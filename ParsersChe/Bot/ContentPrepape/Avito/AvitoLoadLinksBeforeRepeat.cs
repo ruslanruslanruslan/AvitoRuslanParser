@@ -21,15 +21,21 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
        }
        public override void LoadLinkFromPage() 
        {
-           var units = Doc.DocumentNode.SelectNodes("//a[@class='second-link']");
+
+           var units = Doc.DocumentNode.SelectNodes("//a[@class='photo-wrapper']");
+           
            foreach (var item in units)
            {
+              
+              
                string resultRef;
                string href = item.GetAttributeValue("href", "");
                if (!string.IsNullOrEmpty(href))
                {
                    if (Links == null) { Links = new List<string>(); }
+                   
                    resultRef = avitoHost + href;
+                  
                    int idAd = GetIdAd(resultRef);
                    bool isNew = IsNewAd(idAd);
                    if (!isNew) { currentCountRepeat++; } 

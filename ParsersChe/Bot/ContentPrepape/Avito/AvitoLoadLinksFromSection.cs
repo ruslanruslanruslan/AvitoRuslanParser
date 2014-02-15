@@ -51,6 +51,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
             Content = content;
             Url = url;
             Doc = doc;
+
+
             LoadLinkWithAllPage();
             var result = links;
             PartsPage part = PartsPage.LinkOnAd;

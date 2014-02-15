@@ -147,7 +147,9 @@ namespace WindowsFormsApplication1
                         URLLink = item;
                       //  MySqlDB.DeleteUnTransformated();
                         var result = Parser.Run(item);
+                      //  result["Phone"] = result["Phone"].ToString().Split('"')[3];
 
+                       
                         if (result[PartsPage.Cost] != null)
                         {
                             MySqlDB.InsertFctAvitoGrabber(result, MySqlDB.ResourceListID(), item, linkSection[1]);

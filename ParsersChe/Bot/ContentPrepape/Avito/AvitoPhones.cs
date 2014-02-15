@@ -127,6 +127,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
             if (res != null)
             {
                 phonePageContent = HttpWeb.GetContent(res);
+                phonePageContent = phonePageContent.Split('"')[3].ToString();
             }
             else
             {
