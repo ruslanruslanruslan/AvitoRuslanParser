@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8ADA93A4-1E6C-4C8F-BE60-BA047AFA888D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ParsersChe</RootNamespace>
+    <AssemblyName>ParsersChe</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\HtmlAgilityPack.1.4.6\Net20\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bot\ContentPrepape\Avito\Animals\AvitoAnimalsBreed.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AudioVideo\AvitoTypeAV.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoBodyType.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoDrive.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoMaker.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoMileage.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoModel.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoParams.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoTransmission.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoTypeEngine.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoWheel.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\AvitoAutoYear.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoAgency.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoCountLinks.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoDateAd.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoHelpFulMethod.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadImageCutWatermark.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadLinksBeforeDate.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadLinksBeforeDateRepeat.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadLinksBeforeRepeat.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadLinksSetCount.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Auto\HelpFulAvitoAutoParamsLoad.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoBodyAd.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoCategory.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoCity.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoCost.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoCurrency.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoIdAd.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadImages.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoLoadLinksFromSection.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoPhones.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoRegion.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoSeller.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoSendMessageToOwner.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoSite.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoSubCategory.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoTitle.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\AvitoTypeProduct.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Dress\AvitoDressSize.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Dress\AvitoDressSubject.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Dress\AvitoDressType.cs" />
+    <Compile Include="Bot\ContentPrepape\EmailUnit.cs" />
+    <Compile Include="Bot\ContentPrepape\IPrepareContent.cs" />
+    <Compile Include="Bot\ContentPrepape\Avito\Phone\AvitoTypePhone.cs" />
+    <Compile Include="Bot\ContentPrepape\Irr\IrrCountLinks.cs" />
+    <Compile Include="Bot\ContentPrepape\Irr\IrrLoadLinks.cs" />
+    <Compile Include="Bot\ContentPrepape\Irr\IrrLoadLinksLimitPage.cs" />
+    <Compile Include="Bot\ContentPrepape\Irr\IrrPhone.cs" />
+    <Compile Include="Bot\EnumsPartPage\PartsPage.cs" />
+    <Compile Include="Bot\HttpHeaders.cs" />
+    <Compile Include="Bot\IActionPage.cs" />
+    <Compile Include="Bot\ILoadContent.cs" />
+    <Compile Include="Bot\ParserPage.cs" />
+    <Compile Include="Bot\SimpleParserPage.cs" />
+    <Compile Include="Bot\WebClientBot.cs" />
+    <Compile Include="CapthaUnlock\Antigate.cs" />
+    <Compile Include="CapthaUnlock\UploadFile.cs" />
+    <Compile Include="CapthaUnlock\Uploading.cs" />
+    <Compile Include="HelpFull\InfoPage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultPrepare\ResultPreparer.cs" />
+    <Compile Include="ResultPrepare\XmlLeonidData.cs" />
+    <Compile Include="WebClientParser\Decorators\CookieDecorator.cs" />
+    <Compile Include="WebClientParser\Decorators\WebClDecoratorBase.cs" />
+    <Compile Include="WebClientParser\IHttpWeb.cs" />
+    <Compile Include="WebClientParser\Proxy\CheckerProxy\AvitoCheckerProxy.cs" />
+    <Compile Include="WebClientParser\Proxy\CheckerProxy\ICheckerProxy.cs" />
+    <Compile Include="WebClientParser\Proxy\IUpdateProxy.cs" />
+    <Compile Include="WebClientParser\Proxy\ProxyCollection.cs" />
+    <Compile Include="WebClientParser\Proxy\ProxyCollectionSingl.cs" />
+    <Compile Include="WebClientParser\Proxy\ProxyCollSeparate.cs" />
+    <Compile Include="WebClientParser\Proxy\ProxyCollUp.cs" />
+    <Compile Include="WebClientParser\Proxy\ProxyQueueTxt.cs" />
+    <Compile Include="WebClientParser\WebCl.cs" />
+    <Compile Include="WebClientParser\WebClAlwaysNewProxy.cs" />
+    <Compile Include="WebClientParser\WebClProxy.cs" />
+    <Compile Include="WebClientParser\WebClSeperateProxy.cs" />
+    <Compile Include="WebClientParser\WebClSepNewProxy.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
