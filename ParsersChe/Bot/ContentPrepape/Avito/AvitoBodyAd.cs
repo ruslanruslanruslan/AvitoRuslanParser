@@ -25,7 +25,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
         private string GetBodyText() 
         {
             StringBuilder sb = new StringBuilder();
-            var resNode = Doc.DocumentNode.SelectNodes("//dd[@id='desc_text']/p");
+            var resNode = Doc.DocumentNode.SelectNodes("//div[@id='desc_text']/p");
             if (resNode != null) 
             {
                 foreach (var item in resNode)
