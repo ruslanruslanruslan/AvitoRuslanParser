@@ -49,9 +49,9 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
                                 
                             var image = Image.FromStream(imageStream);
                             ReseizeSave(image, image.Size, "_original", guid);
-                            ReseizeSave(image, new Size(480, 340), "_preview", guid);
-                            ReseizeSave(image, new Size(240, 200), "_thumbnail", guid);
-                            ReseizeSave(image, new Size(640, 480), "", guid);
+                            ReseizeSave(image, new Size(295, 190), "_preview", guid);
+                            ReseizeSave(image, new Size(80, 80), "_thumbnail", guid);
+                            ReseizeSave(image, new Size(1, 1), "", guid);
                         }
                     }
                 }
