@@ -48,6 +48,14 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
                     {
                       title = titleNode.InnerText.Trim();
                     }
+                    else
+                    {
+                        titleNode = Doc.DocumentNode.SelectSingleNode("//h1[@itemprop='name']");
+                        if (titleNode != null)
+                        {
+                            title =  titleNode.InnerText.Trim();
+                        }
+                    }
                 }
             }
             return title;
