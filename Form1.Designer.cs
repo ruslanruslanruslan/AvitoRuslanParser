@@ -43,6 +43,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxSleep = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,6 +108,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.textBoxSleep);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.PasswordtextBox);
             this.groupBox1.Controls.Add(this.userNametextBox);
             this.groupBox1.Controls.Add(this.label5);
@@ -179,6 +183,23 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(56, 99);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 13);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "sleep(sec)";
+            // 
+            // textBoxSleep
+            // 
+            this.textBoxSleep.Location = new System.Drawing.Point(127, 102);
+            this.textBoxSleep.Name = "textBoxSleep";
+            this.textBoxSleep.Size = new System.Drawing.Size(100, 20);
+            this.textBoxSleep.TabIndex = 12;
+            this.textBoxSleep.Text = "4";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -221,6 +242,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBoxSleep;
+        private System.Windows.Forms.Label label7;
     }
 }
 

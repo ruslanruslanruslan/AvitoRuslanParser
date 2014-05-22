@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-
+        int sleepSec=-1;
         public static string URLLink;
 
         public Form1()
@@ -161,7 +161,8 @@ namespace WindowsFormsApplication1
                             MySqlDB.ExecuteProc();
 
                         }
-                        Thread.Sleep(25 * 1000);
+                        if (sleepSec == -1) sleepSec = Convert.ToInt32(textBoxSleep.Text);
+                        Thread.Sleep(sleepSec * 1000);
                     }
                 }
                 catch (Exception ex)

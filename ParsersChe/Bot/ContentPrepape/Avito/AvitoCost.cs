@@ -26,11 +26,11 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
         private string GetCost()
         {
             string cost = null;
-            var res = Doc.DocumentNode.SelectSingleNode("//span[@class='p_i_price t-item-price']/strong");
+            var res = Doc.DocumentNode.SelectSingleNode("//span[@class='p_i_price t-item-price']/span");
             if (res != null)
             {
                 cost = res.InnerText.Replace("&nbsp;", "");
-                cost = cost.Replace(" ", "");
+                cost = cost.Replace(" ", "").Replace("руб.","");
                 cost = InfoPage.GetDatafromText(cost, "\\d+");
             }
             return cost;

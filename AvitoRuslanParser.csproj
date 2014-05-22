@@ -43,7 +43,7 @@
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\MySQLFiles\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="ParsersChe, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ParsersChe, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ParsersChe\bin\Release\ParsersChe.dll</HintPath>
     </Reference>
