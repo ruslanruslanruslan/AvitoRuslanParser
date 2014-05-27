@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,9 @@ namespace AvitoRuslanParser
         [STAThread]
         static void Main()
         {
+           
+           // Logger logger = LogManager.GetCurrentClassLogger();
+           // logger.Info("hello");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

@@ -76,8 +76,10 @@ namespace AvitoRuslanParser
             return links;
         }
 
+        public static int CountAd { get; set; }
         public static bool IsNewAd(int id) 
         {
+            CountAd++;
             bool resultValue = true;
             MySqlConnection conn = null;
             try

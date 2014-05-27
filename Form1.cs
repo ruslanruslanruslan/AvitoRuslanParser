@@ -12,17 +12,46 @@ using MySql.Data.MySqlClient;
 using ParsersChe.WebClientParser.Proxy;
 using System.Threading;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
+using NLog;
+using System.Threading.Tasks;
+using LogsForms;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
+
+        private static   Logger logger = LogManager.GetCurrentClassLogger();
         int sleepSec=-1;
+        private int countParsed=0;
+        private int countInseted=0;
         public static string URLLink;
+       private LogsForm logsForm;
 
         public Form1()
         {
             InitializeComponent();
+            System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+
+        }
+
+        public void IncParsed() 
+        {
+            countParsed++;
+            labelParsed.Text = countParsed.ToString();
+        }
+        public void incInseted() 
+        {
+            countInseted++;
+            labelInserted.Text = countInseted.ToString();
+        }
+
+        public void SetZeroCounters() 
+        {
+            countInseted = 0;
+            countParsed = 0;
+            labelParsed.Text = "0";
+            labelInserted.Text = "0";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -136,9 +165,14 @@ namespace WindowsFormsApplication1
                     Parser.PathImages = pathToImgtextBox.Text;
 
                     var linksAds = Parser.LoadLinks(linkSection[0]);
-                int i=0;
+                    logsForm.AddLog(linkSection[1]);
+                    logsForm.AddLog("Count new ad: " + linksAds.Count().ToString());
+                    int i=0;
+                    int countPre = 0;
+                    int countIns = 0;
                     foreach (var item in linksAds)
                     {
+                        logsForm.AddLog("start parse link: " + item);
                         i++;
                         if (i == 25) 
                         {
@@ -148,28 +182,56 @@ namespace WindowsFormsApplication1
                       //  MySqlDB.DeleteUnTransformated();
                         var result = Parser.Run(item);
                       //  result["Phone"] = result["Phone"].ToString().Split('"')[3];
+                        //
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine();
+                        foreach (var element in result )
+                        {
+                            if (element.Key!=PartsPage.Body )
+                            {
+                               sb.Append(element.Key + " - ");
+                            if (element.Value != null)
+                            foreach (var t in element.Value)
+                            {
+                                sb.Append(t + " |");
+                            }
+                            sb.Append(Environment.NewLine);
+                            }
+                        }
 
-                       
+                        logsForm.AddLog(sb.ToString());
+                        IncParsed();
+                        countPre++;
                         if (result[PartsPage.Cost] != null)
                         {
+                            logsForm.AddLog("preparing ad to insert to db");
                             MySqlDB.InsertFctAvitoGrabber(result, MySqlDB.ResourceListID(), item, linkSection[1]);
-
+                            logsForm.AddLog("ad inserted");
+                            incInseted();
 
                             Parser2.PathImages2 = pathToImgtextBox.Text;
 
                             var result2 = Parser2.Run(item);
                             MySqlDB.ExecuteProc();
+                            countIns++;
 
                         }
+
                         if (sleepSec == -1) sleepSec = Convert.ToInt32(textBoxSleep.Text);
+                        logsForm.AddLog("sleep on. " + sleepSec + " sec");
                         Thread.Sleep(sleepSec * 1000);
+                        logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
                     }
+                    logsForm.AddLogStatistic(linkSection[1], MySqlDB.CountAd, countIns);
+
                 }
                 catch (Exception ex)
                 {
+                    logsForm.AddLog(ex.ToString());
                     MessageBox.Show("Error" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
                 }
                 label6.Text = "Finish";
+               // logger.Info("fsnish");
             }
         }
         #region fieldSaveLoad
@@ -205,13 +267,23 @@ namespace WindowsFormsApplication1
 
         private void button2_Click(object sender, EventArgs e)
         {
+            logsForm = new LogsForm();
+            logsForm.Visible = true;
+            SetZeroCounters();
             var links = MySqlDB.LoadSectionsLink();
-            foreach (var item in links)
+            Task.Factory.StartNew(() =>
             {
-                LoadSection(item);
-            //    Thread.Sleep(25 * 1000);
-            }
-            ProxyCollectionSingl.Instance.Dispose();
+                button2.Enabled = false;
+                foreach (var item in links)
+                {
+                    logsForm.AddLog("start next sections");
+                    LoadSection(item);
+                    //    Thread.Sleep(25 * 1000);
+                }
+                ProxyCollectionSingl.Instance.Dispose();
+                button2.Enabled = true;
+            });
+            
         }
     }
 }

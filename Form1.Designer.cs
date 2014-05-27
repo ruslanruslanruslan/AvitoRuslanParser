@@ -36,6 +36,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pathToProxytextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxSleep = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.PasswordtextBox = new System.Windows.Forms.TextBox();
             this.userNametextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -43,16 +45,18 @@
             this.label6 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBoxSleep = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.labelParsed = new System.Windows.Forms.Label();
+            this.labelInserted = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(25, 275);
+            this.button1.Location = new System.Drawing.Point(25, 320);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(248, 109);
+            this.button1.Size = new System.Drawing.Size(207, 64);
             this.button1.TabIndex = 0;
             this.button1.Text = "Enter";
             this.button1.UseVisualStyleBackColor = true;
@@ -124,6 +128,23 @@
             this.groupBox1.Text = "Прокси";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // textBoxSleep
+            // 
+            this.textBoxSleep.Location = new System.Drawing.Point(127, 102);
+            this.textBoxSleep.Name = "textBoxSleep";
+            this.textBoxSleep.Size = new System.Drawing.Size(100, 20);
+            this.textBoxSleep.TabIndex = 12;
+            this.textBoxSleep.Text = "4";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(56, 99);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 13);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "sleep(sec)";
+            // 
             // PasswordtextBox
             // 
             this.PasswordtextBox.Location = new System.Drawing.Point(127, 71);
@@ -175,7 +196,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(326, 302);
+            this.button2.Location = new System.Drawing.Point(304, 361);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 12;
@@ -183,28 +204,51 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label7
+            // label9
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(56, 99);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(55, 13);
-            this.label7.TabIndex = 11;
-            this.label7.Text = "sleep(sec)";
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(11, 263);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(92, 13);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Count Parsed ad: ";
             // 
-            // textBoxSleep
+            // label10
             // 
-            this.textBoxSleep.Location = new System.Drawing.Point(127, 102);
-            this.textBoxSleep.Name = "textBoxSleep";
-            this.textBoxSleep.Size = new System.Drawing.Size(100, 20);
-            this.textBoxSleep.TabIndex = 12;
-            this.textBoxSleep.Text = "4";
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(11, 286);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(97, 13);
+            this.label10.TabIndex = 15;
+            this.label10.Text = "Count Inserted ad: ";
+            // 
+            // labelParsed
+            // 
+            this.labelParsed.AutoSize = true;
+            this.labelParsed.Location = new System.Drawing.Point(132, 263);
+            this.labelParsed.Name = "labelParsed";
+            this.labelParsed.Size = new System.Drawing.Size(16, 13);
+            this.labelParsed.TabIndex = 16;
+            this.labelParsed.Text = "...";
+            // 
+            // labelInserted
+            // 
+            this.labelInserted.AutoSize = true;
+            this.labelInserted.Location = new System.Drawing.Point(132, 285);
+            this.labelInserted.Name = "labelInserted";
+            this.labelInserted.Size = new System.Drawing.Size(16, 13);
+            this.labelInserted.TabIndex = 17;
+            this.labelInserted.Text = "...";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 411);
+            this.Controls.Add(this.labelInserted);
+            this.Controls.Add(this.labelParsed);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label6);
@@ -244,6 +288,10 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBoxSleep;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label labelParsed;
+        private System.Windows.Forms.Label labelInserted;
     }
 }
 

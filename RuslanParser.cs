@@ -33,6 +33,7 @@ namespace AvitoRuslanParser
         {
             IHttpWeb webCl = new WebCl();
             string url = linkSection;
+            MySqlDB.CountAd = 0;
             ParserPage parser = new SimpleParserPage
               (url, new List<IPrepareContent> {
                     new AvitoLoadLinksBeforeRepeat(webCl,8,x=>MySqlDB.IsNewAd(x))
