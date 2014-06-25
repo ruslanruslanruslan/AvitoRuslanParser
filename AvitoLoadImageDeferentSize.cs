@@ -99,14 +99,28 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
 
             }
 
-            Image newImage2 = new Bitmap(newWidth - minW, newHeight - minH);
+            //Image newImage2 = new Bitmap(newWidth - minW, newHeight - minH);
+            Image newImage2 = DrawFilledRectangle(size.Width,size.Height);
+
+            int xMove = (size.Width - (newWidth ))/2;
+            int yMove = (size.Height - (newHeight ))/2;
             using (Graphics graphicsHandle = Graphics.FromImage(newImage2))
             {
                 graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphicsHandle.DrawImage(newImage, new Rectangle(0, 0, newWidth - minW, newHeight - minH), 0, 0, newWidth - minW, newHeight - minH, GraphicsUnit.Pixel);
+                graphicsHandle.DrawImage(newImage, new Rectangle(xMove, yMove, newWidth , newHeight ), 0, 0, newWidth - minW*2, newHeight - minH, GraphicsUnit.Pixel);
             }
 
             return newImage2;
+        }
+        private Bitmap DrawFilledRectangle(int x, int y)
+        {
+            Bitmap bmp = new Bitmap(x, y);
+            using (Graphics graph = Graphics.FromImage(bmp))
+            {
+                Rectangle ImageSize = new Rectangle(0, 0, x, y);
+                graph.FillRectangle(Brushes.White, ImageSize);
+            }
+            return bmp;
         }
 
     }
