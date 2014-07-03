@@ -49,6 +49,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.labelParsed = new System.Windows.Forms.Label();
             this.labelInserted = new System.Windows.Forms.Label();
+            this.buttonParsingEbay = new System.Windows.Forms.Button();
+            this.buttonParsingAvitoEbay = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,6 +137,7 @@
             this.textBoxSleep.Size = new System.Drawing.Size(100, 20);
             this.textBoxSleep.TabIndex = 12;
             this.textBoxSleep.Text = "4";
+            this.textBoxSleep.TextChanged += new System.EventHandler(this.textBoxSleep_TextChanged);
             // 
             // label7
             // 
@@ -190,17 +193,17 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(432, 36);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(500, 368);
+            this.listBox1.Size = new System.Drawing.Size(500, 212);
             this.listBox1.TabIndex = 11;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(304, 361);
+            this.button2.Location = new System.Drawing.Point(277, 305);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(184, 23);
             this.button2.TabIndex = 12;
-            this.button2.Text = "Start Parsing Sections]";
+            this.button2.Text = "Start Parsing Avito";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -240,11 +243,33 @@
             this.labelInserted.TabIndex = 17;
             this.labelInserted.Text = "...";
             // 
+            // buttonParsingEbay
+            // 
+            this.buttonParsingEbay.Location = new System.Drawing.Point(277, 341);
+            this.buttonParsingEbay.Name = "buttonParsingEbay";
+            this.buttonParsingEbay.Size = new System.Drawing.Size(184, 23);
+            this.buttonParsingEbay.TabIndex = 18;
+            this.buttonParsingEbay.Text = "Start Parsing  Ebay";
+            this.buttonParsingEbay.UseVisualStyleBackColor = true;
+            this.buttonParsingEbay.Click += new System.EventHandler(this.buttonParsingEbay_Click);
+            // 
+            // buttonParsingAvitoEbay
+            // 
+            this.buttonParsingAvitoEbay.Location = new System.Drawing.Point(277, 376);
+            this.buttonParsingAvitoEbay.Name = "buttonParsingAvitoEbay";
+            this.buttonParsingAvitoEbay.Size = new System.Drawing.Size(184, 23);
+            this.buttonParsingAvitoEbay.TabIndex = 19;
+            this.buttonParsingAvitoEbay.Text = "Start Parsing Avito+Ebay";
+            this.buttonParsingAvitoEbay.UseVisualStyleBackColor = true;
+            this.buttonParsingAvitoEbay.Click += new System.EventHandler(this.buttonParsingAvitoEbay_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 411);
+            this.Controls.Add(this.buttonParsingAvitoEbay);
+            this.Controls.Add(this.buttonParsingEbay);
             this.Controls.Add(this.labelInserted);
             this.Controls.Add(this.labelParsed);
             this.Controls.Add(this.label10);
@@ -292,6 +317,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label labelParsed;
         private System.Windows.Forms.Label labelInserted;
+        private System.Windows.Forms.Button buttonParsingEbay;
+        private System.Windows.Forms.Button buttonParsingAvitoEbay;
     }
 }
 

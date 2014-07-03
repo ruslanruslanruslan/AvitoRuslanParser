@@ -39,6 +39,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="eBay.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\eBay.Services.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\AutoRuParser\AutoRuParser\bin\Debug\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -52,9 +56,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ParsersChe\bin\Release\ParsersChe.dll</HintPath>
     </Reference>
+    <Reference Include="SLF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\SLF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,6 +75,10 @@
     <Compile Include="AvitoLoadImageDeferentSize.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EbayLoadImage.cs" />
+    <Compile Include="EbayParser\ItemInfo.cs" />
+    <Compile Include="EbayParser\SearchApi.cs" />
+    <Compile Include="Helpfuls\SectionItem.cs" />
     <Compile Include="LogsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +94,7 @@
     <Compile Include="MySqlDB.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlDB2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Properties.Designer.cs">
@@ -95,6 +109,7 @@
     <Compile Include="RuslanParser2.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SectionItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

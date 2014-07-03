@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using AvitoRuslanParser.EbayParser;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace AvitoRuslanParser
         [STAThread]
         static void Main()
         {
-           
+         //   SearchApi.ParseItems(new long[] { 201117381586, 191228445949, 141318265370 });
            // Logger logger = LogManager.GetCurrentClassLogger();
            // logger.Info("hello");
             Application.EnableVisualStyles();

@@ -12,7 +12,7 @@ namespace AvitoRuslanParser
   public  class MySqlDB
     {
         //conectionString!!!!!!!!!!!!!!!
-        public static readonly string connectionString = "server=localhost;user=root;database=playandbay;port=3306;password=Galka91;";
+      public static readonly string connectionString = "server=localhost;user=root;database=playandbay_test;port=3306;password=Galka91;";
         //Метод получения ID картинки префикс!!!!!!!!!
         public static string ItemID()
         {
@@ -54,7 +54,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "SELECT search_url, category_name FROM playandbay.fct_categories_avito_search where search_url is not null";
+                string sql = "SELECT search_url, category_name FROM playandbay_test.fct_categories_search where search_url is not null";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -87,7 +87,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "SELECT count(*) FROM playandbay.fct_grabber_avito where avito_id=@Id";
+                string sql = "SELECT count(*) FROM playandbay_test.fct_grabber_avito where avito_id=@Id";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Connection = conn;
                 cmd.CommandText = sql;
@@ -128,7 +128,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "SELECT ifnull(max(pk_i_id),0)+1 FROM playandbay.oc_t_item_resource;";
+                string sql = "SELECT ifnull(max(pk_i_id),0)+1 FROM playandbay_test.oc_t_item_resource;";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object result = cmd.ExecuteScalar();
                 if (result != null)
@@ -157,7 +157,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "select ifnull(v,0)+1 from (select max(pk_i_id) v from playandbay.oc_t_item) t";
+                string sql = "select ifnull(v,0)+1 from (select max(pk_i_id) v from playandbay_test.oc_t_item) t";
                 //select ifnull(AUTO_INCREMENT,0) FROM information_schema.tables WHERE table_name = 'oc_t_item'"
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object result = cmd.ExecuteScalar();
@@ -187,7 +187,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "use playandbay; call ribr_test();";
+                string sql = "use playandbay_test; call ribr_test();";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object result = cmd.ExecuteScalar();
                 if (result != null)
@@ -218,7 +218,7 @@ namespace AvitoRuslanParser
                     conn = new MySqlConnection(connectionString);
                     conn.Open();
                     //Тело запроса!!!!!!!
-                    string sql = @" insert into playandbay.fct_grabber_avito (id_resource_list, avito_id,url, title, tel_num, author, price, city, avito_section, user_section, description)
+                    string sql = @" insert into playandbay_test.fct_grabber_avito (id_resource_list, avito_id,url, title, tel_num, author, price, city, avito_section, user_section, description)
                                     Values(@index,@idAvito,@url,@title,@phone,@seller,@price,@city,@subcategory,@section,@desc)";
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = conn;
@@ -270,7 +270,7 @@ namespace AvitoRuslanParser
                     conn = new MySqlConnection(connectionString);
                     conn.Open();
                     //Тело запроса!!!!!!!
-                    string sql = @" insert into playandbay.oc_t_item_resource
+                    string sql = @" insert into playandbay_test.oc_t_item_resource
                                     select @resourceid, 1, null, ""jpg"", ""image/jpeg"", ""oc-content/uploads/""";
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = conn;
@@ -301,7 +301,7 @@ namespace AvitoRuslanParser
                     conn = new MySqlConnection(connectionString);
                     conn.Open();
                     //Тело запроса!!!!!!!
-                    string sql = @" insert into playandbay.ass_grabber_avito_resource_list
+                    string sql = @" insert into playandbay_test.ass_grabber_avito_resource_list
                     Values(@index1,@index2)";
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = conn;
@@ -333,7 +333,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                     //Тело запроса!!!!!!!
-                string sql = @" delete from playandbay.ass_grabber_avito_resource_list 
+                string sql = @" delete from playandbay_test.ass_grabber_avito_resource_list 
                                 where id_resource_list in (select id_resource_list from playandbay.fct_grabber_avito 
 						                                   where transformated = 0);
                                     delete from playandbay.fct_grabber_avito 
