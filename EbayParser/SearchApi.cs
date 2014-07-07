@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -33,13 +34,28 @@ namespace AvitoRuslanParser.EbayParser
         {
             set
             {
-                var words = value.Split(';');
-                CategoryId = Convert.ToInt32(words[0]);
-                Keywords = words[1];
+                GetDataFromLink(value);
                 section = value;
             }
         }
 
+        private void GetDataFromLink(string link) 
+        {
+            string pattern1 = "_nkw=(.+?)&";
+            string patternt2 = "_nkw=(.+)";
+            string patternKeyWord = null;
+
+            patternKeyWord = Regex.IsMatch(link, pattern1) ? pattern1 : patternt2;
+            Keywords = Regex.Match(link, patternKeyWord).Groups[1].Value;
+
+            string patternCategory = null;
+            pattern1 = "_sacat=(\\d+)";
+            patternt2 = "/(\\d+)/";
+            patternCategory = Regex.IsMatch(link, pattern1) ? pattern1 : patternt2;
+            string category = Regex.Match(link, patternCategory).Groups[1].Value;
+            CategoryId = Convert.ToInt32(category);
+
+        }
 
         public IEnumerable<long> SearchLinks()
         {
@@ -148,10 +164,45 @@ namespace AvitoRuslanParser.EbayParser
                     var doc = new HtmlDocument();
                     doc.LoadHtml(items.Item[i].Description);
 
-                    items.Item[i].Description = itemsDesc.Item[i].Description;
+                    string desc = HttpUtility.HtmlDecode(GetText(doc.DocumentNode).Replace("&nbsp;",""));
+                    
+                    string paatern="(\r\n){2,}";
+                    string paatern2 = "(\r\n ){2,}";
+                    string pattern3=".+\\{[\\s|\\S]+?\\}";
+                    string  trueDesc=Regex.Replace(desc,pattern3,string.Empty);
+
+                    trueDesc = Regex.Replace(trueDesc, "( ){2,}", " ");
+                    trueDesc = Regex.Replace(trueDesc, "(\n){2,}", "\n");
+
+                    trueDesc = Regex.Replace(trueDesc, paatern, "\r\n");
+                    trueDesc = Regex.Replace(trueDesc, paatern2, "\r\n ");
+
+                     items.Item[i].Description = trueDesc;
                         items.Item[i].PictureURL = NewArrayImg(items.Item[i].PictureURL, doc);
                 }
             }
+        }
+
+        public static string GetText(HtmlNode doc)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in doc.ChildNodes)
+            {
+                if (item.Name != "script")
+                {
+                    string text = null;
+                    if (item.HasChildNodes)
+                    {
+                       text=  GetText(item);
+                    }
+                    else
+                    {
+                        text = item.InnerText;
+                    }
+                    sb.AppendLine(text);
+                }
+            }
+            return sb.ToString();
         }
 
         public static string[] NewArrayImg(string[] oldArray, HtmlDocument doc)

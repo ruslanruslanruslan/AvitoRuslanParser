@@ -161,7 +161,7 @@ namespace WindowsFormsApplication1
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                MessageBox.Show("Error" + Environment.NewLine + ex.ToString());
             }
             label6.Text = "Finish";
         }
@@ -260,7 +260,7 @@ namespace WindowsFormsApplication1
                 catch (Exception ex)
                 {
                     logsForm.AddLog(ex.ToString());
-                    MessageBox.Show("Error" + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace);
+                    MessageBox.Show("Error" + Environment.NewLine + ex.ToString());
                 }
                 label6.Text = "Finish";
                 // logger.Info("fsnish");

@@ -40,7 +40,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -74,15 +74,20 @@ namespace AvitoRuslanParser
                     var link = reader.GetString(0);
                     var category_name = reader.GetString(1);
                     SectionItem.Site siteCurrent = SectionItem.Site.UnTyped;
-                    if (Regex.IsMatch(link,"http")) siteCurrent = SectionItem.Site.Avito;
-                    else siteCurrent = SectionItem.Site.Ebay;
-                    var section = new SectionItem { Link = link, site = siteCurrent, CategoryName = category_name };
-                    links.Add(section);
+                    if (link != "NULL")
+                    {
+                        var uri = new Uri(link);
+
+                        if (uri.Host == "www.avito.ru") siteCurrent = SectionItem.Site.Avito;
+                        else siteCurrent = SectionItem.Site.Ebay;
+                        var section = new SectionItem { Link = link, site = siteCurrent, CategoryName = category_name };
+                        links.Add(section);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -113,7 +118,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -136,7 +141,7 @@ namespace AvitoRuslanParser
                     if (!is_auction) break;
                     //Тело запроса!!!!!!!
 
-                    string sql = @" update from " + namedb + @".fct_grabber_ebay  set price=@price where ebay_id=@id ";
+                    string sql = @" update " + namedb + @".fct_grabber_ebay  set price=@price where ebay_id=@id ";
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
@@ -151,7 +156,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
@@ -193,7 +198,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -235,7 +240,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -264,7 +269,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             finally
@@ -297,7 +302,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
@@ -325,7 +330,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
 
             }
             
@@ -356,7 +361,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show("!" + ex.Message);
+                MessageBox.Show("!" + ex.ToString());
 
             }
             finally
@@ -385,7 +390,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show("!" + ex.Message);
+                MessageBox.Show("!" + ex.ToString());
 
             }
           
@@ -394,7 +399,7 @@ namespace AvitoRuslanParser
         //Метод вставки данных в базу!!!!!!!!
         public static void InsertFctEbayGrabber(GetMultipleItemsResponse list, string section)
         {
-            if (list != null && list.Item.Length > 0)
+            if (list != null && list.Item!=null && list.Item.Length > 0)
             {
                 MySqlConnection conn = null;
                 try
@@ -411,7 +416,7 @@ namespace AvitoRuslanParser
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString());
                 }
                 finally
                 {
@@ -432,7 +437,7 @@ namespace AvitoRuslanParser
                     }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString());
                 }
                 finally
                 {
@@ -506,7 +511,7 @@ namespace AvitoRuslanParser
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString());
                 }
                 finally
                 {
@@ -539,7 +544,7 @@ namespace AvitoRuslanParser
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString());
                 }
                 finally
                 {
@@ -574,7 +579,7 @@ namespace AvitoRuslanParser
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.ToString());
                 }
                 finally
                 {
@@ -605,7 +610,7 @@ namespace AvitoRuslanParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
