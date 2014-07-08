@@ -16,9 +16,9 @@ namespace AvitoRuslanParser
     {
         private const string hostAvito = "www.avito.ru";
         private const string hostEbay = "www.ebay.com";
-        private const string namedb = "playandbay_test";
+        private const string namedb = "playandbay";
         //conectionString!!!!!!!!!!!!!!!
-        public static readonly string connectionString = "server=localhost;user=root;database=playandbay_test;port=3306;password=Galka91;";
+        public static readonly string connectionString = "server=localhost;user=root;database=playandbay;port=3306;password=Galka91;";
         //Метод получения ID картинки префикс!!!!!!!!!
         public static string ItemID()
         {
@@ -598,9 +598,9 @@ namespace AvitoRuslanParser
                 conn.Open();
                 //Тело запроса!!!!!!!
                 string sql = @" delete from " + namedb + @".ass_grabber_avito_resource_list 
-                                where id_resource_list in (select id_resource_list from playandbay.fct_grabber_avito 
+                                where id_resource_list in (select id_resource_list from fct_grabber_avito 
 						                                   where transformated = 0);
-                                    delete from playandbay.fct_grabber_avito 
+                                    delete from fct_grabber_avito 
                                     where transformated = 0;";
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;

@@ -68,14 +68,14 @@ namespace WindowsFormsApplication1
                 MySqlConnection connection = new MySqlConnection(connectionString);
                 commandString = @"select concat(d1.s_name, "" | "", coalesce(d2.s_name,""-""), "" | "", coalesce(d3.s_name,""-""), "" | "", coalesce(d4.s_name,""-"")) s_name,
                                          coalesce(c4.pk_i_id, c3.pk_i_id, c2.pk_i_id, c1.pk_i_id) id
-                                  from playandbay.oc_t_category c1
-                                  left join playandbay.oc_t_category c2 on c1.pk_i_id=c2.fk_i_parent_id
-                                  left join playandbay.oc_t_category c3 on c2.pk_i_id=c3.fk_i_parent_id
-                                  left join playandbay.oc_t_category c4 on c3.pk_i_id=c4.fk_i_parent_id
-                                  left join playandbay.oc_t_category_description d1 on c1.pk_i_id=d1.fk_i_category_id
-                                  left join playandbay.oc_t_category_description d2 on c2.pk_i_id=d2.fk_i_category_id
-                                  left join playandbay.oc_t_category_description d3 on c3.pk_i_id=d3.fk_i_category_id
-                                  left join playandbay.oc_t_category_description d4 on c4.pk_i_id=d4.fk_i_category_id
+                                  from oc_t_category c1
+                                  left join oc_t_category c2 on c1.pk_i_id=c2.fk_i_parent_id
+                                  left join oc_t_category c3 on c2.pk_i_id=c3.fk_i_parent_id
+                                  left join oc_t_category c4 on c3.pk_i_id=c4.fk_i_parent_id
+                                  left join oc_t_category_description d1 on c1.pk_i_id=d1.fk_i_category_id
+                                  left join oc_t_category_description d2 on c2.pk_i_id=d2.fk_i_category_id
+                                  left join oc_t_category_description d3 on c3.pk_i_id=d3.fk_i_category_id
+                                  left join oc_t_category_description d4 on c4.pk_i_id=d4.fk_i_category_id
                                   where d1.fk_c_locale_code = ""ru_RU"" 
                                         and (d2.fk_c_locale_code = ""ru_RU"" or d2.fk_c_locale_code is null)
                                         and (d3.fk_c_locale_code = ""ru_RU"" or d3.fk_c_locale_code is null)

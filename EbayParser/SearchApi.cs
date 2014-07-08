@@ -165,7 +165,8 @@ namespace AvitoRuslanParser.EbayParser
                     doc.LoadHtml(items.Item[i].Description);
 
                     string desc = HttpUtility.HtmlDecode(GetText(doc.DocumentNode).Replace("&nbsp;",""));
-                    
+
+                    desc = Regex.Replace(desc,"\\t","");
                     string paatern="(\r\n){2,}";
                     string paatern2 = "(\r\n ){2,}";
                     string pattern3=".+\\{[\\s|\\S]+?\\}";
@@ -177,7 +178,7 @@ namespace AvitoRuslanParser.EbayParser
                     trueDesc = Regex.Replace(trueDesc, paatern, "\r\n");
                     trueDesc = Regex.Replace(trueDesc, paatern2, "\r\n ");
 
-                     items.Item[i].Description = trueDesc;
+                     items.Item[i].Description = trueDesc.Trim();
                         items.Item[i].PictureURL = NewArrayImg(items.Item[i].PictureURL, doc);
                 }
             }
