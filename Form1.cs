@@ -114,23 +114,30 @@ namespace WindowsFormsApplication1
 
         private void OneLinkEbay()
         {
-            long id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
-            var imgParser = new EbayLoadImage(new WebCl(), pathToImgtextBox.Text);
-            var parsedItems = SearchApi.ParseItems(new long[] { id });
-
-
-            MySqlDB2.InsertFctEbayGrabber(parsedItems, listBox1.Text);
-            bool isAuction = true;
-
-            if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
+            try
             {
-                imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-                isAuction = parsedItems.Item[0].BuyItNowAvailable != null;
+                long id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
+                var imgParser = new EbayLoadImage(new WebCl(), pathToImgtextBox.Text);
+                var parsedItems = SearchApi.ParseItems(new long[] { id });
 
+
+                MySqlDB2.InsertFctEbayGrabber(parsedItems, listBox1.Text);
+                bool isAuction = true;
+
+                if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
+                {
+                    imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                    isAuction = parsedItems.Item[0].BuyItNowAvailable != null;
+
+                }
+
+                if (!isAuction)
+                    MySqlDB2.ExecuteProc2();
             }
-
-            if (!isAuction)
-                MySqlDB2.ExecuteProc2();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
 
         }
         private void OneLinkAvito()
@@ -384,6 +391,11 @@ namespace WindowsFormsApplication1
                  // if (!isAuction)
                 MySqlDB2.ExecuteProc2();
                 logsForm.AddLog("ad inserted" + Environment.NewLine);
+
+                if (sleepSec == -1) sleepSec = Convert.ToInt32(textBoxSleep.Text);
+                logsForm.AddLog("sleep on. " + sleepSec + " sec");
+                Thread.Sleep(sleepSec * 1000);
+                logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
             }
 
             logsForm.AddLog("Inserted to db");

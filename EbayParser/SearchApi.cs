@@ -166,17 +166,23 @@ namespace AvitoRuslanParser.EbayParser
 
                     string desc = HttpUtility.HtmlDecode(GetText(doc.DocumentNode).Replace("&nbsp;",""));
 
+                    desc = Regex.Replace(desc, "<[\\s|\\S]+?>", string.Empty);
                     desc = Regex.Replace(desc,"\\t","");
                     string paatern="(\r\n){2,}";
                     string paatern2 = "(\r\n ){2,}";
                     string pattern3=".+\\{[\\s|\\S]+?\\}";
                     string  trueDesc=Regex.Replace(desc,pattern3,string.Empty);
 
+                    trueDesc=Regex.Replace(trueDesc,"<[\\s|\\S]+?>",string.Empty);
                     trueDesc = Regex.Replace(trueDesc, "( ){2,}", " ");
                     trueDesc = Regex.Replace(trueDesc, "(\n){2,}", "\n");
+                    trueDesc = Regex.Replace(trueDesc, "( \n){2,}", "\n");
+
 
                     trueDesc = Regex.Replace(trueDesc, paatern, "\r\n");
                     trueDesc = Regex.Replace(trueDesc, paatern2, "\r\n ");
+                    trueDesc = Regex.Replace(trueDesc, "( \r\n){2,}", "\r\n ");
+                    trueDesc = Regex.Replace(trueDesc, "(\n){2,}", "\n");
 
                      items.Item[i].Description = trueDesc.Trim();
                         items.Item[i].PictureURL = NewArrayImg(items.Item[i].PictureURL, doc);
