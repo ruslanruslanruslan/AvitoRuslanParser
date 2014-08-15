@@ -27,7 +27,7 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         public string GetLocal() 
         {
             string result = null;
-            var res = Doc.DocumentNode.SelectNodes("//span[@class='c-1']");
+            var res = Doc.DocumentNode.SelectNodes("//span[@class='pseudo-link']"); // c-1
             if (res != null )
             {
                 if (res.Count>1)

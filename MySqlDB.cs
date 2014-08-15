@@ -54,7 +54,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "SELECT search_url, category_name FROM ct_categories_search where search_url is not null";
+                string sql = "SELECT search_url, category_name FROM fct_categories_search where search_url is not null";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())

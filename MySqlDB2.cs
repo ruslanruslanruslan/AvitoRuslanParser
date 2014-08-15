@@ -56,6 +56,11 @@ namespace AvitoRuslanParser
             var newlist = allLinks.Where(x => x.site == SectionItem.Site.Ebay);
             return newlist.ToList();
         }
+        
+        /// <summary>
+        /// Returns searching categories for both sites Avito and Ebay
+        /// </summary>
+        /// <returns></returns>
         public static IList<SectionItem> LoadSectionsLink()
         {
             IList<SectionItem> links = new List<SectionItem>();
@@ -74,8 +79,9 @@ namespace AvitoRuslanParser
                     var link = reader.GetString(0);
                     var category_name = reader.GetString(1);
                     SectionItem.Site siteCurrent = SectionItem.Site.UnTyped;
-                    if (link != "NULL")
+                    if (link != "NULL" && link != null && link != string.Empty)
                     {
+                        //if (link == null || link == string.Empty) System.Diagnostics.Debugger.Break();
                         var uri = new Uri(link);
 
                         if (uri.Host == "www.avito.ru") siteCurrent = SectionItem.Site.Avito;

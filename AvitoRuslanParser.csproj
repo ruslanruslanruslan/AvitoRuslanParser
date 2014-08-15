@@ -52,9 +52,8 @@
     <Reference Include="NLog">
       <HintPath>packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="ParsersChe, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ParsersChe\bin\Release\ParsersChe.dll</HintPath>
+    <Reference Include="ParsersChe">
+      <HintPath>ParsersChe\bin\Debug\ParsersChe.dll</HintPath>
     </Reference>
     <Reference Include="SLF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
