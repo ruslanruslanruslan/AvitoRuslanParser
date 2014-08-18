@@ -218,7 +218,7 @@ namespace WindowsFormsApplication1
                             i = -1;
                         }
                         URLLink = item;
-                        //  MySqlDB.DeleteUnTransformated();
+                        MySqlDB.DeleteUnTransformated();
                         var result = Parser.Run(item);
                         //  result["Phone"] = result["Phone"].ToString().Split('"')[3];
                         //

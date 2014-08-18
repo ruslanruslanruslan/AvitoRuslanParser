@@ -157,7 +157,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "select ifnull(v,0)+1 from (select max(pk_i_id) v from oc_t_item) t";
+                string sql = "select max(ifnull(v,0))+1 from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_avito where transformated <> 0) t";
                 //select ifnull(AUTO_INCREMENT,0) FROM information_schema.tables WHERE table_name = 'oc_t_item'"
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object result = cmd.ExecuteScalar();

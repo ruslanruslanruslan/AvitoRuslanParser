@@ -19,8 +19,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
 
  public   class AvitoLoadImageDeferentSize : AvitoLoadImages
     {
-     public Func<string> GetidImage;
-     public Func<string> GetidImageList;
+        public Func<string> GetidImage = (() => MySqlDB.ResourceID());
+        public Func<string> GetidImageList = (() => MySqlDB.ResourceListID());
      
      public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder) : base(httpweb, pathFolder)
         {
