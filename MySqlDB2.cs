@@ -356,7 +356,7 @@ namespace AvitoRuslanParser
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 //тело запроса!!!!!!!!!!
-                string sql = "use "+namedb+"; call ribr_test2();";
+                string sql = "use "+namedb+"; call ribr_test2(null);";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object result = cmd.ExecuteScalar();
                 if (result != null)

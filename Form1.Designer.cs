@@ -136,7 +136,7 @@
             this.textBoxSleep.Name = "textBoxSleep";
             this.textBoxSleep.Size = new System.Drawing.Size(100, 20);
             this.textBoxSleep.TabIndex = 12;
-            this.textBoxSleep.Text = "4";
+            this.textBoxSleep.Text = "200";
             this.textBoxSleep.TextChanged += new System.EventHandler(this.textBoxSleep_TextChanged);
             // 
             // label7
