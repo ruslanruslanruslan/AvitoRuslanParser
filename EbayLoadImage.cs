@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using WindowsFormsApplication1;
+using AvitoRuslanParser;
 
 namespace AvitoRuslanParser
 {
@@ -46,7 +46,7 @@ namespace AvitoRuslanParser
                         {
                             string guid = GetidImage();
                             string guid2 = GetidImageList();
-                            MySqlDB2.InsertItemResource(guid, Form1.URLLink);
+                            MySqlDB2.InsertItemResource(guid, frmMain.URLLink);
                             MySqlDB2.InsertassGrabberEbayResourceList(guid2, guid);
 
                             var image = Image.FromStream(imageStream);
