@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Web
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvitoRuslanParser", "AvitoRuslanParser.csproj", "{4ACCA5D9-EA77-4FE8-9723-08F5593BFBCF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8ADA93A4-1E6C-4C8F-BE60-BA047AFA888D} = {8ADA93A4-1E6C-4C8F-BE60-BA047AFA888D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParsersChe", "ParsersChe\ParsersChe.csproj", "{8ADA93A4-1E6C-4C8F-BE60-BA047AFA888D}"
 EndProject

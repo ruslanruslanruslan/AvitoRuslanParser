@@ -18,7 +18,7 @@ namespace AvitoRuslanParser
         private const string hostEbay = "www.ebay.com";
         private const string namedb = "playandbay";
         //conectionString!!!!!!!!!!!!!!!
-        public static readonly string connectionString = "server=localhost;user=root;database=playandbay;port=3306;password=Galka91;";
+        public static readonly string connectionString = "server=playandbay.com;user=remoteviewer;database=playandbay_test;port=3306;password=Pauza123;";
         //Метод получения ID картинки префикс!!!!!!!!!
         public static string ItemID()
         {
