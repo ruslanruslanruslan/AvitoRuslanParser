@@ -45,7 +45,7 @@ namespace AvitoRuslanParser
       countParsed++;
       labelParsed.Text = countParsed.ToString();
     }
-    public void incInseted()
+    public void incInserted()
     {
       countInseted++;
       labelInserted.Text = countInseted.ToString();
@@ -208,7 +208,7 @@ namespace AvitoRuslanParser
               logsForm.AddLog("preparing ad to insert to db");
               mySqlDB.InsertFctAvitoGrabber(result, mySqlDB.ResourceListID(), item, linkSection[1]);
               logsForm.AddLog("ad inserted");
-              incInseted();
+              incInserted();
 
               Parser2.PathImages2 = pathToImgtextBox.Text;
 

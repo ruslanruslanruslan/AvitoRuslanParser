@@ -55,22 +55,67 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
               mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
 
               var image = Image.FromStream(imageStream);
-              ReseizeSave(image, image.Size, "_original", guid);
-              ReseizeSave(image, new Size(295, 190), "_preview", guid);
-              ReseizeSave(image, new Size(80, 80), "_thumbnail", guid);
-              ReseizeSave(image, new Size(1, 1), "", guid);
+              ResizeAndSave(image, image.Size, "_original", guid);
+              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+              ResizeAndSave(image, new Size(1, 1), "", guid);
             }
           }
         }
 
     }
 
-    public void ReseizeSave(Image image, Size size, string prefix, string guid)
+    public void ResizeAndSave(Image image, Size size, string prefix, string guid)
     {
+
+      const string ftpusername = "bla";
+      const string ftppassword = "bla";
+
       var litleImage = ResizeImage(image, size);
-      string path = PathToFolder + "\\" + guid + prefix + ".jpg";
+      string path;
+      string filename = guid + prefix + ".jpg";
+      if ((PathToFolder.ToLower()).StartsWith("ftp://"))
+      {
+        path = Path.GetTempPath();
+      }
+      else
+      {
+        path = PathToFolder + "\\";
+      }
+      path += filename;
       ResultDown.Add(path);
       litleImage.Save(path, ImageFormat.Jpeg);
+      if ((PathToFolder.ToLower()).StartsWith("ftp://"))
+      {
+        FtpWebRequest ftpClient = (FtpWebRequest)FtpWebRequest.Create(PathToFolder + "\\" + filename);
+        ftpClient.Credentials = new System.Net.NetworkCredential(ftpusername, ftppassword);
+        ftpClient.Method = System.Net.WebRequestMethods.Ftp.UploadFile;
+        ftpClient.UseBinary = true;
+        ftpClient.KeepAlive = true;
+        System.IO.FileInfo fi = new System.IO.FileInfo(path);
+        ftpClient.ContentLength = fi.Length;
+        byte[] buffer = new byte[4097];
+        int bytes = 0;
+        int total_bytes = (int)fi.Length;
+        System.IO.FileStream fs = fi.OpenRead();
+        System.IO.Stream rs = ftpClient.GetRequestStream();
+        while (total_bytes > 0)
+        {
+          bytes = fs.Read(buffer, 0, buffer.Length);
+          rs.Write(buffer, 0, bytes);
+          total_bytes = total_bytes - bytes;
+        }
+        //fs.Flush();
+        fs.Close();
+        rs.Close();
+        FtpWebResponse uploadResponse = (FtpWebResponse)ftpClient.GetResponse();
+        var value = uploadResponse.StatusDescription;
+        uploadResponse.Close();
+        if (File.Exists(path))
+        {
+          File.Delete(path);
+        }
+      }
     }
 
 
