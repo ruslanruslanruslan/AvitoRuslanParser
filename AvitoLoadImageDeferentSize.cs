@@ -11,7 +11,6 @@ using System.Net;
 using System.Text;
 using MySql.Data.MySqlClient;
 using AvitoRuslanParser;
-using AvitoRuslanParser;
 
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
@@ -26,7 +25,7 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     }
     public string GetidImageList()
     {
-      return mySqlDB.ResourceListID();
+      return mySqlDB.ResourceListIDAvito();
     }
     public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB)
       : base(httpweb, pathFolder)
@@ -68,8 +67,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     public void ResizeAndSave(Image image, Size size, string prefix, string guid)
     {
 
-      const string ftpusername = "bla";
-      const string ftppassword = "bla";
+      const string ftpusername = "Tejas";
+      const string ftppassword = "1qazXSW@";
 
       var litleImage = ResizeImage(image, size);
       string path;

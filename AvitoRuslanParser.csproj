@@ -61,7 +61,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.93.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
@@ -96,7 +95,6 @@
     <Compile Include="MySqlDB.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MySqlDB2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Properties.Designer.cs">
