@@ -37,7 +37,7 @@ namespace AvitoRuslanParser
     {
       InitializeComponent();
       System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
-      mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword, 
+      mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword,
         Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
     }
 
@@ -93,7 +93,7 @@ namespace AvitoRuslanParser
       try
       {
         long id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
-        var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB);
+        var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
         var parsedItems = SearchApi.ParseItems(new long[] { id });
 
 
@@ -339,9 +339,9 @@ namespace AvitoRuslanParser
       //       if (newIds.Count == 0) return;
 
       var partsIdsCollection = Helpful.Partition<long>(newIds, 1);
-      logsForm.AddLog("Prepared  insert to db");
+      logsForm.AddLog("Prepared insert to db");
 
-      var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB);
+      var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
 
       foreach (var item in partsIdsCollection)
       {
@@ -360,7 +360,11 @@ namespace AvitoRuslanParser
         }
 
         logsForm.AddLog("preparing ad to insert to db");
-        mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
+        try
+        {
+          mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
+        }
+        catch { }
         bool isAuction = true;
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
         {
@@ -407,10 +411,13 @@ namespace AvitoRuslanParser
           logsForm.AddLog("start update auctions");
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
-          {
-            logsForm.AddLog("update auction: " + item.ToString());
+          {            
             var parsedItems = SearchApi.ParseItems(new long[] { item });
-            mySqlDB.UpdateAuction(parsedItems);
+            logsForm.AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
+            if (parsedItems.Ack == "Success")
+            {
+              mySqlDB.UpdateAuction(parsedItems);
+            }
           }
           logsForm.AddLog("finish update auctions" + Environment.NewLine);
         }
@@ -441,9 +448,12 @@ namespace AvitoRuslanParser
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
           {
-            logsForm.AddLog("update auction: " + item.ToString());
             var parsedItems = SearchApi.ParseItems(new long[] { item });
-            mySqlDB.UpdateAuction(parsedItems);
+            logsForm.AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
+            if (parsedItems.Ack == "Success")
+            {
+              mySqlDB.UpdateAuction(parsedItems);
+            }
           }
           logsForm.AddLog("finish update auctions" + Environment.NewLine);
         }

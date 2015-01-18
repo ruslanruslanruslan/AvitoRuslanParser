@@ -19,14 +19,18 @@ namespace AvitoRuslanParser
     //public Func<string> GetidImageList = (() => MySqlDB2.ResourceListID());
 
     private IHttpWeb web;
-    private string pathToFolder;
+    private string PathToFolder;
     private MySqlDB mySqlDB;
+    private string ftpUsername;
+    private string ftpPassword;
 
-    public EbayLoadImage(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB)
+    public EbayLoadImage(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
     {
-      this.pathToFolder = pathFolder;
-      this.web = httpweb;
+      PathToFolder = pathFolder;
+      web = httpweb;
       mySqlDB = _mySqlDB;
+      ftpUsername = _ftpUsername;
+      ftpPassword = _ftpPassword;
     }
 
 
@@ -52,9 +56,9 @@ namespace AvitoRuslanParser
               mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
 
               var image = Image.FromStream(imageStream);
-              ReseizeSave(image, image.Size, "_original", guid);
-              ReseizeSave(image, new Size(295, 190), "_preview", guid);
-              ReseizeSave(image, new Size(80, 80), "_thumbnail", guid);
+              ResizeAndSave(image, image.Size, "_original", guid);
+              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
               //   ReseizeSave(image, new Size(1, 1), "", guid);
             }
           }
@@ -62,12 +66,53 @@ namespace AvitoRuslanParser
     }
 
 
-    public void ReseizeSave(Image image, Size size, string prefix, string guid)
+    public void ResizeAndSave(Image image, Size size, string prefix, string guid)
     {
       var litleImage = ResizeImage(image, size);
-      string path = this.pathToFolder + "\\" + guid + prefix + ".jpg";
-      //  ResultDown.Add(path);
+      string path;
+      string filename = guid + prefix + ".jpg";
+      if ((PathToFolder.ToLower()).StartsWith("ftp://"))
+      {
+        path = Path.GetTempPath();
+      }
+      else
+      {
+        path = PathToFolder + "\\";
+      }
+      path += filename;
+      //ResultDown.Add(path);
       litleImage.Save(path, ImageFormat.Jpeg);
+      if ((PathToFolder.ToLower()).StartsWith("ftp://"))
+      {
+        FtpWebRequest ftpClient = (FtpWebRequest)FtpWebRequest.Create(PathToFolder + "\\" + filename);
+        ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
+        ftpClient.Method = System.Net.WebRequestMethods.Ftp.UploadFile;
+        ftpClient.UseBinary = true;
+        ftpClient.KeepAlive = true;
+        System.IO.FileInfo fi = new System.IO.FileInfo(path);
+        ftpClient.ContentLength = fi.Length;
+        byte[] buffer = new byte[4097];
+        int bytes = 0;
+        int total_bytes = (int)fi.Length;
+        System.IO.FileStream fs = fi.OpenRead();
+        System.IO.Stream rs = ftpClient.GetRequestStream();
+        while (total_bytes > 0)
+        {
+          bytes = fs.Read(buffer, 0, buffer.Length);
+          rs.Write(buffer, 0, bytes);
+          total_bytes = total_bytes - bytes;
+        }
+        //fs.Flush();
+        fs.Close();
+        rs.Close();
+        FtpWebResponse uploadResponse = (FtpWebResponse)ftpClient.GetResponse();
+        var value = uploadResponse.StatusDescription;
+        uploadResponse.Close();
+        if (File.Exists(path))
+        {
+          File.Delete(path);
+        }
+      }
     }
 
     protected static Image ResizeImage(Image image, Size size, bool preserveAspectRatio = true)

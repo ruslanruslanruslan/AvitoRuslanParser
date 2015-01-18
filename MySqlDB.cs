@@ -643,14 +643,12 @@ namespace AvitoRuslanParser
         object result = cmd.ExecuteScalar();
         if (result != null)
         {
-          int r = Convert.ToInt32(result);
-          resultStr = r.ToString();
+          resultStr = result.ToString();
         }
       }
       catch (Exception ex)
       {
         MessageBox.Show("!" + ex.ToString());
-
       }
       return resultStr;
     }

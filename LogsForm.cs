@@ -52,11 +52,6 @@ namespace LogsForms
           //  labelInserted.Text = "0";
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-         
-        }
-
         public void AddLog(string msg) 
         {
             richTextBox1.AppendText( DateTime.Now.ToShortTimeString() + " | " + msg + Environment.NewLine);
@@ -71,10 +66,6 @@ namespace LogsForms
             richTextBox1.Text += DateTime.Now.ToString()+Environment.NewLine;
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
      //Методот по события нажатия кнопки
         
 
