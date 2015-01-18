@@ -37,7 +37,8 @@ namespace AvitoRuslanParser
     {
       InitializeComponent();
       System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
-      mySqlDB = new MySqlDB("remoteviewer", "Pauza123", "playandbay.com", 3306, "playandbay_test");
+      mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword, 
+        Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
     }
 
     public void IncParsed()
@@ -68,9 +69,13 @@ namespace AvitoRuslanParser
       }
     }
 
-    private void Closing(object sender, FormClosingEventArgs e)
+    private void frmMain_Closing(object sender, FormClosingEventArgs e)
     {
       SaveField();
+      if (mySqlDB != null)
+      {
+        mySqlDB.Close();
+      }
     }
     //Методот по события нажатия кнопки
 
@@ -79,7 +84,7 @@ namespace AvitoRuslanParser
       try
       {
         long id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
-        var imgParser = new EbayLoadImage(new WebCl(), pathToImgtextBox.Text, mySqlDB);
+        var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB);
         var parsedItems = SearchApi.ParseItems(new long[] { id });
 
 
@@ -110,8 +115,8 @@ namespace AvitoRuslanParser
         //Ссылка на обьявление
         mySqlDB.DeleteUnTransformated();
         //Создаем класс и вводим параметры 
-        var Parser = new RuslanParser(userNametextBox.Text, PasswordtextBox.Text, pathToProxytextBox.Text, mySqlDB);
-        Parser.PathImages = pathToImgtextBox.Text;
+        var Parser = new RuslanParser(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB);
+        Parser.PathImages = Properties.Default.PathToImg;
         //вот тут мы вызывем запрос на Id к базе
         //Parser.LoadGuid = (() => MySqlDB.SeletGuid());
         //Parser.LoadGuid = (() => "1532");
@@ -123,8 +128,8 @@ namespace AvitoRuslanParser
         mySqlDB.InsertFctAvitoGrabber(result, mySqlDB.ResourceListIDAvito(), URLLink, lbCategories.Text);
         //MessageBox.Show(MySqlDB.PictureID());
         //MessageBox.Show(MySqlDB.PictureListID());
-        var Parser2 = new RuslanParser2(userNametextBox.Text, PasswordtextBox.Text, pathToProxytextBox.Text, mySqlDB);
-        Parser2.PathImages2 = pathToImgtextBox.Text;
+        var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
+        Parser2.PathImages2 = Properties.Default.PathToImg;
         var result2 = Parser2.Run(URLLink);
         mySqlDB.ExecuteProc();
       }
@@ -136,9 +141,9 @@ namespace AvitoRuslanParser
     }
     private void btnEnter_Click(object sender, EventArgs e)
     {//Проверку на пустые знаяения полей
-      if (!string.IsNullOrEmpty(LinkAdtextBox.Text) && !string.IsNullOrEmpty(userNametextBox.Text)
-          && !string.IsNullOrEmpty(PasswordtextBox.Text) && !string.IsNullOrEmpty(pathToProxytextBox.Text)
-          && !string.IsNullOrEmpty(pathToImgtextBox.Text))
+      if (!string.IsNullOrEmpty(LinkAdtextBox.Text) /*&& !string.IsNullOrEmpty(Properties.Default.User)
+          && !string.IsNullOrEmpty(Properties.Default.Password) && !string.IsNullOrEmpty(Properties.Default.PathToProxy)*/
+          && !string.IsNullOrEmpty(Properties.Default.PathToImg))
       {
         URLLink = LinkAdtextBox.Text;
         var uri = new Uri(URLLink);
@@ -160,10 +165,10 @@ namespace AvitoRuslanParser
           //Ссылка на обьявление
           //  URLLink = LinkAdtextBox.Text;
           //Создаем класс и вводим параметры 
-          var Parser = new RuslanParser(userNametextBox.Text, PasswordtextBox.Text, pathToProxytextBox.Text, mySqlDB);
-          var Parser2 = new RuslanParser2(userNametextBox.Text, PasswordtextBox.Text, pathToProxytextBox.Text, mySqlDB);
+          var Parser = new RuslanParser(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB);
+          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
 
-          Parser.PathImages = pathToImgtextBox.Text;
+          Parser.PathImages = Properties.Default.PathToImg;
 
           var linksAds = Parser.LoadLinks(linkSection[0]);
           logsForm.AddLog(linkSection[1]);
@@ -210,7 +215,7 @@ namespace AvitoRuslanParser
               logsForm.AddLog("ad inserted");
               incInserted();
 
-              Parser2.PathImages2 = pathToImgtextBox.Text;
+              Parser2.PathImages2 = Properties.Default.PathToImg;
 
               var result2 = Parser2.Run(item);
               mySqlDB.ExecuteProc();
@@ -218,7 +223,7 @@ namespace AvitoRuslanParser
 
             }
 
-            if (sleepSec == -1) sleepSec = Convert.ToInt32(textBoxSleep.Text);
+            if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
             logsForm.AddLog("sleep on. " + sleepSec + " sec");
             Thread.Sleep(sleepSec * 1000);
             logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
@@ -238,21 +243,21 @@ namespace AvitoRuslanParser
     #region fieldSaveLoad
     private void SaveField()
     {
-      Properties.Default.User = userNametextBox.Text;
-      Properties.Default.Password = PasswordtextBox.Text;
+      //Properties.Default.User = userNametextBox.Text;
+      //Properties.Default.Password = PasswordtextBox.Text;
       Properties.Default.LinkOnAd = LinkAdtextBox.Text;
-      Properties.Default.PathToImg = pathToImgtextBox.Text;
-      Properties.Default.PathToProxy = pathToProxytextBox.Text;
+      //Properties.Default.PathToImg = pathToImgtextBox.Text;
+      //Properties.Default.PathToProxy = pathToProxytextBox.Text;
       Properties.Default.Save();
 
     }
     private void LoadField()
     {
-      userNametextBox.Text = Properties.Default.User;
-      PasswordtextBox.Text = Properties.Default.Password;
+      //userNametextBox.Text = Properties.Default.User;
+      //PasswordtextBox.Text = Properties.Default.Password;
       LinkAdtextBox.Text = Properties.Default.LinkOnAd;
-      pathToImgtextBox.Text = Properties.Default.PathToImg;
-      pathToProxytextBox.Text = Properties.Default.PathToProxy;
+      //pathToImgtextBox.Text = Properties.Default.PathToImg;
+      //pathToProxytextBox.Text = Properties.Default.PathToProxy;
     }
     #endregion
 
@@ -325,7 +330,7 @@ namespace AvitoRuslanParser
       var partsIdsCollection = Helpful.Partition<long>(newIds, 1);
       logsForm.AddLog("Prepared  insert to db");
 
-      var imgParser = new EbayLoadImage(new WebCl(), pathToImgtextBox.Text, mySqlDB);
+      var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB);
 
       foreach (var item in partsIdsCollection)
       {
@@ -355,7 +360,7 @@ namespace AvitoRuslanParser
         mySqlDB.ExecuteProc2();
         logsForm.AddLog("ad inserted" + Environment.NewLine);
 
-        if (sleepSec == -1) sleepSec = Convert.ToInt32(textBoxSleep.Text);
+        if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
         logsForm.AddLog("sleep on. " + sleepSec + " sec");
         Thread.Sleep(sleepSec * 1000);
         logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
@@ -441,6 +446,12 @@ namespace AvitoRuslanParser
         ProxyCollectionSingl.Instance.Dispose();
         buttonParsingAvitoEbay.Enabled = true;
       });
+    }
+
+    private void btnSettings_Click(object sender, EventArgs e)
+    {
+      frmSettings frm = new frmSettings();
+      frm.ShowDialog();
     }
   }
 }

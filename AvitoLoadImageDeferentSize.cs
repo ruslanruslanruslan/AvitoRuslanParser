@@ -19,6 +19,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
   public class AvitoLoadImageDeferentSize : AvitoLoadImages
   {
     private MySqlDB mySqlDB;
+    private string ftpUsername;
+    private string ftpPassword;
     public string GetidImage()
     {
       return mySqlDB.ResourceID();
@@ -27,10 +29,12 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     {
       return mySqlDB.ResourceListIDAvito();
     }
-    public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB)
+    public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
       : base(httpweb, pathFolder)
     {
       mySqlDB = _mySqlDB;
+      ftpUsername = _ftpUsername;
+      ftpPassword = _ftpPassword;
     }
 
     protected override void LoadImages()
@@ -66,10 +70,6 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
 
     public void ResizeAndSave(Image image, Size size, string prefix, string guid)
     {
-
-      const string ftpusername = "Tejas";
-      const string ftppassword = "1qazXSW@";
-
       var litleImage = ResizeImage(image, size);
       string path;
       string filename = guid + prefix + ".jpg";
@@ -87,7 +87,7 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       if ((PathToFolder.ToLower()).StartsWith("ftp://"))
       {
         FtpWebRequest ftpClient = (FtpWebRequest)FtpWebRequest.Create(PathToFolder + "\\" + filename);
-        ftpClient.Credentials = new System.Net.NetworkCredential(ftpusername, ftppassword);
+        ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
         ftpClient.Method = System.Net.WebRequestMethods.Ftp.UploadFile;
         ftpClient.UseBinary = true;
         ftpClient.KeepAlive = true;

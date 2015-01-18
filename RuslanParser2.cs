@@ -16,6 +16,8 @@ namespace AvitoRuslanParser
   {
     private string pathImages2 = "images";
     private MySqlDB mySqlDB;
+    private string ftpUsername;
+    private string ftpPassword;
     public string PathImages2
     {
       get { return pathImages2; }
@@ -37,9 +39,11 @@ namespace AvitoRuslanParser
     //}
 
 
-    public RuslanParser2(string user, string pass, string pathToProxy, MySqlDB _mySqlDB)
+    public RuslanParser2(string user, string pass, string pathToProxy, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
     {
       mySqlDB = _mySqlDB;
+      ftpUsername = _ftpUsername;
+      ftpPassword = _ftpPassword;
     }
 
     public Dictionary<PartsPage, IEnumerable<string>> Run(string link)
@@ -51,7 +55,7 @@ namespace AvitoRuslanParser
       {
         ParserPage parser = new SimpleParserPage
               (url, new List<IPrepareContent> {
-                    new AvitoLoadImageDeferentSize(webCl,pathImages2, mySqlDB)
+                    new AvitoLoadImageDeferentSize(webCl,pathImages2, mySqlDB, ftpUsername, ftpPassword)
                     { 
                         //GetidImage=loadGuid,
                         //GetidImageList=loadGuid2
