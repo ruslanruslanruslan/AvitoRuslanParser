@@ -282,15 +282,17 @@ namespace AvitoRuslanParser
       }
       return resultStr;
     }
-    public string ExecuteProc()
+    public string ExecuteProcAvito(string id)
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "call ribr_test();";
+      //const string sql = "call ribr_test();";
+      const string sql = "call sp_map_grabber_avito(@id)";
       string resultStr = string.Empty;
       try
       {
-
         MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
+        cmd.Prepare();
+        cmd.Parameters.AddWithValue("@id", id);
         object result = cmd.ExecuteScalar();
         if (result != null)
         {
@@ -332,7 +334,7 @@ namespace AvitoRuslanParser
             phone = list[PartsPage.Phone].First<string>();
           }
           cmd.Parameters.AddWithValue("@index", index);
-          cmd.Parameters.AddWithValue("idAvito", list[PartsPage.Id].First<string>());
+          cmd.Parameters.AddWithValue("@idAvito", list[PartsPage.Id].First<string>());
           cmd.Parameters.AddWithValue("@url", url);
           cmd.Parameters.AddWithValue("@title", list[PartsPage.Title].First<string>());
           cmd.Parameters.AddWithValue("@phone", phone);
@@ -627,14 +629,17 @@ namespace AvitoRuslanParser
       }
       return resultStr;
     }
-    public string ExecuteProc2()
+    public string ExecuteProcEBay(string id)
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "call ribr_test2(null);";
+      //const string sql = "call ribr_test2(null);";
+      const string sql = "call sp_map_grabber_ebay(@id)";
       string resultStr = string.Empty;
       try
       {
         MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
+        cmd.Prepare();
+        cmd.Parameters.AddWithValue("@id", id);
         object result = cmd.ExecuteScalar();
         if (result != null)
         {
@@ -707,7 +712,7 @@ namespace AvitoRuslanParser
       else { price = item.CurrentPrice.Value; }
 
       cmd.Parameters.AddWithValue("@index", index);
-      cmd.Parameters.AddWithValue("idEbay", item.ItemID);
+      cmd.Parameters.AddWithValue("@idEbay", item.ItemID);
       cmd.Parameters.AddWithValue("@url", item.ViewItemURLForNaturalSearch);
       cmd.Parameters.AddWithValue("@title", item.Title);
       cmd.Parameters.AddWithValue("@seller", item.Seller.UserID);

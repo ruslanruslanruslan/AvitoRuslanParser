@@ -57,10 +57,6 @@ namespace LogsForms
          
         }
 
-        private void Closing(object sender, FormClosingEventArgs e)
-        {
-        }
-
         public void AddLog(string msg) 
         {
             richTextBox1.AppendText( DateTime.Now.ToShortTimeString() + " | " + msg + Environment.NewLine);

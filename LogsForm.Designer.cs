@@ -62,7 +62,6 @@
             this.Controls.Add(this.richTextBox1);
             this.Name = "LogsForm";
             this.Text = "Parser";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Closing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 

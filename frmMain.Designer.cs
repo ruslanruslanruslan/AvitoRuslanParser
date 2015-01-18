@@ -45,9 +45,10 @@
       // 
       // btnEnter
       // 
-      this.btnEnter.Location = new System.Drawing.Point(25, 320);
+      this.btnEnter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnEnter.Location = new System.Drawing.Point(857, 8);
       this.btnEnter.Name = "btnEnter";
-      this.btnEnter.Size = new System.Drawing.Size(207, 64);
+      this.btnEnter.Size = new System.Drawing.Size(75, 23);
       this.btnEnter.TabIndex = 0;
       this.btnEnter.Text = "Enter";
       this.btnEnter.UseVisualStyleBackColor = true;
@@ -64,9 +65,11 @@
       // 
       // LinkAdtextBox
       // 
+      this.LinkAdtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.LinkAdtextBox.Location = new System.Drawing.Point(132, 10);
       this.LinkAdtextBox.Name = "LinkAdtextBox";
-      this.LinkAdtextBox.Size = new System.Drawing.Size(800, 20);
+      this.LinkAdtextBox.Size = new System.Drawing.Size(719, 20);
       this.LinkAdtextBox.TabIndex = 2;
       // 
       // label6
@@ -79,6 +82,9 @@
       // 
       // lbCategories
       // 
+      this.lbCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.lbCategories.FormattingEnabled = true;
       this.lbCategories.Location = new System.Drawing.Point(5, 36);
       this.lbCategories.Name = "lbCategories";
@@ -88,7 +94,8 @@
       // 
       // btnParsingAvito
       // 
-      this.btnParsingAvito.Location = new System.Drawing.Point(277, 305);
+      this.btnParsingAvito.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnParsingAvito.Location = new System.Drawing.Point(748, 307);
       this.btnParsingAvito.Name = "btnParsingAvito";
       this.btnParsingAvito.Size = new System.Drawing.Size(184, 23);
       this.btnParsingAvito.TabIndex = 12;
@@ -98,8 +105,9 @@
       // 
       // label9
       // 
+      this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(11, 263);
+      this.label9.Location = new System.Drawing.Point(12, 364);
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(92, 13);
       this.label9.TabIndex = 14;
@@ -107,8 +115,9 @@
       // 
       // label10
       // 
+      this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(11, 286);
+      this.label10.Location = new System.Drawing.Point(12, 387);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(97, 13);
       this.label10.TabIndex = 15;
@@ -116,8 +125,9 @@
       // 
       // labelParsed
       // 
+      this.labelParsed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.labelParsed.AutoSize = true;
-      this.labelParsed.Location = new System.Drawing.Point(132, 263);
+      this.labelParsed.Location = new System.Drawing.Point(133, 364);
       this.labelParsed.Name = "labelParsed";
       this.labelParsed.Size = new System.Drawing.Size(16, 13);
       this.labelParsed.TabIndex = 16;
@@ -125,8 +135,9 @@
       // 
       // labelInserted
       // 
+      this.labelInserted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.labelInserted.AutoSize = true;
-      this.labelInserted.Location = new System.Drawing.Point(132, 285);
+      this.labelInserted.Location = new System.Drawing.Point(133, 386);
       this.labelInserted.Name = "labelInserted";
       this.labelInserted.Size = new System.Drawing.Size(16, 13);
       this.labelInserted.TabIndex = 17;
@@ -134,7 +145,8 @@
       // 
       // buttonParsingEbay
       // 
-      this.buttonParsingEbay.Location = new System.Drawing.Point(277, 341);
+      this.buttonParsingEbay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.buttonParsingEbay.Location = new System.Drawing.Point(748, 343);
       this.buttonParsingEbay.Name = "buttonParsingEbay";
       this.buttonParsingEbay.Size = new System.Drawing.Size(184, 23);
       this.buttonParsingEbay.TabIndex = 18;
@@ -144,7 +156,8 @@
       // 
       // buttonParsingAvitoEbay
       // 
-      this.buttonParsingAvitoEbay.Location = new System.Drawing.Point(277, 376);
+      this.buttonParsingAvitoEbay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.buttonParsingAvitoEbay.Location = new System.Drawing.Point(748, 378);
       this.buttonParsingAvitoEbay.Name = "buttonParsingAvitoEbay";
       this.buttonParsingAvitoEbay.Size = new System.Drawing.Size(184, 23);
       this.buttonParsingAvitoEbay.TabIndex = 19;
@@ -154,6 +167,7 @@
       // 
       // btnSettings
       // 
+      this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.btnSettings.Location = new System.Drawing.Point(857, 258);
       this.btnSettings.Name = "btnSettings";
       this.btnSettings.Size = new System.Drawing.Size(75, 23);
