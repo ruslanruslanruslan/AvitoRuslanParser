@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvitoRuslanParser.Helpfuls
 {
-    struct SectionItem
+    public struct SectionItem
     {
         public enum Site { Avito, Ebay, UnTyped };
         public string Link { get; set; }
