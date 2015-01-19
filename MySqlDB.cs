@@ -690,7 +690,7 @@ namespace AvitoRuslanParser
     {
       const string sql = @" insert into fct_grabber_ebay (id_resource_list, ebay_id,url, title, author, price, city,country, ebay_section, user_section, description,curr_code,is_auction,bid,transformated)
                                     Values(@index,@idEbay,@url,@title,@seller,@price,@city,@country,@subcategory,@section,@desc,@currency,@is_auction,@bid,@transformated)";
-      string index = ResourceListIDEbay();
+      string index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
       int trans = 0;
       bool is_auction = item.MinimumToBid != null;
       if (is_auction) trans = 4;
