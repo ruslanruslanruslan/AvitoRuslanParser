@@ -32,7 +32,6 @@
       this.label1 = new System.Windows.Forms.Label();
       this.LinkAdtextBox = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
-      this.lbCategories = new System.Windows.Forms.ListBox();
       this.btnParsingAvito = new System.Windows.Forms.Button();
       this.label9 = new System.Windows.Forms.Label();
       this.label10 = new System.Windows.Forms.Label();
@@ -41,6 +40,14 @@
       this.buttonParsingEbay = new System.Windows.Forms.Button();
       this.buttonParsingAvitoEbay = new System.Windows.Forms.Button();
       this.btnSettings = new System.Windows.Forms.Button();
+      this.cbCategories = new System.Windows.Forms.ComboBox();
+      this.Label2 = new System.Windows.Forms.Label();
+      this.btnReset = new System.Windows.Forms.Button();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.rtbLog = new System.Windows.Forms.RichTextBox();
+      this.splitter1 = new System.Windows.Forms.Splitter();
+      this.rtbLogStatistics = new System.Windows.Forms.RichTextBox();
+      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // btnEnter
@@ -59,17 +66,17 @@
       this.label1.AutoSize = true;
       this.label1.Location = new System.Drawing.Point(2, 13);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(124, 13);
+      this.label1.Size = new System.Drawing.Size(72, 13);
       this.label1.TabIndex = 1;
-      this.label1.Text = "Ccылка на обьявление";
+      this.label1.Text = "Link to advert";
       // 
       // LinkAdtextBox
       // 
       this.LinkAdtextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.LinkAdtextBox.Location = new System.Drawing.Point(132, 10);
+      this.LinkAdtextBox.Location = new System.Drawing.Point(80, 10);
       this.LinkAdtextBox.Name = "LinkAdtextBox";
-      this.LinkAdtextBox.Size = new System.Drawing.Size(719, 20);
+      this.LinkAdtextBox.Size = new System.Drawing.Size(771, 20);
       this.LinkAdtextBox.TabIndex = 2;
       // 
       // label6
@@ -79,18 +86,6 @@
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(0, 13);
       this.label6.TabIndex = 8;
-      // 
-      // lbCategories
-      // 
-      this.lbCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.lbCategories.FormattingEnabled = true;
-      this.lbCategories.Location = new System.Drawing.Point(5, 36);
-      this.lbCategories.Name = "lbCategories";
-      this.lbCategories.Size = new System.Drawing.Size(927, 212);
-      this.lbCategories.TabIndex = 11;
-      this.lbCategories.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
       // 
       // btnParsingAvito
       // 
@@ -168,19 +163,98 @@
       // btnSettings
       // 
       this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnSettings.Location = new System.Drawing.Point(857, 258);
+      this.btnSettings.Location = new System.Drawing.Point(558, 378);
       this.btnSettings.Name = "btnSettings";
-      this.btnSettings.Size = new System.Drawing.Size(75, 23);
+      this.btnSettings.Size = new System.Drawing.Size(184, 23);
       this.btnSettings.TabIndex = 20;
       this.btnSettings.Text = "Settings";
       this.btnSettings.UseVisualStyleBackColor = true;
       this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+      // 
+      // cbCategories
+      // 
+      this.cbCategories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cbCategories.FormattingEnabled = true;
+      this.cbCategories.Location = new System.Drawing.Point(80, 36);
+      this.cbCategories.Name = "cbCategories";
+      this.cbCategories.Size = new System.Drawing.Size(771, 21);
+      this.cbCategories.TabIndex = 21;
+      // 
+      // Label2
+      // 
+      this.Label2.AutoSize = true;
+      this.Label2.Location = new System.Drawing.Point(2, 39);
+      this.Label2.Name = "Label2";
+      this.Label2.Size = new System.Drawing.Size(49, 13);
+      this.Label2.TabIndex = 22;
+      this.Label2.Text = "Category";
+      // 
+      // btnReset
+      // 
+      this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnReset.Location = new System.Drawing.Point(857, 36);
+      this.btnReset.Name = "btnReset";
+      this.btnReset.Size = new System.Drawing.Size(75, 23);
+      this.btnReset.TabIndex = 23;
+      this.btnReset.Text = "Reset";
+      this.btnReset.UseVisualStyleBackColor = true;
+      this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.groupBox1.Controls.Add(this.rtbLog);
+      this.groupBox1.Controls.Add(this.splitter1);
+      this.groupBox1.Controls.Add(this.rtbLogStatistics);
+      this.groupBox1.Location = new System.Drawing.Point(5, 63);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(927, 238);
+      this.groupBox1.TabIndex = 26;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "Logs";
+      // 
+      // rtbLog
+      // 
+      this.rtbLog.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.rtbLog.Location = new System.Drawing.Point(3, 16);
+      this.rtbLog.Name = "rtbLog";
+      this.rtbLog.ReadOnly = true;
+      this.rtbLog.Size = new System.Drawing.Size(921, 120);
+      this.rtbLog.TabIndex = 0;
+      this.rtbLog.Text = "";
+      // 
+      // splitter1
+      // 
+      this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.splitter1.Location = new System.Drawing.Point(3, 136);
+      this.splitter1.Name = "splitter1";
+      this.splitter1.Size = new System.Drawing.Size(921, 3);
+      this.splitter1.TabIndex = 1;
+      this.splitter1.TabStop = false;
+      // 
+      // rtbLogStatistics
+      // 
+      this.rtbLogStatistics.Dock = System.Windows.Forms.DockStyle.Bottom;
+      this.rtbLogStatistics.Location = new System.Drawing.Point(3, 139);
+      this.rtbLogStatistics.Name = "rtbLogStatistics";
+      this.rtbLogStatistics.ReadOnly = true;
+      this.rtbLogStatistics.Size = new System.Drawing.Size(921, 96);
+      this.rtbLogStatistics.TabIndex = 2;
+      this.rtbLogStatistics.Text = "";
       // 
       // frmMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(944, 411);
+      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.btnReset);
+      this.Controls.Add(this.Label2);
+      this.Controls.Add(this.cbCategories);
       this.Controls.Add(this.btnSettings);
       this.Controls.Add(this.buttonParsingAvitoEbay);
       this.Controls.Add(this.buttonParsingEbay);
@@ -189,7 +263,6 @@
       this.Controls.Add(this.label10);
       this.Controls.Add(this.label9);
       this.Controls.Add(this.btnParsingAvito);
-      this.Controls.Add(this.lbCategories);
       this.Controls.Add(this.label6);
       this.Controls.Add(this.LinkAdtextBox);
       this.Controls.Add(this.label1);
@@ -199,6 +272,7 @@
       this.Text = "Parser";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_Closing);
       this.Load += new System.EventHandler(this.frmMain_Load);
+      this.groupBox1.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -210,7 +284,6 @@
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.TextBox LinkAdtextBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ListBox lbCategories;
         private System.Windows.Forms.Button btnParsingAvito;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
@@ -219,6 +292,13 @@
         private System.Windows.Forms.Button buttonParsingEbay;
         private System.Windows.Forms.Button buttonParsingAvitoEbay;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.ComboBox cbCategories;
+        private System.Windows.Forms.Label Label2;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RichTextBox rtbLog;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.RichTextBox rtbLogStatistics;
     }
 }
 

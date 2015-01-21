@@ -55,7 +55,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     private void LoadUrlsImage()
     {
       LoadSingleImage();
-      if (linksImages == null)
+      //if (linksImages == null)
         LoadMoreImages();
     }
     private void CreateFolderId()
@@ -73,6 +73,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     protected virtual void LoadImages()
     {
       if (linksImages != null)
+      {
+        linksImages = linksImages.Distinct().ToList();
         foreach (var item in linksImages)
         {
           bool result;
@@ -90,6 +92,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
             }
           }
         }
+      }
     }
     #region private helpful methods
     private void LoadSingleImage()

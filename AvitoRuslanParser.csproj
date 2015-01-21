@@ -86,12 +86,6 @@
       <DependentUpon>frmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpfuls\SectionItem.cs" />
-    <Compile Include="LogsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LogsForm.Designer.cs">
-      <DependentUpon>LogsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,9 +127,6 @@
   <ItemGroup>
     <EmbeddedResource Include="frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LogsForm.resx">
-      <DependentUpon>LogsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
