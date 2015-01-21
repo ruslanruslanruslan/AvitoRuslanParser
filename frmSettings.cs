@@ -41,17 +41,33 @@ namespace AvitoRuslanParser
       if (edtFtpFolder.Text.Length > 0 && edtSaveImagePath.Text.Length > 0)
       {
         MessageBox.Show("You need to fill only one path: 'Path to save images' or 'FTP folder'", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        DialogResult = System.Windows.Forms.DialogResult.Cancel;
+        DialogResult = System.Windows.Forms.DialogResult.None;
         return;
       }
       if (edtSaveImagePath.Text.Length > 0)
         Properties.Default.PathToImg = edtSaveImagePath.Text;
       else if (edtFtpFolder.Text.Length > 0)
-        Properties.Default.PathToImg = edtFtpFolder.Text;
+      {
+        if (edtFtpUsername.Text.Length == 0 || edtFtpPassword.Text.Length == 0)
+        {
+          MessageBox.Show("Incomplete FTP settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          DialogResult = System.Windows.Forms.DialogResult.None;
+          return;
+        }
+        else
+          Properties.Default.PathToImg = edtFtpFolder.Text;
+      }
       Properties.Default.PathToProxy = edtPathToProxyFile.Text;
       Properties.Default.SleepSec = Convert.ToInt32(edtSleep.Text);
       Properties.Default.User = edtUsername.Text;
       Properties.Default.Password = edtPassword.Text;
+      if (edtMySqlServerAddress.Text.Length == 0 || edtMySqlServerDatabase.Text.Length == 0 || edtMySqlServerPort.Text.Length == 0 ||
+        edtMySqlServerUsername.Text.Length == 0 || edtMySqlServerPassword.Text.Length == 0)
+      {
+        MessageBox.Show("Incomplete MySql settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        DialogResult = System.Windows.Forms.DialogResult.None;
+        return;
+      }
       Properties.Default.MySqlServerAddress = edtMySqlServerAddress.Text;
       Properties.Default.MySqlServerPort = Convert.ToInt32(edtMySqlServerPort.Text);
       Properties.Default.MySqlServerDatabase = edtMySqlServerDatabase.Text;
