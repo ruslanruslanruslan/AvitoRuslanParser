@@ -35,7 +35,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       {
         bool isEsist = Directory.Exists(pathFolder);
         {
-          throw new FileNotFoundException("Path no exists");
+          if (!isEsist)
+            throw new FileNotFoundException("Path no exists");
         }
       }
     }
@@ -54,7 +55,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     private void LoadUrlsImage()
     {
       LoadSingleImage();
-      if (linksImages == null)
+      //if (linksImages == null)
         LoadMoreImages();
     }
     private void CreateFolderId()
@@ -72,6 +73,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     protected virtual void LoadImages()
     {
       if (linksImages != null)
+      {
+        linksImages = linksImages.Distinct().ToList();
         foreach (var item in linksImages)
         {
           bool result;
@@ -89,11 +92,13 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
             }
           }
         }
+      }
     }
     #region private helpful methods
     private void LoadSingleImage()
     {
       var coll = Doc.DocumentNode.SelectSingleNode("//td[@class='big-picture only-one']/img");
+      if (coll == null) coll = Doc.DocumentNode.SelectSingleNode("//td[@class='big-picture more-than-one']/img");
       if (coll != null)
       {
         string imglink = coll.GetAttributeValue("src", "none");

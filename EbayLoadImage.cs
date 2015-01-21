@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using AvitoRuslanParser;
 
 namespace AvitoRuslanParser
@@ -55,10 +56,17 @@ namespace AvitoRuslanParser
               mySqlDB.InsertItemResource(guid, frmMain.URLLink);
               mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
 
-              var image = Image.FromStream(imageStream);
-              ResizeAndSave(image, image.Size, "_original", guid);
-              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
-              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+              try
+              {
+                var image = Image.FromStream(imageStream);
+                ResizeAndSave(image, image.Size, "_original", guid);
+                ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+                ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+              }
+              catch (Exception ex)
+              {
+                MessageBox.Show(ex.Message);
+              }
               //   ReseizeSave(image, new Size(1, 1), "", guid);
             }
           }

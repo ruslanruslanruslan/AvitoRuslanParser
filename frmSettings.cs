@@ -19,7 +19,10 @@ namespace AvitoRuslanParser
 
     private void frmSettings_Load(object sender, EventArgs e)
     {
-      edtSaveImagePath.Text = Properties.Default.PathToImg;
+      if (Properties.Default.PathToImg.StartsWith("ftp://"))
+        edtFtpFolder.Text = Properties.Default.PathToImg;
+      else
+        edtSaveImagePath.Text = Properties.Default.PathToImg;
       edtPathToProxyFile.Text = Properties.Default.PathToProxy;
       edtSleep.Text = Properties.Default.SleepSec.ToString();
       edtUsername.Text = Properties.Default.User;
@@ -35,11 +38,36 @@ namespace AvitoRuslanParser
 
     private void btnSave_Click(object sender, EventArgs e)
     {
-      Properties.Default.PathToImg = edtSaveImagePath.Text;
+      if (edtFtpFolder.Text.Length > 0 && edtSaveImagePath.Text.Length > 0)
+      {
+        MessageBox.Show("You need to fill only one path: 'Path to save images' or 'FTP folder'", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        DialogResult = System.Windows.Forms.DialogResult.None;
+        return;
+      }
+      if (edtSaveImagePath.Text.Length > 0)
+        Properties.Default.PathToImg = edtSaveImagePath.Text;
+      else if (edtFtpFolder.Text.Length > 0)
+      {
+        if (edtFtpUsername.Text.Length == 0 || edtFtpPassword.Text.Length == 0)
+        {
+          MessageBox.Show("Incomplete FTP settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          DialogResult = System.Windows.Forms.DialogResult.None;
+          return;
+        }
+        else
+          Properties.Default.PathToImg = edtFtpFolder.Text;
+      }
       Properties.Default.PathToProxy = edtPathToProxyFile.Text;
       Properties.Default.SleepSec = Convert.ToInt32(edtSleep.Text);
       Properties.Default.User = edtUsername.Text;
       Properties.Default.Password = edtPassword.Text;
+      if (edtMySqlServerAddress.Text.Length == 0 || edtMySqlServerDatabase.Text.Length == 0 || edtMySqlServerPort.Text.Length == 0 ||
+        edtMySqlServerUsername.Text.Length == 0 || edtMySqlServerPassword.Text.Length == 0)
+      {
+        MessageBox.Show("Incomplete MySql settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        DialogResult = System.Windows.Forms.DialogResult.None;
+        return;
+      }
       Properties.Default.MySqlServerAddress = edtMySqlServerAddress.Text;
       Properties.Default.MySqlServerPort = Convert.ToInt32(edtMySqlServerPort.Text);
       Properties.Default.MySqlServerDatabase = edtMySqlServerDatabase.Text;

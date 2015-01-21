@@ -14,7 +14,6 @@ using System.Threading;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using NLog;
 using System.Threading.Tasks;
-using LogsForms;
 using AvitoRuslanParser.EbayParser;
 using AvitoRuslanParser.Helpfuls;
 using ParsersChe.WebClientParser;
@@ -28,9 +27,8 @@ namespace AvitoRuslanParser
     private static Logger logger = LogManager.GetCurrentClassLogger();
     int sleepSec = -1;
     private int countParsed = 0;
-    private int countInseted = 0;
+    private int countInserted = 0;
     public static string URLLink;
-    private LogsForm logsForm;
     private MySqlDB mySqlDB;
 
     public frmMain()
@@ -48,13 +46,13 @@ namespace AvitoRuslanParser
     }
     public void incInserted()
     {
-      countInseted++;
-      labelInserted.Text = countInseted.ToString();
+      countInserted++;
+      labelInserted.Text = countInserted.ToString();
     }
 
     public void SetZeroCounters()
     {
-      countInseted = 0;
+      countInserted = 0;
       countParsed = 0;
       labelParsed.Text = "0";
       labelInserted.Text = "0";
@@ -67,7 +65,7 @@ namespace AvitoRuslanParser
       {
         foreach (string str in mySqlDB.GetCategories())
         {
-          lbCategories.Items.Add(str);
+          cbCategories.Items.Add(str);
         }
       }
       catch
@@ -97,7 +95,7 @@ namespace AvitoRuslanParser
         var parsedItems = SearchApi.ParseItems(new long[] { id });
 
 
-        mySqlDB.InsertFctEbayGrabber(parsedItems, lbCategories.Text);
+        mySqlDB.InsertFctEbayGrabber(parsedItems, cbCategories.Text);
         bool isAuction = true;
 
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
@@ -135,7 +133,7 @@ namespace AvitoRuslanParser
         //result, index ID, ссылку на обьявления
         //id я не вставлял так как непонятно было и неподходило под структуру бд
         string idResourceList = mySqlDB.ResourceListIDAvito();
-        mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, lbCategories.Text);
+        mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
         //MessageBox.Show(MySqlDB.PictureID());
         //MessageBox.Show(MySqlDB.PictureListID());
         var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
@@ -181,14 +179,14 @@ namespace AvitoRuslanParser
           Parser.PathImages = Properties.Default.PathToImg;
 
           var linksAds = Parser.LoadLinks(linkSection[0]);
-          logsForm.AddLog(linkSection[1]);
-          logsForm.AddLog("Count new ad: " + linksAds.Count().ToString());
+          AddLog(linkSection[1]);
+          AddLog("Count new ad: " + linksAds.Count().ToString());
           int i = 0;
           int countPre = 0;
           int countIns = 0;
           foreach (var item in linksAds)
           {
-            logsForm.AddLog("start parse link: " + item);
+            AddLog("start parse link: " + item);
             i++;
             if (i == 25)
             {
@@ -215,15 +213,15 @@ namespace AvitoRuslanParser
               }
             }
 
-            logsForm.AddLog(sb.ToString());
+            AddLog(sb.ToString());
             IncParsed();
             countPre++;
             if (result[PartsPage.Cost] != null)
             {
-              logsForm.AddLog("preparing ad to insert to db");
+              AddLog("preparing ad to insert to db");
               string idResourceList = mySqlDB.ResourceListIDAvito();
               mySqlDB.InsertFctAvitoGrabber(result, idResourceList, item, linkSection[1]);
-              logsForm.AddLog("ad inserted");
+              AddLog("ad inserted");
               incInserted();
 
               Parser2.PathImages2 = Properties.Default.PathToImg;
@@ -235,16 +233,16 @@ namespace AvitoRuslanParser
             }
 
             if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-            logsForm.AddLog("sleep on. " + sleepSec + " sec");
+            AddLog("sleep on. " + sleepSec + " sec");
             Thread.Sleep(sleepSec * 1000);
-            logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
+            AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
           }
-          logsForm.AddLogStatistic(linkSection[1], mySqlDB.CountAd, countIns);
+          AddLogStatistic(linkSection[1], mySqlDB.CountAd, countIns);
 
         }
         catch (Exception ex)
         {
-          logsForm.AddLog(ex.ToString());
+          AddLog(ex.ToString());
           MessageBox.Show("Error" + Environment.NewLine + ex.ToString());
         }
         label6.Text = "Finish";
@@ -254,38 +252,18 @@ namespace AvitoRuslanParser
     #region fieldSaveLoad
     private void SaveField()
     {
-      //Properties.Default.User = userNametextBox.Text;
-      //Properties.Default.Password = PasswordtextBox.Text;
       Properties.Default.LinkOnAd = LinkAdtextBox.Text;
-      //Properties.Default.PathToImg = pathToImgtextBox.Text;
-      //Properties.Default.PathToProxy = pathToProxytextBox.Text;
       Properties.Default.Save();
 
     }
     private void LoadField()
     {
-      //userNametextBox.Text = Properties.Default.User;
-      //PasswordtextBox.Text = Properties.Default.Password;
       LinkAdtextBox.Text = Properties.Default.LinkOnAd;
-      //pathToImgtextBox.Text = Properties.Default.PathToImg;
-      //pathToProxytextBox.Text = Properties.Default.PathToProxy;
     }
     #endregion
 
-    private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-    }
-
-    private void groupBox1_Enter(object sender, EventArgs e)
-    {
-
-    }
-
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
-      logsForm = new LogsForm();
-      logsForm.Visible = true;
       SetZeroCounters();
       var links = mySqlDB.LoadSectionsLink();
       Task.Factory.StartNew(() =>
@@ -293,7 +271,7 @@ namespace AvitoRuslanParser
         btnParsingAvito.Enabled = false;
         foreach (var item in links)
         {
-          logsForm.AddLog("start next sections");
+          AddLog("start next sections");
           LoadSection(item);
           //    Thread.Sleep(25 * 1000);
         }
@@ -316,10 +294,10 @@ namespace AvitoRuslanParser
       searchApi.PerPage = 100;
       searchApi.Section = sectionItem.Link;
 
-      logsForm.AddLog(sectionItem.CategoryName);
+      AddLog(sectionItem.CategoryName);
 
       var ids = searchApi.SearchLinks();
-      logsForm.AddLog("Count new ad: " + ids.Count().ToString());
+      AddLog("Count new ad: " + ids.Count().ToString());
 
       IList<long> newIds = new List<long>();
       int countCurrentRepeat = 0;
@@ -339,7 +317,7 @@ namespace AvitoRuslanParser
       //       if (newIds.Count == 0) return;
 
       var partsIdsCollection = Helpful.Partition<long>(newIds, 1);
-      logsForm.AddLog("Prepared insert to db");
+      AddLog("Prepared insert to db");
 
       var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
 
@@ -356,10 +334,10 @@ namespace AvitoRuslanParser
           sb.AppendLine("city: " + unit.Location);
           sb.AppendLine("author: " + unit.Seller.UserID);
           sb.AppendLine("ebay section: " + unit.PrimaryCategoryName);
-          logsForm.AddLog(sb.ToString());
+          AddLog(sb.ToString());
         }
 
-        logsForm.AddLog("preparing ad to insert to db");
+        AddLog("preparing ad to insert to db");
         try
         {
           mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
@@ -373,16 +351,16 @@ namespace AvitoRuslanParser
         }
         // if (!isAuction)
         mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
-        logsForm.AddLog("ad inserted" + Environment.NewLine);
+        AddLog("ad inserted" + Environment.NewLine);
 
         if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-        logsForm.AddLog("sleep on. " + sleepSec + " sec");
+        AddLog("sleep on. " + sleepSec + " sec");
         Thread.Sleep(sleepSec * 1000);
-        logsForm.AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
+        AddLog("sleep off" + Environment.NewLine + Environment.NewLine);
       }
 
-      logsForm.AddLog("Inserted to db");
-      logsForm.AddLog("Inserted: " + newIds.Count().ToString());
+      AddLog("Inserted to db");
+      AddLog("Inserted: " + newIds.Count().ToString());
     }
 
     private void LoadSectionEbayAvito(SectionItem sectionItem)
@@ -398,8 +376,6 @@ namespace AvitoRuslanParser
     }
     private void buttonParsingEbay_Click(object sender, EventArgs e)
     {
-      logsForm = new LogsForm();
-      logsForm.Visible = true;
       SetZeroCounters();
       var links = mySqlDB.LoadSectionLinkEbay();
       Task.Factory.StartNew(() =>
@@ -408,23 +384,23 @@ namespace AvitoRuslanParser
 
         if (true)
         {
-          logsForm.AddLog("start update auctions");
+          AddLog("start update auctions");
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
           {            
             var parsedItems = SearchApi.ParseItems(new long[] { item });
-            logsForm.AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
+            AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
             if (parsedItems.Ack == "Success")
             {
               mySqlDB.UpdateAuction(parsedItems);
             }
           }
-          logsForm.AddLog("finish update auctions" + Environment.NewLine);
+          AddLog("finish update auctions" + Environment.NewLine);
         }
 
         foreach (var item in links)
         {
-          logsForm.AddLog("start next sections");
+          AddLog("start next sections");
           LoadSectionEbay(item);
           //    Thread.Sleep(25 * 1000);
         }
@@ -434,8 +410,6 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
-      logsForm = new LogsForm();
-      logsForm.Visible = true;
       SetZeroCounters();
       var links = mySqlDB.LoadSectionsLinkEx();
       Task.Factory.StartNew(() =>
@@ -444,23 +418,23 @@ namespace AvitoRuslanParser
 
         if (true)
         {
-          logsForm.AddLog("start update auctions");
+          AddLog("start update auctions");
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
           {
             var parsedItems = SearchApi.ParseItems(new long[] { item });
-            logsForm.AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
+            AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
             if (parsedItems.Ack == "Success")
             {
               mySqlDB.UpdateAuction(parsedItems);
             }
           }
-          logsForm.AddLog("finish update auctions" + Environment.NewLine);
+          AddLog("finish update auctions" + Environment.NewLine);
         }
         foreach (var item in links)
         {
-          logsForm.AddLog("start next sections");
-          logsForm.AddLog(item.site.ToString());
+          AddLog("start next sections");
+          AddLog(item.site.ToString());
           LoadSectionEbayAvito(item);
           //    Thread.Sleep(25 * 1000);
         }
@@ -473,6 +447,20 @@ namespace AvitoRuslanParser
     {
       frmSettings frm = new frmSettings();
       frm.ShowDialog();
+    }
+
+    private void btnReset_Click(object sender, EventArgs e)
+    {
+      cbCategories.SelectedIndex = -1;
+    }
+
+    private void AddLog(string msg)
+    {
+      rtbLog.AppendText(DateTime.Now.ToShortTimeString() + " | " + msg + Environment.NewLine);
+    }
+    private void AddLogStatistic(string category, int countPrepared, int countInserted)
+    {
+      rtbLogStatistics.AppendText(category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
     }
   }
 }
