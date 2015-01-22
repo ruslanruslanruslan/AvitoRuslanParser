@@ -41,7 +41,7 @@ namespace AvitoRuslanParser
               ResizeAndSave(image, image.Size, "_original", guid);
               ResizeAndSave(image, new Size(295, 190), "_preview", guid);
               ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
-              ResizeAndSave(image, new Size(1, 1), "", guid);
+              //ResizeAndSave(image, new Size(1, 1), "", guid);
             }
             catch(Exception ex)
             {

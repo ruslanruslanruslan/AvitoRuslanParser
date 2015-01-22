@@ -112,16 +112,25 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
 
     private void LoadMoreImages()
     {
+
       var colls = Doc.DocumentNode.SelectNodes("//div[@class='items']/div/a");
+      if (colls == null) colls = Doc.DocumentNode.SelectNodes("//meta[@property='og:image']");
       if (colls != null)
       {
         foreach (var item in colls)
         {
-          string imglink = item.GetAttributeValue("href", "nonde");
+          string imglink = item.GetAttributeValue("content", "nonde");
           if (!string.IsNullOrEmpty(imglink) && !imglink.Equals("none"))
           {
             if (linksImages == null) { linksImages = new List<string>(); }
-            linksImages.Add(http + imglink);
+            if (imglink.StartsWith(http))
+            {
+              linksImages.Add(imglink);
+            }
+            else
+            {
+              linksImages.Add(http + imglink);
+            }
           }
         }
       }

@@ -42,6 +42,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     protected override void LoadImages()
     {
       if (LinksImages != null)
+      {
+        LinksImages = LinksImages.Distinct().ToList();
         foreach (var item in LinksImages)
         {
           string guid = GetidImage();
@@ -52,6 +54,7 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
             mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
           }
         }
+      }
     }
   }
 }
