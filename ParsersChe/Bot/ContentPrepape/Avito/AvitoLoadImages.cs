@@ -56,7 +56,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     {
       LoadSingleImage();
       //if (linksImages == null)
-        LoadMoreImages();
+      LoadMoreImages();
     }
     private void CreateFolderId()
     {

@@ -6,15 +6,15 @@ using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {
-    public class AvitoAutoWheel:AvitoAutoParams
+  public class AvitoAutoWheel : AvitoAutoParams
+  {
+    protected override string GetParams()
     {
-        protected override string GetParams()
-        {
-            partsPage = PartsPage.Wheel;
-            return HelpFulAvitoAutoParamsLoad.GetParamFromParentNodes(Doc, new string[,] {
+      partsPage = PartsPage.Wheel;
+      return HelpFulAvitoAutoParamsLoad.GetParamFromParentNodes(Doc, new string[,] {
            {"левый руль","левый"},
             {"правый руль","правый"}
             });
-        }
     }
+  }
 }

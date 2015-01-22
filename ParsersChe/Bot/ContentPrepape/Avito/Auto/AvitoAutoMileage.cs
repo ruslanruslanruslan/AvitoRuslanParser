@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {
-    public class AvitoAutoMileage:AvitoAutoParams
+  public class AvitoAutoMileage : AvitoAutoParams
+  {
+    protected override string GetParams()
     {
-        protected override string GetParams()
-        {
-            partsPage = PartsPage.Mileage;
-            return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc, "Пробег");
-        }
+      partsPage = PartsPage.Mileage;
+      return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc, "Пробег");
     }
+  }
 }

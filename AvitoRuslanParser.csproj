@@ -73,10 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AvitoLoadImageDeferentSize.cs">
+    <Compile Include="AvitoParser\AvitoLoadImageDeferentSize.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EbayLoadImage.cs" />
+    <Compile Include="EbayParser\EbayLoadImage.cs" />
     <Compile Include="EbayParser\ItemInfo.cs" />
     <Compile Include="EbayParser\SearchApi.cs" />
     <Compile Include="frmSettings.cs">
@@ -133,9 +133,7 @@
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="New_Version\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

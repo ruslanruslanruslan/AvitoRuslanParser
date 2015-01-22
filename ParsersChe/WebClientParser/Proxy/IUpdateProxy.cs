@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ParsersChe.WebClientParser.Proxy
 {
-    public interface IUpdateProxy
-    {
-        void CheckCrahsList();
-        void RemoveProxyToCrahsList();
-    }
+  public interface IUpdateProxy
+  {
+    void CheckCrahsList();
+    void RemoveProxyToCrahsList();
+  }
 }

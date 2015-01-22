@@ -28,29 +28,29 @@ namespace AvitoRuslanParser
 
     public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2)
     {
-        HttpWebRequest req = web.GetHttpWebReq(itemImage);
-        HttpWebResponse resp = web.GetHttpWebResp(req);
-        if (resp != null)
+      HttpWebRequest req = web.GetHttpWebReq(itemImage);
+      HttpWebResponse resp = web.GetHttpWebResp(req);
+      if (resp != null)
+      {
+        Stream imageStream = resp.GetResponseStream();
+        if (imageStream != null)
         {
-          Stream imageStream = resp.GetResponseStream();
-          if (imageStream != null)
+          try
           {
-            try
-            {
-              var image = Image.FromStream(imageStream);
-              ResizeAndSave(image, image.Size, "_original", guid);
-              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
-              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
-              //ResizeAndSave(image, new Size(1, 1), "", guid);
-            }
-            catch(Exception ex)
-            {
-              MessageBox.Show(ex.Message);
-            }
-            return true;
+            var image = Image.FromStream(imageStream);
+            ResizeAndSave(image, image.Size, "_original", guid);
+            ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+            ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+            //ResizeAndSave(image, new Size(1, 1), "", guid);
           }
+          catch (Exception ex)
+          {
+            MessageBox.Show(ex.Message);
+          }
+          return true;
         }
-        return false;
+      }
+      return false;
     }
 
     private void ResizeAndSave(Image image, Size size, string prefix, string guid)

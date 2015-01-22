@@ -9,12 +9,12 @@ using System.Text.RegularExpressions;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {
-    public class AvitoAutoMaker : AvitoAutoParams
+  public class AvitoAutoMaker : AvitoAutoParams
+  {
+    protected override string GetParams()
     {
-        protected override string GetParams()
-        {
-            partsPage = PartsPage.Maker;
-            return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc,"Марка");
-        }
+      partsPage = PartsPage.Maker;
+      return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc, "Марка");
     }
+  }
 }
