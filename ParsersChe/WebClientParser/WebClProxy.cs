@@ -77,11 +77,10 @@ namespace ParsersChe.WebClientParser
                     Log(wex, "GetHttpWebResp");
                     webReq = GetHttpWebReqNewProxy(url);
                 }
-                catch (Exception ex)
+                catch
                 {
                     res = null;
                     countTry--;
-                    int code = 0;
                     webReq = GetHttpWebReqNewProxy(url);
                 }
             if (res != null && (int)res.StatusCode == 302)
@@ -188,10 +187,9 @@ namespace ParsersChe.WebClientParser
                    req2.AllowAutoRedirect = req.AllowAutoRedirect;
                    req = req2;
                 }
-                catch (Exception ex)
+                catch
                 {
                     countTry--;
-                    int code = 0;
                     req = GetHttpWebReqNewProxy(url);
                 }
         }
@@ -255,7 +253,7 @@ namespace ParsersChe.WebClientParser
                     if (webReq != null)
                         response = GetHttpWebResp(webReq);
                 }
-                catch (Exception ex) 
+                catch
                 {
                     countTry--;
                     var webReq = GetHttpWebReqNewProxy(url);

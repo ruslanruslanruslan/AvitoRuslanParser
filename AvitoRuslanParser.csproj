@@ -92,6 +92,7 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageLoader.cs" />
     <Compile Include="MySqlDB.cs">
       <SubType>Code</SubType>
     </Compile>

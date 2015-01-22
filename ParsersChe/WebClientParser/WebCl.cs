@@ -48,11 +48,10 @@ namespace ParsersChe.WebClientParser
                     }
                     Log(wex, "GetHttpWebResp");
                 }
-                catch (Exception ex)
+                catch
                 {
                     res = null;
                     countTry--;
-                    int code = 0;
                     webReq = GetHttpWebReq(url);
                 }
             if (res != null && (int)res.StatusCode == 302)
@@ -111,7 +110,7 @@ namespace ParsersChe.WebClientParser
                     result = true;
                     repeat = false;
                 }
-                catch (WebException exWeb)
+                catch
                 {
 
                 }

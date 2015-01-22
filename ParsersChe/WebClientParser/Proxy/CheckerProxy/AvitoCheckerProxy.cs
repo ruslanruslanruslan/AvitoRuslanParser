@@ -24,7 +24,7 @@ namespace ParsersChe.WebClientParser.Proxy.CheckerProxy
                     result = false;
                 }
             }
-            catch (WebException wex)
+            catch
             {
                 result = false;
             }
