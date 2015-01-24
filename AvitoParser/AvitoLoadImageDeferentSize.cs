@@ -13,7 +13,7 @@ using MySql.Data.MySqlClient;
 using AvitoRuslanParser;
 
 
-namespace ParsersChe.Bot.ContentPrepape.Avito
+namespace AvitoRuslanParser.AvitoParser
 {
 
   public class AvitoLoadImageDeferentSize : AvitoLoadImages

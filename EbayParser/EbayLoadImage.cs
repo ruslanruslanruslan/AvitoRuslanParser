@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AvitoRuslanParser;
 
-namespace AvitoRuslanParser
+namespace AvitoRuslanParser.EbayParser
 {
   class EbayLoadImage
   {

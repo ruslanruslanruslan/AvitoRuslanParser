@@ -145,7 +145,7 @@
       this.buttonParsingEbay.Name = "buttonParsingEbay";
       this.buttonParsingEbay.Size = new System.Drawing.Size(184, 23);
       this.buttonParsingEbay.TabIndex = 18;
-      this.buttonParsingEbay.Text = "Start Parsing  Ebay";
+      this.buttonParsingEbay.Text = "Start Parsing Ebay";
       this.buttonParsingEbay.UseVisualStyleBackColor = true;
       this.buttonParsingEbay.Click += new System.EventHandler(this.buttonParsingEbay_Click);
       // 

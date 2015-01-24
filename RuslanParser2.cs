@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AvitoRuslanParser.AvitoParser;
 
 namespace AvitoRuslanParser
 {
@@ -23,21 +24,6 @@ namespace AvitoRuslanParser
       get { return pathImages2; }
       set { pathImages2 = value; }
     }
-    //private Func<string> loadGuid = (() => MySqlDB.ResourceID());
-    //private Func<string> loadGuid2 = (() => MySqlDB.ResourceListID());
-
-    //public Func<string> LoadGuid
-    //{
-    //    get { return loadGuid; }
-    //    set { loadGuid = value; }
-    //}
-
-    //public Func<string> LoadGuid2
-    //{
-    //    get { return loadGuid2; }
-    //    set { loadGuid2 = value; }
-    //}
-
 
     public RuslanParser2(string user, string pass, string pathToProxy, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
     {
@@ -57,8 +43,6 @@ namespace AvitoRuslanParser
               (url, new List<IPrepareContent> {
                     new AvitoLoadImageDeferentSize(webCl,pathImages2, mySqlDB, ftpUsername, ftpPassword)
                     { 
-                        //GetidImage=loadGuid,
-                        //GetidImageList=loadGuid2
                     }
                            }, webCl
               );
