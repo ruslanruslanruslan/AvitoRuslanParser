@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
 {
-    public class AvitoSite:WebClientBot,IPrepareContent
+  public class AvitoSite : WebClientBot, IPrepareContent
+  {
+    private static readonly string siteName = "www.avito.ru";
+    public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
-        private static readonly string siteName="www.avito.ru";
-        public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
-        {
-            return new KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>>(PartsPage.Site, new List<string> { siteName });
-        }
+      return new KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>>(PartsPage.Site, new List<string> { siteName });
     }
+  }
 }

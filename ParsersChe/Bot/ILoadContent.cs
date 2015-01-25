@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage
 {
-    public interface ILoadContent
-    {
-        void LoadPage(string url);
-    }
+  public interface ILoadContent
+  {
+    void LoadPage(string url);
+  }
 }

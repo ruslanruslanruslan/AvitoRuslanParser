@@ -387,7 +387,7 @@ namespace AvitoRuslanParser
           AddLog("start update auctions");
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
-          {            
+          {
             var parsedItems = SearchApi.ParseItems(new long[] { item });
             AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack);
             if (parsedItems.Ack == "Success")

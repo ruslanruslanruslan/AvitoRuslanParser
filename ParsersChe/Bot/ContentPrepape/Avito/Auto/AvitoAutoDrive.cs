@@ -6,16 +6,16 @@ using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {
-    public class AvitoAutoDrive : AvitoAutoParams
+  public class AvitoAutoDrive : AvitoAutoParams
+  {
+    protected override string GetParams()
     {
-        protected override string GetParams()
-        {
-            partsPage = PartsPage.Drive;
-            return HelpFulAvitoAutoParamsLoad.GetParamFromParentNodes(Doc, new string[,]{ 
+      partsPage = PartsPage.Drive;
+      return HelpFulAvitoAutoParamsLoad.GetParamFromParentNodes(Doc, new string[,]{ 
              {"задний привод","задний"},
              {"передний привод","передний"},
              {"полный привод","полный"}
           });
-        }
     }
+  }
 }

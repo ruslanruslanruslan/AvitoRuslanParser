@@ -1,80 +1,59 @@
-﻿using ParsersChe.WebClientParser;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AvitoRuslanParser;
+using ParsersChe.WebClientParser;
 
 namespace AvitoRuslanParser
 {
-  class EbayLoadImage
+  class ImageLoader
   {
-    //public Func<string> GetidImage = (() => MySqlDB2.ResourceID());
-    //public Func<string> GetidImageList = (() => MySqlDB2.ResourceListID());
-
-    private IHttpWeb web;
     private string PathToFolder;
-    private MySqlDB mySqlDB;
     private string ftpUsername;
     private string ftpPassword;
 
-    public EbayLoadImage(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
+    public ImageLoader(string _PathToFolder, string _ftpUsername, string _ftpPasword)
     {
-      PathToFolder = pathFolder;
-      web = httpweb;
-      mySqlDB = _mySqlDB;
+      PathToFolder = _PathToFolder;
       ftpUsername = _ftpUsername;
-      ftpPassword = _ftpPassword;
+      ftpPassword = _ftpPasword;
     }
 
-
-    public void LoadImages(IEnumerable<string> LinksImages)
+    public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2)
     {
-      // IList
-      if (LinksImages != null)
-        foreach (var item in LinksImages)
+      HttpWebRequest req = web.GetHttpWebReq(itemImage);
+      HttpWebResponse resp = web.GetHttpWebResp(req);
+      if (resp != null)
+      {
+        Stream imageStream = resp.GetResponseStream();
+        if (imageStream != null)
         {
-          HttpWebRequest req = web.GetHttpWebReq(item);
-          HttpWebResponse resp = web.GetHttpWebResp(req);
-          if (resp != null)
+          try
           {
-            //  if (ResultDown == null) { ResultDown = new List<string>(); }
-            var wcpr = web;
-
-            Stream imageStream = resp.GetResponseStream();
-            if (imageStream != null)
-            {
-              string guid = mySqlDB.ResourceID();
-              string guid2 = mySqlDB.ResourceListIDEbay();
-              mySqlDB.InsertItemResource(guid, frmMain.URLLink);
-              mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
-
-              try
-              {
-                var image = Image.FromStream(imageStream);
-                ResizeAndSave(image, image.Size, "_original", guid);
-                ResizeAndSave(image, new Size(295, 190), "_preview", guid);
-                ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
-              }
-              catch (Exception ex)
-              {
-                MessageBox.Show(ex.Message);
-              }
-              //   ReseizeSave(image, new Size(1, 1), "", guid);
-            }
+            var image = Image.FromStream(imageStream);
+            ResizeAndSave(image, image.Size, "_original", guid);
+            ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+            ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+            //ResizeAndSave(image, new Size(1, 1), "", guid);
           }
+          catch (Exception ex)
+          {
+            MessageBox.Show(ex.Message);
+          }
+          return true;
         }
+      }
+      return false;
     }
 
-
-    public void ResizeAndSave(Image image, Size size, string prefix, string guid)
+    private void ResizeAndSave(Image image, Size size, string prefix, string guid)
     {
       var litleImage = ResizeImage(image, size);
       string path;
@@ -123,7 +102,7 @@ namespace AvitoRuslanParser
       }
     }
 
-    protected static Image ResizeImage(Image image, Size size, bool preserveAspectRatio = true)
+    protected Image ResizeImage(Image image, Size size, bool preserveAspectRatio = true)
     {
       int newWidth;
       int newHeight;
@@ -166,10 +145,10 @@ namespace AvitoRuslanParser
         graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphicsHandle.DrawImage(newImage, new Rectangle(xMove, yMove, newWidth, newHeight), 0, 0, newWidth - minW * 2, newHeight - minH, GraphicsUnit.Pixel);
       }
-
       return newImage2;
     }
-    private static Bitmap DrawFilledRectangle(int x, int y)
+
+    private Bitmap DrawFilledRectangle(int x, int y)
     {
       Bitmap bmp = new Bitmap(x, y);
       using (Graphics graph = Graphics.FromImage(bmp))
@@ -179,5 +158,6 @@ namespace AvitoRuslanParser
       }
       return bmp;
     }
+
   }
 }

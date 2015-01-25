@@ -9,22 +9,22 @@ using AvitoRuslanParser;
 
 namespace AvitoRuslanParser
 {
-    class Program
+  class Program
+  {
+    /// <summary>
+    /// Главная точка входа для приложения.
+    /// </summary>
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-         //   SearchApi.ParseItems(new long[] { 201117381586, 191228445949, 141318265370 });
-           // Logger logger = LogManager.GetCurrentClassLogger();
-           // logger.Info("hello");
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
-        }
-
-        
+      //   SearchApi.ParseItems(new long[] { 201117381586, 191228445949, 141318265370 });
+      // Logger logger = LogManager.GetCurrentClassLogger();
+      // logger.Info("hello");
+      Application.EnableVisualStyles();
+      Application.SetCompatibleTextRenderingDefault(false);
+      Application.Run(new frmMain());
     }
+
+
+  }
 }

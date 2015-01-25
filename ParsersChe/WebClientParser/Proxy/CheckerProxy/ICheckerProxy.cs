@@ -6,8 +6,8 @@ using System.Text;
 
 namespace ParsersChe.WebClientParser.Proxy.CheckerProxy
 {
-    interface ICheckerProxy
-    {
-        bool IsWorkProxy(IWebProxy proxy);
-    }
+  interface ICheckerProxy
+  {
+    bool IsWorkProxy(IWebProxy proxy);
+  }
 }

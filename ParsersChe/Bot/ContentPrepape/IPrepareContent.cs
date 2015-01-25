@@ -7,8 +7,8 @@ using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
 {
-    public interface IPrepareContent
-    {
-        KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlDocument doc);
-    }
+  public interface IPrepareContent
+  {
+    KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlDocument doc);
+  }
 }

@@ -24,8 +24,6 @@ namespace AvitoRuslanParser
 
     public RuslanParser(string user, string pass, string pathToProxy, MySqlDB _mySqlDB)
     {
-      // ProxyCollectionSingl.ProxyPass = pass;
-      //ProxyCollectionSingl.ProxyUser = user;
       ProxyCollectionSingl.ProxyPass = pathToProxy;
       mySqlDB = _mySqlDB;
     }

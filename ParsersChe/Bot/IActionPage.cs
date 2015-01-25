@@ -6,10 +6,9 @@ using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage
 {
-    public interface IActionPage
-    {
-        void RunActions();
-        Dictionary<PartsPage, IEnumerable<string>> ResultsParsing { get; set; }
-
-    }
+  public interface IActionPage
+  {
+    void RunActions();
+    Dictionary<PartsPage, IEnumerable<string>> ResultsParsing { get; set; }
+  }
 }

@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {
-    public class AvitoAutoBodyType:AvitoAutoParams
+  public class AvitoAutoBodyType : AvitoAutoParams
+  {
+    protected override string GetParams()
     {
-        protected override string GetParams()
-        {
-            partsPage = PartsPage.AutoBodyType;
-            return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc, "Тип кузова");
-        }
+      partsPage = PartsPage.AutoBodyType;
+      return HelpFulAvitoAutoParamsLoad.GetParamFromNodes(Doc, "Тип кузова");
     }
+  }
 }
