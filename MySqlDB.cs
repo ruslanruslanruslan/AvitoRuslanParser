@@ -116,8 +116,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
-
+        throw ex;
       }
       return resultStr;
     }
@@ -142,8 +141,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
-
+        throw ex;
       }
       finally
       {
@@ -188,7 +186,7 @@ namespace AvitoRuslanParser
       }
       catch (MySqlException ex)
       {
-        Console.WriteLine("Error: \r\n{0}", ex.ToString());
+        throw ex;
       }
       finally
       {
@@ -208,7 +206,6 @@ namespace AvitoRuslanParser
       bool resultValue = true;
       try
       {
-
         MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
         cmd.Connection = mySqlConnection;
         cmd.CommandText = sql;
@@ -231,8 +228,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
-
+        throw ex;
       }
       return resultValue;
     }
@@ -253,8 +249,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
-
+        throw ex;
       }
       return resultStr;
     }
@@ -265,8 +260,6 @@ namespace AvitoRuslanParser
       string resultStr = string.Empty;
       try
       {
-
-        //select ifnull(AUTO_INCREMENT,0) FROM information_schema.tables WHERE table_name = 'oc_t_item'"
         MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
         object result = cmd.ExecuteScalar();
         if (result != null)
@@ -277,15 +270,13 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
-
+        throw ex;
       }
       return resultStr;
     }
     public string ExecuteProcAvito(string id)
     {
       //тело запроса!!!!!!!!!!
-      //const string sql = "call ribr_test();";
       const string sql = "call sp_map_grabber_avito(@id)";
       string resultStr = string.Empty;
       try
@@ -301,8 +292,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show("!" + ex.Message);
-
+        throw ex;
       }
       return resultStr;
     }
@@ -348,7 +338,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message);
+          throw ex;
         }
       }
     }
@@ -368,11 +358,10 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@resourceid", resourceid);
 
           int result = cmd.ExecuteNonQuery();
-
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message);
+          throw ex;
         }
       }
     }
@@ -394,14 +383,12 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@index1", index1);
           cmd.Parameters.AddWithValue("@index2", index2);
           int result = cmd.ExecuteNonQuery();
-
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.Message);
+          throw ex;
         }
       }
-
     }
     public void DeleteUnTransformated()
     {
@@ -421,15 +408,22 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
+        throw ex;
       }
     }
     // From MySqlDB2
     public IList<SectionItem> LoadSectionLinkEbay()
     {
-      var allLinks = LoadSectionsLinkEx();
-      var newlist = allLinks.Where(x => x.site == SectionItem.Site.Ebay);
-      return newlist.ToList();
+      try
+      {
+        var allLinks = LoadSectionsLinkEx();
+        var newlist = allLinks.Where(x => x.site == SectionItem.Site.Ebay);
+        return newlist.ToList();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
     }
     /// <summary>
     /// Returns searching categories for both sites Avito and Ebay
@@ -465,7 +459,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
+        throw ex;
       }
       finally
       {
@@ -495,8 +489,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
-
+        throw ex;
       }
       finally
       {
@@ -532,7 +525,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
+        throw ex;
       }
     }
     public bool IsNewAdAvito(int id)
@@ -565,8 +558,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
-
+        throw ex;
       }
       return resultValue;
     }
@@ -600,8 +592,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
-
+        throw ex;
       }
       return resultValue;
     }
@@ -612,8 +603,6 @@ namespace AvitoRuslanParser
       string resultStr = string.Empty;
       try
       {
-        // string sql = "select ifnull(v,0)+1 from (select max(pk_i_id) v from "+namedb+".oc_t_item) t";
-        //select ifnull(AUTO_INCREMENT,0) FROM information_schema.tables WHERE table_name = 'oc_t_item'"
         MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
         object result = cmd.ExecuteScalar();
         if (result != null)
@@ -624,14 +613,13 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.ToString());
+        throw ex;
       }
       return resultStr;
     }
     public string ExecuteProcEBay(string id)
     {
       //тело запроса!!!!!!!!!!
-      //const string sql = "call ribr_test2(null);";
       const string sql = "call sp_map_grabber_ebay(@id)";
       string resultStr = string.Empty;
       try
@@ -647,7 +635,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        MessageBox.Show("!" + ex.ToString());
+        throw ex;
       }
       return resultStr;
     }
@@ -663,11 +651,10 @@ namespace AvitoRuslanParser
             InsertEbay(item, section);
             //     ExecuteProcEbay(conn);
           }
-
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.ToString());
+          throw ex;
         }
       }
     }
@@ -681,7 +668,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.ToString());
+          throw ex;
         }
       }
     }
@@ -689,44 +676,51 @@ namespace AvitoRuslanParser
     {
       const string sql = @" insert into fct_grabber_ebay (id_resource_list, ebay_id,url, title, author, price, city,country, ebay_section, user_section, description,curr_code,is_auction,bid,transformated)
                                     Values(@index,@idEbay,@url,@title,@seller,@price,@city,@country,@subcategory,@section,@desc,@currency,@is_auction,@bid,@transformated)";
-      string index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
-      int trans = 0;
-      bool is_auction = item.MinimumToBid != null;
-      if (is_auction) trans = 4;
-      MySqlCommand cmd = new MySqlCommand();
-      cmd.Connection = mySqlConnection;
-      cmd.CommandText = sql;
-      cmd.Prepare();
-      //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-      // и тд
-
-      decimal? price = null;
-      decimal? bid = null;
-      if (is_auction)
+      try
       {
-        bid = item.CurrentPrice.Value;
+        string index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
+        int trans = 0;
+        bool is_auction = item.MinimumToBid != null;
+        if (is_auction) trans = 4;
+        MySqlCommand cmd = new MySqlCommand();
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+        //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
+        // и тд
+
+        decimal? price = null;
+        decimal? bid = null;
+        if (is_auction)
+        {
+          bid = item.CurrentPrice.Value;
+        }
+        else { price = item.CurrentPrice.Value; }
+
+        cmd.Parameters.AddWithValue("@index", index);
+        cmd.Parameters.AddWithValue("@idEbay", item.ItemID);
+        cmd.Parameters.AddWithValue("@url", item.ViewItemURLForNaturalSearch);
+        cmd.Parameters.AddWithValue("@title", item.Title);
+        cmd.Parameters.AddWithValue("@seller", item.Seller.UserID);
+        cmd.Parameters.AddWithValue("@price", price);
+        cmd.Parameters.AddWithValue("@city", item.Location);
+        cmd.Parameters.AddWithValue("@country", item.Country);
+
+        cmd.Parameters.AddWithValue("@subcategory", item.PrimaryCategoryName);
+        cmd.Parameters.AddWithValue("@section", section);
+        cmd.Parameters.AddWithValue("@desc", item.Description);
+        cmd.Parameters.AddWithValue("@currency", item.CurrentPrice.currencyID);
+        cmd.Parameters.AddWithValue("@is_auction", is_auction);
+        cmd.Parameters.AddWithValue("@transformated", trans);
+        cmd.Parameters.AddWithValue("@bid", bid);
+
+        int result = cmd.ExecuteNonQuery();
+        return is_auction;
       }
-      else { price = item.CurrentPrice.Value; }
-
-      cmd.Parameters.AddWithValue("@index", index);
-      cmd.Parameters.AddWithValue("@idEbay", item.ItemID);
-      cmd.Parameters.AddWithValue("@url", item.ViewItemURLForNaturalSearch);
-      cmd.Parameters.AddWithValue("@title", item.Title);
-      cmd.Parameters.AddWithValue("@seller", item.Seller.UserID);
-      cmd.Parameters.AddWithValue("@price", price);
-      cmd.Parameters.AddWithValue("@city", item.Location);
-      cmd.Parameters.AddWithValue("@country", item.Country);
-
-      cmd.Parameters.AddWithValue("@subcategory", item.PrimaryCategoryName);
-      cmd.Parameters.AddWithValue("@section", section);
-      cmd.Parameters.AddWithValue("@desc", item.Description);
-      cmd.Parameters.AddWithValue("@currency", item.CurrentPrice.currencyID);
-      cmd.Parameters.AddWithValue("@is_auction", is_auction);
-      cmd.Parameters.AddWithValue("@transformated", trans);
-      cmd.Parameters.AddWithValue("@bid", bid);
-
-      int result = cmd.ExecuteNonQuery();
-      return is_auction;
+      catch (Exception ex)
+      {
+        throw ex;
+      }
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)
     {
@@ -746,11 +740,10 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@index1", index1);
           cmd.Parameters.AddWithValue("@index2", index2);
           int result = cmd.ExecuteNonQuery();
-
         }
         catch (Exception ex)
         {
-          MessageBox.Show(ex.ToString());
+          throw ex;
         }
       }
     }
