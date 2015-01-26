@@ -415,7 +415,19 @@ namespace AvitoRuslanParser
                   }
                   else
                   {
-                    AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Error());
+                    string err = String.Empty;
+                    if (parsedItems.Errors != null)
+                    {
+                      if (parsedItems.Errors.LongMessage.Length > 0)
+                      {
+                        err = parsedItems.Errors.LongMessage;
+                      }
+                      else
+                      {
+                        err = parsedItems.Errors.ShortMessage;
+                      }
+                    }
+                    AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
                   }
                 }
                 catch (Exception ex)
@@ -479,7 +491,19 @@ namespace AvitoRuslanParser
                   }
                   else
                   {
-                    AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Error());
+                    string err = String.Empty;
+                    if (parsedItems.Errors != null)
+                    {
+                      if (parsedItems.Errors.LongMessage.Length > 0)
+                      {
+                        err = parsedItems.Errors.LongMessage;
+                      }
+                      else
+                      {
+                        err = parsedItems.Errors.ShortMessage;
+                      }
+                    }
+                    AddLog("update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
                   }
                 }
                 catch (Exception ex)
