@@ -48,10 +48,17 @@ namespace AvitoRuslanParser.AvitoParser
         {
           string guid = GetidImage();
           string guid2 = GetidImageList();
-          if (imageLoader.LoadImage(item, WebCl, guid, guid2))
+          try
           {
-            mySqlDB.InsertItemResource(guid, frmMain.URLLink);
-            mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
+            if (imageLoader.LoadImage(item, WebCl, guid, guid2))
+            {
+              mySqlDB.InsertItemResource(guid, frmMain.URLLink);
+              mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
+            }
+          }
+          catch (Exception ex)
+          {
+            throw ex;
           }
         }
       }
