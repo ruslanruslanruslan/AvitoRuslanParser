@@ -105,7 +105,7 @@ namespace ParsersChe.WebClientParser
           {
             content = sr.ReadToEnd();
             webResp.Close();
-            if (content.Equals("обновите страницу, пожалуйста")) throw new WebException("Proxy no Russian");
+            if (content.Equals("обновите страницу, пожалуйста")) throw new WebException("ParsersChe error: Proxy no Russian");
             repeat = false;
           }
         }

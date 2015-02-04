@@ -89,7 +89,7 @@ namespace AvitoRuslanParser
           }
           catch (Exception ex)
           {
-            throw new Exception("Невозможно соединиться с сервером базы данных", ex);
+            throw new Exception("MySql error: Невозможно соединиться с сервером базы данных" + ex.Message, ex);
           }
         }
         return m_mySqlConnection;
@@ -116,7 +116,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception ("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -141,7 +141,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception ("MySql error: " + ex.Message, ex);
       }
       finally
       {
@@ -186,7 +186,7 @@ namespace AvitoRuslanParser
       }
       catch (MySqlException ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       finally
       {
@@ -228,7 +228,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultValue;
     }
@@ -249,7 +249,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception ("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -270,7 +270,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -292,7 +292,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -338,7 +338,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }
@@ -361,7 +361,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }
@@ -386,7 +386,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }
@@ -408,7 +408,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
     }
     // From MySqlDB2
@@ -422,7 +422,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
     }
     /// <summary>
@@ -459,7 +459,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       finally
       {
@@ -489,7 +489,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       finally
       {
@@ -525,7 +525,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
     }
     public bool IsNewAdAvito(int id)
@@ -558,7 +558,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultValue;
     }
@@ -592,7 +592,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultValue;
     }
@@ -613,7 +613,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -635,7 +635,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -654,7 +654,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }
@@ -668,7 +668,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }
@@ -719,7 +719,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw new Exception("MySql error: " + ex.Message, ex);
       }
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)
@@ -743,7 +743,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new Exception("MySql error: " + ex.Message, ex);
         }
       }
     }

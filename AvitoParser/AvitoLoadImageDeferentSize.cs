@@ -58,7 +58,7 @@ namespace AvitoRuslanParser.AvitoParser
           }
           catch (Exception ex)
           {
-            throw ex;
+            throw new Exception("LoadImage error: " + ex.Message, ex);
           }
         }
       }

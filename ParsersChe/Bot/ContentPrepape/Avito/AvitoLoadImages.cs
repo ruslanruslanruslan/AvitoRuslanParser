@@ -36,7 +36,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
         bool isEsist = Directory.Exists(pathFolder);
         {
           if (!isEsist)
-            throw new FileNotFoundException("Path no exists");
+            throw new FileNotFoundException("LoadImage error: Path no exists '" + pathFolder + "'");
         }
       }
     }
