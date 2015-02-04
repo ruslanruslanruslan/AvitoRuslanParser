@@ -226,6 +226,7 @@
       this.rtbLog.Size = new System.Drawing.Size(921, 120);
       this.rtbLog.TabIndex = 0;
       this.rtbLog.Text = "";
+      this.rtbLog.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbLog_LinkClicked);
       // 
       // splitter1
       // 

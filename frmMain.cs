@@ -569,5 +569,10 @@ namespace AvitoRuslanParser
       rtbLogStatistics.SelectionStart = rtbLogStatistics.Text.Length;
       rtbLogStatistics.ScrollToCaret();
     }
+
+    private void rtbLog_LinkClicked(object sender, LinkClickedEventArgs e)
+    {
+      System.Diagnostics.Process.Start(e.LinkText);
+    }
   }
 }

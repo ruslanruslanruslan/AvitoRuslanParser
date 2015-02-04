@@ -47,6 +47,8 @@
       this.label7 = new System.Windows.Forms.Label();
       this.label6 = new System.Windows.Forms.Label();
       this.tabFTP = new System.Windows.Forms.TabPage();
+      this.edtFtpFolder = new System.Windows.Forms.TextBox();
+      this.label13 = new System.Windows.Forms.Label();
       this.edtFtpPassword = new System.Windows.Forms.TextBox();
       this.edtFtpUsername = new System.Windows.Forms.TextBox();
       this.label12 = new System.Windows.Forms.Label();
@@ -64,8 +66,7 @@
       this.btnSave = new System.Windows.Forms.Button();
       this.dlgBrowser = new System.Windows.Forms.FolderBrowserDialog();
       this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-      this.label13 = new System.Windows.Forms.Label();
-      this.edtFtpFolder = new System.Windows.Forms.TextBox();
+      this.label14 = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabMain.SuspendLayout();
       this.tabMySql.SuspendLayout();
@@ -151,6 +152,7 @@
       // 
       // tabMySql
       // 
+      this.tabMySql.Controls.Add(this.label14);
       this.tabMySql.Controls.Add(this.edtMySqlServerPassword);
       this.tabMySql.Controls.Add(this.edtMySqlServerUsername);
       this.tabMySql.Controls.Add(this.edtMySqlServerDatabase);
@@ -275,6 +277,24 @@
       this.tabFTP.TabIndex = 2;
       this.tabFTP.Text = "FTP";
       this.tabFTP.UseVisualStyleBackColor = true;
+      // 
+      // edtFtpFolder
+      // 
+      this.edtFtpFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edtFtpFolder.Location = new System.Drawing.Point(69, 13);
+      this.edtFtpFolder.Name = "edtFtpFolder";
+      this.edtFtpFolder.Size = new System.Drawing.Size(475, 20);
+      this.edtFtpFolder.TabIndex = 5;
+      // 
+      // label13
+      // 
+      this.label13.AutoSize = true;
+      this.label13.Location = new System.Drawing.Point(8, 16);
+      this.label13.Name = "label13";
+      this.label13.Size = new System.Drawing.Size(56, 13);
+      this.label13.TabIndex = 4;
+      this.label13.Text = "FTP folder";
       // 
       // edtFtpPassword
       // 
@@ -424,23 +444,17 @@
       this.btnSave.UseVisualStyleBackColor = true;
       this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
       // 
-      // label13
+      // label14
       // 
-      this.label13.AutoSize = true;
-      this.label13.Location = new System.Drawing.Point(8, 16);
-      this.label13.Name = "label13";
-      this.label13.Size = new System.Drawing.Size(56, 13);
-      this.label13.TabIndex = 4;
-      this.label13.Text = "FTP folder";
-      // 
-      // edtFtpFolder
-      // 
-      this.edtFtpFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtFtpFolder.Location = new System.Drawing.Point(69, 13);
-      this.edtFtpFolder.Name = "edtFtpFolder";
-      this.edtFtpFolder.Size = new System.Drawing.Size(475, 20);
-      this.edtFtpFolder.TabIndex = 5;
+      this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      this.label14.Location = new System.Drawing.Point(8, 175);
+      this.label14.Name = "label14";
+      this.label14.Size = new System.Drawing.Size(541, 23);
+      this.label14.TabIndex = 10;
+      this.label14.Text = "Need program restart to apply database changes";
+      this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // frmSettings
       // 
@@ -508,5 +522,6 @@
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.TextBox edtFtpFolder;
     private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.Label label14;
   }
 }

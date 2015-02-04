@@ -211,7 +211,6 @@ namespace AvitoRuslanParser.EbayParser
 
     private ulong valueField;
 
-    //[System.Xml.Serialization.XmlElementAttribute("ParamID")]
     public ulong ParamID
     {
       get
