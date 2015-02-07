@@ -163,7 +163,7 @@ namespace AvitoRuslanParser
     public string ResourceID()
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "call sp_get_NextResourceId();";//"SELECT ifnull(max(pk_i_id),0)+1 FROM oc_t_item_resource;";
+      const string sql = "call sp_get_NextResourceId();";
       string resultStr = string.Empty;
       try
       {
