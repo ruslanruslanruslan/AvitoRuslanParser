@@ -98,33 +98,10 @@ namespace AvitoRuslanParser
 
     public int CountAd { get; set; }
 
-    //Метод получения ID картинки префикс!!!!!!!!!
-    public string ItemID()
-    {
-      //тело запроса!!!!!!!!!!
-      const string sql = "SELECT ifnull(max(pk_i_id),0)+1 FROM oc_t_item;";
-      string resultStr = string.Empty;
-      try
-      {
-        MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
-        object result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          int r = Convert.ToInt32(result);
-          resultStr = r.ToString();
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception ("MySql error: " + ex.Message, ex);
-      }
-      return resultStr;
-    }
-
     public IList<string[]> LoadSectionsLink()
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "SELECT search_url, category_name FROM fct_categories_search where search_url is not null";
+      const string sql = "call sp_get_SearchUrlsList();";
       IList<string[]> links = new List<string[]>();
       string resultStr = string.Empty;
       MySqlDataReader reader = null;
@@ -155,22 +132,7 @@ namespace AvitoRuslanParser
     public IList<string> GetCategories()
     {
       MySqlCommand command = new MySqlCommand(); ;
-      const string commandString = @"select concat(d1.s_name, "" | "", coalesce(d2.s_name,""-""), "" | "", coalesce(d3.s_name,""-""), "" | "", coalesce(d4.s_name,""-"")) s_name,
-                                         coalesce(c4.pk_i_id, c3.pk_i_id, c2.pk_i_id, c1.pk_i_id) id
-                                  from oc_t_category c1
-                                  left join oc_t_category c2 on c1.pk_i_id=c2.fk_i_parent_id
-                                  left join oc_t_category c3 on c2.pk_i_id=c3.fk_i_parent_id
-                                  left join oc_t_category c4 on c3.pk_i_id=c4.fk_i_parent_id
-                                  left join oc_t_category_description d1 on c1.pk_i_id=d1.fk_i_category_id
-                                  left join oc_t_category_description d2 on c2.pk_i_id=d2.fk_i_category_id
-                                  left join oc_t_category_description d3 on c3.pk_i_id=d3.fk_i_category_id
-                                  left join oc_t_category_description d4 on c4.pk_i_id=d4.fk_i_category_id
-                                  where d1.fk_c_locale_code = ""ru_RU"" 
-                                        and (d2.fk_c_locale_code = ""ru_RU"" or d2.fk_c_locale_code is null)
-                                        and (d3.fk_c_locale_code = ""ru_RU"" or d3.fk_c_locale_code is null)
-                                        and (d4.fk_c_locale_code = ""ru_RU"" or d4.fk_c_locale_code is null)
-                                        and c1.fk_i_parent_id is null
-                                  order by d1.s_name, d2.s_name, d3.s_name, d4.s_name;";
+      const string commandString = "call sp_get_CategoriesList();";
       command.CommandText = commandString;
       command.Connection = mySqlConnection;
       MySqlDataReader reader = null;
@@ -198,44 +160,10 @@ namespace AvitoRuslanParser
       return results;
     }
 
-    public bool IsNewAd(int id)
-    {
-      //тело запроса!!!!!!!!!!
-      const string sql = "SELECT count(*) FROM fct_grabber_avito where avito_id=@Id";
-      CountAd++;
-      bool resultValue = true;
-      try
-      {
-        MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-
-        cmd.Parameters.AddWithValue("@Id", id);
-        object result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          int r = Convert.ToInt32(result);
-          if (r > 0)
-          {
-            resultValue = false;
-          }
-          else
-          {
-            resultValue = true;
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: " + ex.Message, ex);
-      }
-      return resultValue;
-    }
     public string ResourceID()
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "SELECT ifnull(max(pk_i_id),0)+1 FROM oc_t_item_resource;";
+      const string sql = "call sp_get_NextResourceId();";//"SELECT ifnull(max(pk_i_id),0)+1 FROM oc_t_item_resource;";
       string resultStr = string.Empty;
       try
       {
@@ -256,7 +184,7 @@ namespace AvitoRuslanParser
     public string ResourceListIDAvito()
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "select max(ifnull(v,0))+1 from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_avito where transformated <> 0) t";
+      const string sql = "call sp_get_avito_NextItemId();";
       string resultStr = string.Empty;
       try
       {
@@ -473,7 +401,7 @@ namespace AvitoRuslanParser
     public IList<long> LoadAuctionLink()
     {
       //тело запроса!!!!!!!!!!//set order by ordering
-      const string sql = "SELECT ebay_id FROM fct_grabber_ebay where is_auction=1 and price is null";
+      const string sql = "call sp_get_ebay_AuctionsListForCheck();";
       IList<long> links = new List<long>();
       string resultStr = string.Empty;
       MySqlDataReader reader = null;
@@ -531,7 +459,7 @@ namespace AvitoRuslanParser
     public bool IsNewAdAvito(int id)
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "SELECT count(*) FROM fct_grabber_avito where avito_id=@Id";
+      const string sql = "call sp_check_avito_IsNewAd(@Id);";
       CountAd++;
       bool resultValue = true;
       try
@@ -546,7 +474,7 @@ namespace AvitoRuslanParser
         if (result != null)
         {
           int r = Convert.ToInt32(result);
-          if (r > 0)
+          if (r == 0)
           {
             resultValue = false;
           }
@@ -565,7 +493,7 @@ namespace AvitoRuslanParser
     public bool IsNewAdEbay(long id)
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "SELECT count(*) FROM fct_grabber_ebay where ebay_id=@Id";
+      const string sql = "call sp_check_ebay_IsNewAd(@Id);";
       CountAd++;
       bool resultValue = true;
       try
@@ -580,7 +508,7 @@ namespace AvitoRuslanParser
         if (result != null)
         {
           int r = Convert.ToInt32(result);
-          if (r > 0)
+          if (r == 0)
           {
             resultValue = false;
           }

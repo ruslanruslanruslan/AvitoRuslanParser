@@ -35,7 +35,7 @@ namespace AvitoRuslanParser
       mySqlDB.CountAd = 0;
       ParserPage parser = new SimpleParserPage
         (url, new List<IPrepareContent> {
-                    new AvitoLoadLinksBeforeRepeat(webCl,8,x=>mySqlDB.IsNewAd(x))
+                    new AvitoLoadLinksBeforeRepeat(webCl,8,x=>mySqlDB.IsNewAdAvito(x))
                            }, webCl
         );
       parser.RunActions();
