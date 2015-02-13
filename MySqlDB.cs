@@ -89,7 +89,7 @@ namespace AvitoRuslanParser
           }
           catch (Exception ex)
           {
-            throw new Exception("MySql error: Невозможно соединиться с сервером базы данных" + ex.Message, ex);
+            throw new Exception("MySql error: Невозможно соединиться с сервером базы данных: " + ex.Message, ex);
           }
         }
         return m_mySqlConnection;
@@ -118,7 +118,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception ("MySql error: " + ex.Message, ex);
+        throw new Exception ("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -148,7 +148,7 @@ namespace AvitoRuslanParser
       }
       catch (MySqlException ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + commandString + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -177,7 +177,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception ("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -198,7 +198,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -220,7 +220,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -230,6 +230,8 @@ namespace AvitoRuslanParser
       //Тело запроса!!!!!!!
       const string sql = @" insert into fct_grabber_avito (id_resource_list, avito_id,url, title, tel_num, author, price, city, avito_section, user_section, description)
                                     Values(@index,@idAvito,@url,@title,@phone,@seller,@price,@city,@subcategory,@section,@desc)";
+      string cost = "null";
+      string phone = "null";
       if (list != null && list.Count > 0)
       {
         try
@@ -240,12 +242,10 @@ namespace AvitoRuslanParser
           cmd.Prepare();
           //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
           // и тд
-          string cost = "null";
           if (list[PartsPage.Cost] != null)
           {
             cost = list[PartsPage.Cost].First<string>();
           }
-          string phone = "null";
           if (list[PartsPage.Phone] != null)
           {
             phone = list[PartsPage.Phone].First<string>();
@@ -266,7 +266,10 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw new Exception("MySql error: " + ex.Message, ex);
+          throw new Exception("MySql error: [" + sql + "] [index = " + index + "] [idAvito = " + list[PartsPage.Id].First<string>() + "] [url = " + url +
+            "] [title = " + list[PartsPage.Title].First<string>() + "] [phone = " + phone + "] [seller = " + list[PartsPage.Seller].First<string>() + 
+            "] [price = " + cost + "] [city = " + list[PartsPage.City].First<string>() + "] [subcategory = " + list[PartsPage.SubCategory].First<string>() +
+            "] [section = " + section + "] [desc = " + list[PartsPage.Body].First<string>() + " ]: " + ex.Message, ex);
         }
       }
     }
@@ -289,7 +292,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw new Exception("MySql error: " + ex.Message, ex);
+          throw new Exception("MySql error: [" + sql + "] [resourceid = " + resourceid + "]: " + ex.Message, ex);
         }
       }
     }
@@ -314,7 +317,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw new Exception("MySql error: " + ex.Message, ex);
+          throw new Exception("MySql error: [" + sql + "] [index1 = ]" + index1 + "] [index2 = ]" + index2 +  "]: " + ex.Message, ex);
         }
       }
     }
@@ -336,7 +339,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
     }
     // From MySqlDB2
@@ -387,7 +390,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -417,7 +420,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -432,6 +435,8 @@ namespace AvitoRuslanParser
     {
       //Тело запроса!!!!!!!
       const string sql = @"update fct_grabber_ebay set price=@price where ebay_id=@id";
+      decimal price = 0;
+      ulong id = 0;
       try
       {
         foreach (var item in list.Item)
@@ -445,15 +450,16 @@ namespace AvitoRuslanParser
           cmd.Prepare();
           //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
           // и тд
-
-          cmd.Parameters.AddWithValue("@price", item.CurrentPrice.Value);
-          cmd.Parameters.AddWithValue("@id", item.ItemID);
+          price = item.CurrentPrice.Value;
+          id = item.ItemID;
+          cmd.Parameters.AddWithValue("@price", price);
+          cmd.Parameters.AddWithValue("@id", id);
           int result = cmd.ExecuteNonQuery();
         }
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [price = " + price + "] [id = " + id + "]: " + ex.Message, ex);
       }
     }
     public bool IsNewAdAvito(int id)
@@ -486,7 +492,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
       }
       return resultValue;
     }
@@ -520,7 +526,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [Id = " + id + "]: " + ex.Message, ex);
       }
       return resultValue;
     }
@@ -541,7 +547,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -563,7 +569,7 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
       }
       return resultStr;
     }
@@ -604,11 +610,15 @@ namespace AvitoRuslanParser
     {
       const string sql = @" insert into fct_grabber_ebay (id_resource_list, ebay_id,url, title, author, price, city,country, ebay_section, user_section, description,curr_code,is_auction,bid,transformated)
                                     Values(@index,@idEbay,@url,@title,@seller,@price,@city,@country,@subcategory,@section,@desc,@currency,@is_auction,@bid,@transformated)";
+      string index = "null";
+      decimal? price = null;
+      decimal? bid = null;
+      int trans = 0;
+      bool is_auction = false;
       try
       {
-        string index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
-        int trans = 0;
-        bool is_auction = item.MinimumToBid != null;
+        index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);        
+        is_auction = item.MinimumToBid != null;
         if (is_auction) trans = 4;
         MySqlCommand cmd = new MySqlCommand();
         cmd.Connection = mySqlConnection;
@@ -616,9 +626,7 @@ namespace AvitoRuslanParser
         cmd.Prepare();
         //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
         // и тд
-
-        decimal? price = null;
-        decimal? bid = null;
+        
         if (is_auction)
         {
           bid = item.CurrentPrice.Value;
@@ -647,18 +655,22 @@ namespace AvitoRuslanParser
       }
       catch (Exception ex)
       {
-        throw new Exception("MySql error: " + ex.Message, ex);
+        throw new Exception("MySql error: [" + sql + "] [index = " + index + "] [idEbay = " + item.ItemID + "] [url = " + item.ViewItemURLForNaturalSearch +
+          "] [title = " + item.Title + "] [seller = " + item.Seller.UserID + "] [price = " + price + "] [city = " + item.Location +
+          "] [country = " + item.Country + "] [subcategory = " + item.PrimaryCategoryName + "] [section = " + section + "] [desc = " + item.Description +
+          "] [currency = " + item.CurrentPrice.currencyID + "] [is_auction = " + is_auction + "] [transformated = " + trans + "] [bid = " + bid +
+          "]: " + ex.Message, ex);
       }
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)
     {
+      //Тело запроса!!!!!!!
+      const string sql = @" insert into ass_grabber_ebay_resource_list
+                    Values(@index1,@index2)";
       if (index1 != null)
       {
         try
         {
-          //Тело запроса!!!!!!!
-          string sql = @" insert into ass_grabber_ebay_resource_list
-                    Values(@index1,@index2)";
           MySqlCommand cmd = new MySqlCommand();
           cmd.Connection = mySqlConnection;
           cmd.CommandText = sql;
@@ -671,7 +683,7 @@ namespace AvitoRuslanParser
         }
         catch (Exception ex)
         {
-          throw new Exception("MySql error: " + ex.Message, ex);
+          throw new Exception("MySql error: [" + sql + "] [index1 = " + index1 + "] [index2 = " + index2 + "]: " + ex.Message, ex);
         }
       }
     }
