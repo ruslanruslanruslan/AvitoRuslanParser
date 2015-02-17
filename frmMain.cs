@@ -557,7 +557,7 @@ namespace AvitoRuslanParser
       int start = rtbLog.Text.Length - 1;
       if (start < 0)
         start = 0;
-      rtbLog.AppendText(DateTime.Now.ToShortTimeString() + " | " + msg + Environment.NewLine);
+      rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
       rtbLog.Select(start, rtbLog.Text.Length - start + 1);
       rtbLog.SelectionColor = msgColor;
       rtbLog.SelectionStart = rtbLog.Text.Length;
@@ -565,7 +565,7 @@ namespace AvitoRuslanParser
     }
     private void AddLogStatistic(string category, int countPrepared, int countInserted)
     {
-      rtbLogStatistics.AppendText(category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
+      rtbLogStatistics.AppendText(DateTime.Now.ToLongTimeString() + " | " + category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
       rtbLogStatistics.SelectionStart = rtbLogStatistics.Text.Length;
       rtbLogStatistics.ScrollToCaret();
     }

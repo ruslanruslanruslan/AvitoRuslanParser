@@ -124,15 +124,29 @@ namespace AvitoRuslanParser.EbayParser
       XmlSerializer ser = new XmlSerializer(typeof(GetMultipleItemsResponse));
       GetMultipleItemsResponse items;
 
-      using (StringReader reader = new StringReader(content))
+      try
       {
-        items = (GetMultipleItemsResponse)ser.Deserialize(reader);
+        using (StringReader reader = new StringReader(content))
+        {
+          items = (GetMultipleItemsResponse)ser.Deserialize(reader);
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception(ex.Message + Environment.NewLine + "Content:" + Environment.NewLine + content, ex);
       }
 
       GetMultipleItemsResponse itemDesc = null;
-      using (StringReader reader = new StringReader(contentDesc))
+      try
       {
-        itemDesc = (GetMultipleItemsResponse)ser.Deserialize(reader);
+        using (StringReader reader = new StringReader(contentDesc))
+        {
+          itemDesc = (GetMultipleItemsResponse)ser.Deserialize(reader);
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception(ex.Message + Environment.NewLine + "ContentDesc:" + Environment.NewLine + contentDesc, ex);
       }
 
       if (items != null && items.Item != null && items.Item.Count() > 0)

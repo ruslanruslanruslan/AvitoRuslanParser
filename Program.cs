@@ -20,9 +20,16 @@ namespace AvitoRuslanParser
       //   SearchApi.ParseItems(new long[] { 201117381586, 191228445949, 141318265370 });
       // Logger logger = LogManager.GetCurrentClassLogger();
       // logger.Info("hello");
-      Application.EnableVisualStyles();
-      Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new frmMain());
+      try
+      {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new frmMain());
+      }
+      catch(Exception ex)
+      {
+        MessageBox.Show("Exception:" + Environment.NewLine + ex.Message + Environment.NewLine + "Stack trace:" + Environment.NewLine + ex.StackTrace);
+      }
     }
 
 
