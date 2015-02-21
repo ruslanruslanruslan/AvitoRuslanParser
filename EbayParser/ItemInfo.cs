@@ -25,6 +25,8 @@ namespace AvitoRuslanParser.EbayParser
 
     private GetMultipleItemsResponseItem[] itemField;
 
+    private GetMultipleItemsResponseErrors errorsField;
+
     /// <remarks/>
     public string Timestamp
     {
@@ -88,6 +90,148 @@ namespace AvitoRuslanParser.EbayParser
       set
       {
         this.itemField = value;
+      }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Errors")]
+    public GetMultipleItemsResponseErrors Errors
+    {
+      get
+      {
+        return this.errorsField;
+      }
+      set
+      {
+        this.errorsField = value;
+      }
+    }
+
+  }
+
+  /// <remarks/>
+  [System.SerializableAttribute()]
+  [System.ComponentModel.DesignerCategoryAttribute("code")]
+  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  public partial class GetMultipleItemsResponseErrors
+  {
+    private string shortMessageField;
+
+    private string longMessageField;
+
+    private string errorCodeField;
+
+    private string severityCodeField;
+
+    private GetMultipleItemsResponseErrorsErrorParameters errorParametersField;
+
+    private string errorClassificationField;
+
+    public string ShortMessage
+    {
+      get
+      {
+        return this.shortMessageField;
+      }
+      set
+      {
+        this.shortMessageField = value;
+      }
+    }
+
+    public string LongMessage
+    {
+      get
+      {
+        return this.longMessageField;
+      }
+      set
+      {
+        this.longMessageField = value;
+      }
+    }
+
+    public string ErrorCode
+    {
+      get
+      {
+        return this.errorCodeField;
+      }
+      set
+      {
+        this.errorCodeField = value;
+      }
+    }
+
+    public string SeverityCode
+    {
+      get
+      {
+        return this.severityCodeField;
+      }
+      set
+      {
+        this.severityCodeField = value;
+      }
+    }
+
+    [System.Xml.Serialization.XmlElementAttribute("ErrorParameters")]
+    public GetMultipleItemsResponseErrorsErrorParameters ErrorParameters
+    {
+      get
+      {
+        return this.errorParametersField;
+      }
+      set
+      {
+        this.errorParametersField = value;
+      }
+    }
+
+    public string ErrorClassification
+    {
+      get
+      {
+        return this.errorClassificationField;
+      }
+      set
+      {
+        this.errorClassificationField = value;
+      }
+    }
+  }
+
+  /// <remarks/>
+  [System.SerializableAttribute()]
+  [System.ComponentModel.DesignerCategoryAttribute("code")]
+  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  public partial class GetMultipleItemsResponseErrorsErrorParameters
+  {
+    private ulong paramIDField;
+
+    private ulong valueField;
+
+    public ulong ParamID
+    {
+      get
+      {
+        return this.paramIDField;
+      }
+      set
+      {
+        this.paramIDField = value;
+      }
+    }
+
+    public ulong Value
+    {
+      get
+      {
+        return this.valueField;
+      }
+      set
+      {
+        this.valueField = value;
       }
     }
   }

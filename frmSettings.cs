@@ -68,6 +68,13 @@ namespace AvitoRuslanParser
         DialogResult = System.Windows.Forms.DialogResult.None;
         return;
       }
+      bool bNeedRestart = false;
+      if (Properties.Default.MySqlServerAddress != edtMySqlServerAddress.Text || Properties.Default.MySqlServerPort != Convert.ToInt32(edtMySqlServerPort.Text) ||
+          Properties.Default.MySqlServerDatabase != edtMySqlServerDatabase.Text || Properties.Default.MySqlServerUsername != edtMySqlServerUsername.Text ||
+          Properties.Default.MySqlServerPassword != edtMySqlServerPassword.Text)
+      {
+        bNeedRestart = true;
+      }
       Properties.Default.MySqlServerAddress = edtMySqlServerAddress.Text;
       Properties.Default.MySqlServerPort = Convert.ToInt32(edtMySqlServerPort.Text);
       Properties.Default.MySqlServerDatabase = edtMySqlServerDatabase.Text;
@@ -77,6 +84,12 @@ namespace AvitoRuslanParser
       Properties.Default.FtpPassword = edtFtpPassword.Text;
 
       Properties.Default.Save();
+
+      if (bNeedRestart)
+      {
+        MessageBox.Show("Для внесения изменения программа будет перезапущена", "Перезапуск", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        Application.Restart();
+      }
     }
 
     private void btnSaveImagePathBrowse_Click(object sender, EventArgs e)
