@@ -67,9 +67,9 @@ namespace AvitoRuslanParser
 
     public void Close()
     {
-      if (mySqlConnection != null)
+      if (m_mySqlConnection != null)
       {
-        mySqlConnection.Close();
+        m_mySqlConnection.Close();
       }
     }
 

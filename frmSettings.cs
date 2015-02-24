@@ -12,9 +12,11 @@ namespace AvitoRuslanParser
 {
   public partial class frmSettings : Form
   {
-    public frmSettings()
+    private bool ForceRestart;
+    public frmSettings(bool bForceRestart = false)
     {
       InitializeComponent();
+      ForceRestart = bForceRestart;
     }
 
     private void frmSettings_Load(object sender, EventArgs e)
@@ -85,7 +87,23 @@ namespace AvitoRuslanParser
 
       Properties.Default.Save();
 
-      if (bNeedRestart)
+      // Test MySql connection
+
+      MySqlDB db = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword, Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
+      try
+      {
+        var r = db.mySqlConnection;
+      }
+      catch (Exception)
+      {
+        MessageBox.Show("Невозможно установить соединение с базой данных", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        DialogResult = DialogResult.Abort;
+        bNeedRestart = false;
+        ForceRestart = false;
+      }
+      db.Close();
+
+      if (bNeedRestart || ForceRestart)
       {
         MessageBox.Show("Для внесения изменения программа будет перезапущена", "Перезапуск", MessageBoxButtons.OK, MessageBoxIcon.Information);
         Application.Restart();
