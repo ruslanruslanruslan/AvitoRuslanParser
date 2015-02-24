@@ -68,11 +68,22 @@ namespace AvitoRuslanParser
           cbCategories.Items.Add(str);
         }
       }
-      catch
+      catch (Exception)
       {
-        frmSettings frm = new frmSettings();
-        frm.ShowDialog();
-        Application.Restart();
+        frmSettings frm = new frmSettings(true);
+        DialogResult result = frm.ShowDialog();
+        if (result == DialogResult.Cancel)
+          Application.Exit();
+        if (result == DialogResult.Abort)
+        {
+          LinkAdtextBox.Enabled = false;
+          btnEnter.Enabled = false;
+          cbCategories.Enabled = false;
+          btnReset.Enabled = false;
+          btnParsingAvito.Enabled = false;
+          buttonParsingEbay.Enabled = false;
+          buttonParsingAvitoEbay.Enabled = false;
+        }
       }
     }
 
