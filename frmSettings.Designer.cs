@@ -30,12 +30,17 @@
     {
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabMain = new System.Windows.Forms.TabPage();
+      this.cbPublishParsedData = new System.Windows.Forms.CheckBox();
+      this.btnBrowserSMSSpamerPath = new System.Windows.Forms.Button();
+      this.edtSMSSPamerPath = new System.Windows.Forms.TextBox();
+      this.cbRunSMSSpamer = new System.Windows.Forms.CheckBox();
       this.edtSleep = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.btnSaveImagePathBrowse = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.edtSaveImagePath = new System.Windows.Forms.TextBox();
       this.tabMySql = new System.Windows.Forms.TabPage();
+      this.label14 = new System.Windows.Forms.Label();
       this.edtMySqlServerPassword = new System.Windows.Forms.TextBox();
       this.edtMySqlServerUsername = new System.Windows.Forms.TextBox();
       this.edtMySqlServerDatabase = new System.Windows.Forms.TextBox();
@@ -66,7 +71,6 @@
       this.btnSave = new System.Windows.Forms.Button();
       this.dlgBrowser = new System.Windows.Forms.FolderBrowserDialog();
       this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-      this.label14 = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabMain.SuspendLayout();
       this.tabMySql.SuspendLayout();
@@ -90,6 +94,10 @@
       // 
       // tabMain
       // 
+      this.tabMain.Controls.Add(this.cbPublishParsedData);
+      this.tabMain.Controls.Add(this.btnBrowserSMSSpamerPath);
+      this.tabMain.Controls.Add(this.edtSMSSPamerPath);
+      this.tabMain.Controls.Add(this.cbRunSMSSpamer);
       this.tabMain.Controls.Add(this.edtSleep);
       this.tabMain.Controls.Add(this.label3);
       this.tabMain.Controls.Add(this.btnSaveImagePathBrowse);
@@ -102,6 +110,46 @@
       this.tabMain.TabIndex = 0;
       this.tabMain.Text = "Main";
       this.tabMain.UseVisualStyleBackColor = true;
+      // 
+      // cbPublishParsedData
+      // 
+      this.cbPublishParsedData.AutoSize = true;
+      this.cbPublishParsedData.Location = new System.Drawing.Point(11, 111);
+      this.cbPublishParsedData.Name = "cbPublishParsedData";
+      this.cbPublishParsedData.Size = new System.Drawing.Size(119, 17);
+      this.cbPublishParsedData.TabIndex = 8;
+      this.cbPublishParsedData.Text = "Publish parsed data";
+      this.cbPublishParsedData.UseVisualStyleBackColor = true;
+      // 
+      // btnBrowserSMSSpamerPath
+      // 
+      this.btnBrowserSMSSpamerPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnBrowserSMSSpamerPath.Location = new System.Drawing.Point(474, 74);
+      this.btnBrowserSMSSpamerPath.Name = "btnBrowserSMSSpamerPath";
+      this.btnBrowserSMSSpamerPath.Size = new System.Drawing.Size(75, 23);
+      this.btnBrowserSMSSpamerPath.TabIndex = 7;
+      this.btnBrowserSMSSpamerPath.Text = "Browse";
+      this.btnBrowserSMSSpamerPath.UseVisualStyleBackColor = true;
+      this.btnBrowserSMSSpamerPath.Click += new System.EventHandler(this.btnBrowserSMSSpamerPath_Click);
+      // 
+      // edtSMSSPamerPath
+      // 
+      this.edtSMSSPamerPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edtSMSSPamerPath.Location = new System.Drawing.Point(117, 76);
+      this.edtSMSSPamerPath.Name = "edtSMSSPamerPath";
+      this.edtSMSSPamerPath.Size = new System.Drawing.Size(351, 20);
+      this.edtSMSSPamerPath.TabIndex = 6;
+      // 
+      // cbRunSMSSpamer
+      // 
+      this.cbRunSMSSpamer.AutoSize = true;
+      this.cbRunSMSSpamer.Location = new System.Drawing.Point(11, 79);
+      this.cbRunSMSSpamer.Name = "cbRunSMSSpamer";
+      this.cbRunSMSSpamer.Size = new System.Drawing.Size(108, 17);
+      this.cbRunSMSSpamer.TabIndex = 5;
+      this.cbRunSMSSpamer.Text = "Run SMSSpamer";
+      this.cbRunSMSSpamer.UseVisualStyleBackColor = true;
       // 
       // edtSleep
       // 
@@ -170,6 +218,18 @@
       this.tabMySql.TabIndex = 1;
       this.tabMySql.Text = "MySql";
       this.tabMySql.UseVisualStyleBackColor = true;
+      // 
+      // label14
+      // 
+      this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      this.label14.Location = new System.Drawing.Point(8, 175);
+      this.label14.Name = "label14";
+      this.label14.Size = new System.Drawing.Size(541, 23);
+      this.label14.TabIndex = 10;
+      this.label14.Text = "Need program restart to apply database changes";
+      this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // edtMySqlServerPassword
       // 
@@ -444,18 +504,6 @@
       this.btnSave.UseVisualStyleBackColor = true;
       this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
       // 
-      // label14
-      // 
-      this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      this.label14.Location = new System.Drawing.Point(8, 175);
-      this.label14.Name = "label14";
-      this.label14.Size = new System.Drawing.Size(541, 23);
-      this.label14.TabIndex = 10;
-      this.label14.Text = "Need program restart to apply database changes";
-      this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-      // 
       // frmSettings
       // 
       this.AcceptButton = this.btnSave;
@@ -523,5 +571,9 @@
     private System.Windows.Forms.TextBox edtFtpFolder;
     private System.Windows.Forms.Label label13;
     private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.CheckBox cbRunSMSSpamer;
+    private System.Windows.Forms.TextBox edtSMSSPamerPath;
+    private System.Windows.Forms.Button btnBrowserSMSSpamerPath;
+    private System.Windows.Forms.CheckBox cbPublishParsedData;
   }
 }

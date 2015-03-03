@@ -85,6 +85,17 @@ namespace AvitoRuslanParser
           buttonParsingAvitoEbay.Enabled = false;
         }
       }
+      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
+      {
+        Task.Factory.StartNew(() =>
+          {
+            string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
+              Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
+              Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
+            System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
+          }
+        );
+      }
     }
 
     private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -232,10 +243,13 @@ namespace AvitoRuslanParser
               AddLog("Parser: ad inserted", LogMessageColor.Information());
               incInserted();
 
-              Parser2.PathImages2 = Properties.Default.PathToImg;
+              if (Properties.Default.PublishParsedData)
+              {
+                Parser2.PathImages2 = Properties.Default.PathToImg;
 
-              var result2 = Parser2.Run(item);
-              mySqlDB.ExecuteProcAvito(idResourceList);
+                var result2 = Parser2.Run(item);
+                mySqlDB.ExecuteProcAvito(idResourceList);
+              }
               countIns++;
 
             }
@@ -355,10 +369,12 @@ namespace AvitoRuslanParser
             bool isAuction = true;
             if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
             {
-              imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+              if (Properties.Default.PublishParsedData)
+                imgParser.LoadImages(parsedItems.Item[0].PictureURL);
               isAuction = parsedItems.Item[0].TimeLeft != null;
             }
-            mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+            if (Properties.Default.PublishParsedData)
+              mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
           }
           catch (Exception ex)
