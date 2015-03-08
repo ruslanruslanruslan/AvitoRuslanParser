@@ -483,7 +483,7 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@id", id);
           int result = cmd.ExecuteNonQuery();
 
-          if (price > 0)
+          if (price > 0 && Properties.Default.PublishParsedData)
           {
             ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
           }
