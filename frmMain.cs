@@ -365,7 +365,7 @@ namespace AvitoRuslanParser
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
           }
           AddLog("End parsing ad", LogMessageColor.Information());
-
+          IncParsed();
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
           try
           {
@@ -397,6 +397,7 @@ namespace AvitoRuslanParser
               AddLog("End publishing ad", LogMessageColor.Information());
             }
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
+            incInserted();
           }
           catch (Exception ex)
           {
