@@ -245,10 +245,14 @@ namespace AvitoRuslanParser
 
               if (Properties.Default.PublishParsedData)
               {
+                AddLog("Begin loading images", LogMessageColor.Information());
                 Parser2.PathImages2 = Properties.Default.PathToImg;
 
                 var result2 = Parser2.Run(item);
+                AddLog("Loading images end", LogMessageColor.Information());
+                AddLog("Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
+                AddLog("End publising ad", LogMessageColor.Information());
               }
               countIns++;
 
@@ -267,7 +271,6 @@ namespace AvitoRuslanParser
           AddLog("Parser: " + ex.Message, LogMessageColor.Error());
         }
         label6.Text = "Finish";
-        // logger.Info("fsnish");
       }
     }
     private void SaveField()
@@ -347,6 +350,7 @@ namespace AvitoRuslanParser
 
         foreach (var item in partsIdsCollection)
         {
+          AddLog("Begin parsing ad", LogMessageColor.Information());
           var parsedItems = SearchApi.ParseItems(item);
           foreach (var unit in parsedItems.Item)
           {
@@ -360,6 +364,7 @@ namespace AvitoRuslanParser
             sb.AppendLine("ebay section: " + unit.PrimaryCategoryName);
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
           }
+          AddLog("End parsing ad", LogMessageColor.Information());
 
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
           try
@@ -370,11 +375,27 @@ namespace AvitoRuslanParser
             if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
             {
               if (Properties.Default.PublishParsedData)
+              {
+                AddLog("Begin loading images", LogMessageColor.Information());
                 imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                AddLog("End loading images", LogMessageColor.Information());
+              }
               isAuction = parsedItems.Item[0].TimeLeft != null;
+              if (isAuction)
+              {
+                AddLog("It is auction", LogMessageColor.Information());
+              }
+              else
+              {
+                AddLog("It is advertisement", LogMessageColor.Information());
+              }
             }
             if (Properties.Default.PublishParsedData)
+            {
+              AddLog("Begin publishing ad", LogMessageColor.Information());
               mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+              AddLog("End publishing ad", LogMessageColor.Information());
+            }
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
           }
           catch (Exception ex)
