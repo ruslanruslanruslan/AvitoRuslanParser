@@ -458,12 +458,13 @@ namespace AvitoRuslanParser
       return resultStr;
     }
 
-    public void UpdateAuction(GetMultipleItemsResponse list)
+    public int UpdateAuction(GetMultipleItemsResponse list)
     {
       //Тело запроса!!!!!!!
       const string sql = @"update fct_grabber_ebay set price=@price where ebay_id=@id";
       decimal price = 0;
       ulong id = 0;
+      int published = 0;
       try
       {
         foreach (var item in list.Item)
@@ -486,6 +487,7 @@ namespace AvitoRuslanParser
           if (price > 0 && Properties.Default.PublishParsedData)
           {
             ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
+            published = 1;
           }
         }
       }
@@ -493,6 +495,7 @@ namespace AvitoRuslanParser
       {
         throw new Exception("MySql error: [" + sql + "] [price = " + price + "] [id = " + id + "]: " + ex.Message, ex);
       }
+      return published;
     }
     public bool IsNewAdAvito(int id)
     {
@@ -587,6 +590,27 @@ namespace AvitoRuslanParser
     {
       //тело запроса!!!!!!!!!!
       const string sql = "call sp_map_grabber_ebay(@id)";
+      string resultStr = string.Empty;
+      try
+      {
+        MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
+        cmd.Prepare();
+        cmd.Parameters.AddWithValue("@id", id);
+        object result = cmd.ExecuteScalar();
+        if (result != null)
+        {
+          resultStr = result.ToString();
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
+      }
+      return resultStr;
+    }
+    public string InsertSMSSpamerData(string id)
+    {
+      const string sql = "call sp_fill_smsspamer_data(@id)";
       string resultStr = string.Empty;
       try
       {

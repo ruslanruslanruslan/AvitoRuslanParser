@@ -245,14 +245,20 @@ namespace AvitoRuslanParser
 
               if (Properties.Default.PublishParsedData)
               {
-                AddLog("Begin loading images", LogMessageColor.Information());
+                AddLog("Parser: Begin loading images", LogMessageColor.Information());
                 Parser2.PathImages2 = Properties.Default.PathToImg;
 
                 var result2 = Parser2.Run(item);
-                AddLog("Loading images end", LogMessageColor.Information());
-                AddLog("Begin publishing ad", LogMessageColor.Information());
+                AddLog("Parser: Loading images end", LogMessageColor.Information());
+                AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
-                AddLog("End publising ad", LogMessageColor.Information());
+                AddLog("Parser: End publishing ad", LogMessageColor.Information());
+              }
+              else
+              {
+                AddLog("Parser: Saving data to SMSSpamer", LogMessageColor.Information());
+                mySqlDB.InsertSMSSpamerData(idResourceList);
+                AddLog("Parser: Data saved successfully", LogMessageColor.Information());
               }
               countIns++;
 
@@ -294,7 +300,7 @@ namespace AvitoRuslanParser
           btnParsingAvito.Enabled = false;
           foreach (var item in links)
           {
-            AddLog("Parser: start next sections", LogMessageColor.Information());
+            AddLog("Parser: start next section", LogMessageColor.Information());
             try
             {
               LoadSection(item);
@@ -323,10 +329,10 @@ namespace AvitoRuslanParser
 
       AddLog("Parser: " + sectionItem.CategoryName, LogMessageColor.Information());
 
-      var ids = searchApi.SearchLinks();
-      AddLog("Parser: Count new ad: " + ids.Count().ToString(), LogMessageColor.Information());
       try
       {
+        var ids = searchApi.SearchLinks();
+        AddLog("Parser: Count new ad: " + ids.Count().ToString(), LogMessageColor.Information());
         IList<long> newIds = new List<long>();
         int countCurrentRepeat = 0;
 
@@ -350,7 +356,7 @@ namespace AvitoRuslanParser
 
         foreach (var item in partsIdsCollection)
         {
-          AddLog("Begin parsing ad", LogMessageColor.Information());
+          AddLog("Parser: Begin parsing ad", LogMessageColor.Information());
           var parsedItems = SearchApi.ParseItems(item);
           foreach (var unit in parsedItems.Item)
           {
@@ -364,7 +370,7 @@ namespace AvitoRuslanParser
             sb.AppendLine("ebay section: " + unit.PrimaryCategoryName);
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
           }
-          AddLog("End parsing ad", LogMessageColor.Information());
+          AddLog("Parser: End parsing ad", LogMessageColor.Information());
           IncParsed();
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
           try
@@ -376,25 +382,25 @@ namespace AvitoRuslanParser
             {
               if (Properties.Default.PublishParsedData)
               {
-                AddLog("Begin loading images", LogMessageColor.Information());
+                AddLog("Parser: Begin loading images", LogMessageColor.Information());
                 imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-                AddLog("End loading images", LogMessageColor.Information());
+                AddLog("Parser: End loading images", LogMessageColor.Information());
               }
               isAuction = parsedItems.Item[0].TimeLeft != null;
               if (isAuction)
               {
-                AddLog("It is auction", LogMessageColor.Information());
+                AddLog("Parser: It is auction", LogMessageColor.Information());
               }
               else
               {
-                AddLog("It is advertisement", LogMessageColor.Information());
+                AddLog("Parser: It is advertisement", LogMessageColor.Information());
               }
             }
-            if (Properties.Default.PublishParsedData)
+            if (Properties.Default.PublishParsedData && !isAuction)
             {
-              AddLog("Begin publishing ad", LogMessageColor.Information());
+              AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
               mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
-              AddLog("End publishing ad", LogMessageColor.Information());
+              AddLog("Parser: End publishing ad", LogMessageColor.Information());
             }
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
             incInserted();
@@ -410,7 +416,7 @@ namespace AvitoRuslanParser
           AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
         }
 
-        AddLog("Parser: Inserted to db", LogMessageColor.Information());
+        AddLog("Parser: End pasring section " + sectionItem.CategoryName, LogMessageColor.Information());
         AddLog("Parser: Inserted: " + newIds.Count().ToString(), LogMessageColor.Information());
       }
       catch (Exception ex)
@@ -456,11 +462,15 @@ namespace AvitoRuslanParser
               {
                 try
                 {
+                  AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
                   var parsedItems = SearchApi.ParseItems(new long[] { item });
                   if (parsedItems.Ack == "Success")
                   {
                     AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
-                    mySqlDB.UpdateAuction(parsedItems);
+                    if (mySqlDB.UpdateAuction(parsedItems) == 1)
+                    {
+                      AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
+                    }
                   }
                   else
                   {
@@ -483,6 +493,11 @@ namespace AvitoRuslanParser
                 {
                   AddLog("Parser: " + ex.Message, LogMessageColor.Error());
                 }
+
+                if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
+                AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(sleepSec * 1000);
+                AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
               }
               AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
             }
@@ -496,7 +511,7 @@ namespace AvitoRuslanParser
           {
             try
             {
-              AddLog("Parser: start next sections", LogMessageColor.Information());
+              AddLog("Parser: start next section", LogMessageColor.Information());
               LoadSectionEbay(item);
             }
             catch (Exception ex)
@@ -532,11 +547,15 @@ namespace AvitoRuslanParser
               {
                 try
                 {
+                  AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
                   var parsedItems = SearchApi.ParseItems(new long[] { item });
                   if (parsedItems.Ack == "Success")
                   {
                     AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
-                    mySqlDB.UpdateAuction(parsedItems);
+                    if (mySqlDB.UpdateAuction(parsedItems) == 1)
+                    {
+                      AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
+                    }
                   }
                   else
                   {
@@ -559,6 +578,11 @@ namespace AvitoRuslanParser
                 {
                   AddLog("Parser: " + ex.Message, LogMessageColor.Error());
                 }
+
+                if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
+                AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(sleepSec * 1000);
+                AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
               }
               AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
             }
@@ -571,7 +595,7 @@ namespace AvitoRuslanParser
           {
             try
             {
-              AddLog("Parser: start next sections", LogMessageColor.Information());
+              AddLog("Parser: start next section", LogMessageColor.Information());
               AddLog("Parser: " + item.site.ToString(), LogMessageColor.Information());
               LoadSectionEbayAvito(item);
             }
