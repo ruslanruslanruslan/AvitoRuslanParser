@@ -36,6 +36,9 @@ namespace AvitoRuslanParser
       edtMySqlServerPassword.Text = Properties.Default.MySqlServerPassword;
       edtFtpUsername.Text = Properties.Default.FtpUsername;
       edtFtpPassword.Text = Properties.Default.FtpPassword;
+      cbRunSMSSpamer.Checked = Properties.Default.RunSMSSpamer;
+      edtSMSSPamerPath.Text = Properties.Default.SMSSpamerPath;
+      cbPublishParsedData.Checked = Properties.Default.PublishParsedData;
     }
 
     private void btnSave_Click(object sender, EventArgs e)
@@ -59,6 +62,19 @@ namespace AvitoRuslanParser
         else
           Properties.Default.PathToImg = edtFtpFolder.Text;
       }
+
+      if (cbRunSMSSpamer.Checked && edtSMSSPamerPath.Text.Length == 0)
+      {
+        MessageBox.Show("SMSSPamer path is empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        DialogResult = System.Windows.Forms.DialogResult.None;
+        return;
+      }
+      else
+      {
+        Properties.Default.SMSSpamerPath = edtSMSSPamerPath.Text;
+        Properties.Default.RunSMSSpamer = cbRunSMSSpamer.Checked;
+      }
+
       Properties.Default.PathToProxy = edtPathToProxyFile.Text;
       Properties.Default.SleepSec = Convert.ToInt32(edtSleep.Text);
       Properties.Default.User = edtUsername.Text;
@@ -84,6 +100,8 @@ namespace AvitoRuslanParser
       Properties.Default.MySqlServerPassword = edtMySqlServerPassword.Text;
       Properties.Default.FtpUsername = edtFtpUsername.Text;
       Properties.Default.FtpPassword = edtFtpPassword.Text;
+
+      Properties.Default.PublishParsedData = cbPublishParsedData.Checked;
 
       Properties.Default.Save();
 
@@ -132,6 +150,15 @@ namespace AvitoRuslanParser
       if (dlgOpenFile.ShowDialog() == DialogResult.OK)
       {
         edtPathToProxyFile.Text = dlgOpenFile.FileName;
+      }
+    }
+
+    private void btnBrowserSMSSpamerPath_Click(object sender, EventArgs e)
+    {
+      dlgOpenFile.Filter = "SMSSpamer Application|SMSSpamer.exe";
+      if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+      {
+        edtSMSSPamerPath.Text = dlgOpenFile.FileName;
       }
     }
   }

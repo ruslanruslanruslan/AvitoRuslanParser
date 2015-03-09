@@ -431,6 +431,33 @@ namespace AvitoRuslanParser
       }
       return links;
     }
+
+    public string GetEBayIDResourceListByEBayID(string ebay_id)
+    {
+      const string sql = "select id_resource_list from fct_grabber_ebay where ebay_id = @ebay_id;";
+      string resultStr = string.Empty;
+      try
+      {
+        MySqlCommand cmd = new MySqlCommand(sql, mySqlConnection);
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+
+        cmd.Parameters.AddWithValue("@ebay_id", ebay_id);
+        object result = cmd.ExecuteScalar();
+        if (result != null)
+        {
+          int r = Convert.ToInt32(result);
+          resultStr = r.ToString();
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] " + ex.Message, ex);
+      }
+      return resultStr;
+    }
+
     public void UpdateAuction(GetMultipleItemsResponse list)
     {
       //Тело запроса!!!!!!!
@@ -455,6 +482,11 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@price", price);
           cmd.Parameters.AddWithValue("@id", id);
           int result = cmd.ExecuteNonQuery();
+
+          if (price > 0 && Properties.Default.PublishParsedData)
+          {
+            ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
+          }
         }
       }
       catch (Exception ex)

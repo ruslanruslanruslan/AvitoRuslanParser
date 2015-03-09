@@ -85,6 +85,17 @@ namespace AvitoRuslanParser
           buttonParsingAvitoEbay.Enabled = false;
         }
       }
+      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
+      {
+        Task.Factory.StartNew(() =>
+          {
+            string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
+              Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
+              Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
+            System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
+          }
+        );
+      }
     }
 
     private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -232,10 +243,17 @@ namespace AvitoRuslanParser
               AddLog("Parser: ad inserted", LogMessageColor.Information());
               incInserted();
 
-              Parser2.PathImages2 = Properties.Default.PathToImg;
+              if (Properties.Default.PublishParsedData)
+              {
+                AddLog("Begin loading images", LogMessageColor.Information());
+                Parser2.PathImages2 = Properties.Default.PathToImg;
 
-              var result2 = Parser2.Run(item);
-              mySqlDB.ExecuteProcAvito(idResourceList);
+                var result2 = Parser2.Run(item);
+                AddLog("Loading images end", LogMessageColor.Information());
+                AddLog("Begin publishing ad", LogMessageColor.Information());
+                mySqlDB.ExecuteProcAvito(idResourceList);
+                AddLog("End publising ad", LogMessageColor.Information());
+              }
               countIns++;
 
             }
@@ -253,7 +271,6 @@ namespace AvitoRuslanParser
           AddLog("Parser: " + ex.Message, LogMessageColor.Error());
         }
         label6.Text = "Finish";
-        // logger.Info("fsnish");
       }
     }
     private void SaveField()
@@ -333,6 +350,7 @@ namespace AvitoRuslanParser
 
         foreach (var item in partsIdsCollection)
         {
+          AddLog("Begin parsing ad", LogMessageColor.Information());
           var parsedItems = SearchApi.ParseItems(item);
           foreach (var unit in parsedItems.Item)
           {
@@ -346,7 +364,8 @@ namespace AvitoRuslanParser
             sb.AppendLine("ebay section: " + unit.PrimaryCategoryName);
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
           }
-
+          AddLog("End parsing ad", LogMessageColor.Information());
+          IncParsed();
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
           try
           {
@@ -355,11 +374,30 @@ namespace AvitoRuslanParser
             bool isAuction = true;
             if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
             {
-              imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+              if (Properties.Default.PublishParsedData)
+              {
+                AddLog("Begin loading images", LogMessageColor.Information());
+                imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                AddLog("End loading images", LogMessageColor.Information());
+              }
               isAuction = parsedItems.Item[0].TimeLeft != null;
+              if (isAuction)
+              {
+                AddLog("It is auction", LogMessageColor.Information());
+              }
+              else
+              {
+                AddLog("It is advertisement", LogMessageColor.Information());
+              }
             }
-            mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+            if (Properties.Default.PublishParsedData)
+            {
+              AddLog("Begin publishing ad", LogMessageColor.Information());
+              mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+              AddLog("End publishing ad", LogMessageColor.Information());
+            }
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
+            incInserted();
           }
           catch (Exception ex)
           {
