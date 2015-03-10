@@ -60,41 +60,32 @@ namespace AvitoRuslanParser.EbayParser
     public IEnumerable<long> SearchLinks()
     {
       IList<long> list = new List<long>();
-      try
+      //181419645692
+      ClientConfig config = new ClientConfig();
+      config.EndPointAddress = "http://svcs.ebay.com/services/search/FindingService/v1";
+      config.ApplicationId = "Artsiom97-3905-4c09-9e4e-4144ac444e6";
+
+      FindingServicePortTypeClient client = FindingServiceClientFactory.getServiceClient(config);
+
+      FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
+      // Set request parameters
+      request.keywords = Keywords;
+      request.categoryId = new string[] { CategoryId.ToString() };
+      PaginationInput pi = new PaginationInput();
+      pi.entriesPerPage = PerPage;
+
+      pi.entriesPerPageSpecified = true;
+      request.paginationInput = pi;
+      // Call the service
+      FindItemsAdvancedResponse response = client.findItemsAdvanced(request);
+      // Show output
+      SearchItem[] items = response.searchResult.item;
+
+      for (int i = 0; i < items.Length; i++)
       {
-        //181419645692
-        ClientConfig config = new ClientConfig();
-        config.EndPointAddress = "http://svcs.ebay.com/services/search/FindingService/v1";
-        config.ApplicationId = "Artsiom97-3905-4c09-9e4e-4144ac444e6";
-
-        FindingServicePortTypeClient client = FindingServiceClientFactory.getServiceClient(config);
-
-        FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
-        // Set request parameters
-        request.keywords = Keywords;
-        request.categoryId = new string[] { CategoryId.ToString() };
-        PaginationInput pi = new PaginationInput();
-        pi.entriesPerPage = PerPage;
-
-        pi.entriesPerPageSpecified = true;
-        request.paginationInput = pi;
-        // Call the service
-        FindItemsAdvancedResponse response = client.findItemsAdvanced(request);
-        // Show output
-        SearchItem[] items = response.searchResult.item;
-
-        for (int i = 0; i < items.Length; i++)
-        {
-          list.Add(Convert.ToInt64(items[i].itemId));
-        }
-      }
-      catch (Exception ex)
-      {
-        // Handle exception if any
-        Console.WriteLine(ex);
+        list.Add(Convert.ToInt64(items[i].itemId));
       }
       return list;
-
     }
 
     public static GetMultipleItemsResponse ParseItems(IEnumerable<long> idsAd)
