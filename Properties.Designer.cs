@@ -226,5 +226,17 @@ namespace AvitoRuslanParser {
                 this["PublishParsedData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int SleepSecAfterAuctionUpdate {
+            get {
+                return ((int)(this["SleepSecAfterAuctionUpdate"]));
+            }
+            set {
+                this["SleepSecAfterAuctionUpdate"] = value;
+            }
+        }
     }
 }

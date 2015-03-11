@@ -470,6 +470,10 @@ namespace AvitoRuslanParser
                     if (mySqlDB.UpdateAuction(parsedItems) == 1)
                     {
                       AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
+                      if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
+                      AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
+                      Thread.Sleep(sleepSec * 1000);
+                      AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
                     }
                   }
                   else
@@ -493,10 +497,8 @@ namespace AvitoRuslanParser
                 {
                   AddLog("Parser: " + ex.Message, LogMessageColor.Error());
                 }
-
-                if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-                AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-                Thread.Sleep(sleepSec * 1000);
+                AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
                 AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
               }
               AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
@@ -555,6 +557,10 @@ namespace AvitoRuslanParser
                     if (mySqlDB.UpdateAuction(parsedItems) == 1)
                     {
                       AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
+                      if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
+                      AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
+                      Thread.Sleep(sleepSec * 1000);
+                      AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
                     }
                   }
                   else
@@ -578,10 +584,8 @@ namespace AvitoRuslanParser
                 {
                   AddLog("Parser: " + ex.Message, LogMessageColor.Error());
                 }
-
-                if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-                AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-                Thread.Sleep(sleepSec * 1000);
+                AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
                 AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
               }
               AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
