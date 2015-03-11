@@ -39,6 +39,7 @@ namespace AvitoRuslanParser
       cbRunSMSSpamer.Checked = Properties.Default.RunSMSSpamer;
       edtSMSSPamerPath.Text = Properties.Default.SMSSpamerPath;
       cbPublishParsedData.Checked = Properties.Default.PublishParsedData;
+      edtSleepSecAfterAuctionUpdate.Text = Properties.Default.SleepSecAfterAuctionUpdate.ToString();
     }
 
     private void btnSave_Click(object sender, EventArgs e)
@@ -77,6 +78,7 @@ namespace AvitoRuslanParser
 
       Properties.Default.PathToProxy = edtPathToProxyFile.Text;
       Properties.Default.SleepSec = Convert.ToInt32(edtSleep.Text);
+      Properties.Default.SleepSecAfterAuctionUpdate = Convert.ToInt32(edtSleepSecAfterAuctionUpdate.Text);
       Properties.Default.User = edtUsername.Text;
       Properties.Default.Password = edtPassword.Text;
       if (edtMySqlServerAddress.Text.Length == 0 || edtMySqlServerDatabase.Text.Length == 0 || edtMySqlServerPort.Text.Length == 0 ||

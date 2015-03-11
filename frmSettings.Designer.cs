@@ -71,6 +71,8 @@
       this.btnSave = new System.Windows.Forms.Button();
       this.dlgBrowser = new System.Windows.Forms.FolderBrowserDialog();
       this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+      this.label15 = new System.Windows.Forms.Label();
+      this.edtSleepSecAfterAuctionUpdate = new System.Windows.Forms.TextBox();
       this.tabControl1.SuspendLayout();
       this.tabMain.SuspendLayout();
       this.tabMySql.SuspendLayout();
@@ -94,6 +96,8 @@
       // 
       // tabMain
       // 
+      this.tabMain.Controls.Add(this.edtSleepSecAfterAuctionUpdate);
+      this.tabMain.Controls.Add(this.label15);
       this.tabMain.Controls.Add(this.cbPublishParsedData);
       this.tabMain.Controls.Add(this.btnBrowserSMSSpamerPath);
       this.tabMain.Controls.Add(this.edtSMSSPamerPath);
@@ -114,7 +118,7 @@
       // cbPublishParsedData
       // 
       this.cbPublishParsedData.AutoSize = true;
-      this.cbPublishParsedData.Location = new System.Drawing.Point(11, 111);
+      this.cbPublishParsedData.Location = new System.Drawing.Point(11, 133);
       this.cbPublishParsedData.Name = "cbPublishParsedData";
       this.cbPublishParsedData.Size = new System.Drawing.Size(119, 17);
       this.cbPublishParsedData.TabIndex = 8;
@@ -124,7 +128,7 @@
       // btnBrowserSMSSpamerPath
       // 
       this.btnBrowserSMSSpamerPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnBrowserSMSSpamerPath.Location = new System.Drawing.Point(474, 74);
+      this.btnBrowserSMSSpamerPath.Location = new System.Drawing.Point(474, 96);
       this.btnBrowserSMSSpamerPath.Name = "btnBrowserSMSSpamerPath";
       this.btnBrowserSMSSpamerPath.Size = new System.Drawing.Size(75, 23);
       this.btnBrowserSMSSpamerPath.TabIndex = 7;
@@ -136,15 +140,15 @@
       // 
       this.edtSMSSPamerPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtSMSSPamerPath.Location = new System.Drawing.Point(117, 76);
+      this.edtSMSSPamerPath.Location = new System.Drawing.Point(172, 98);
       this.edtSMSSPamerPath.Name = "edtSMSSPamerPath";
-      this.edtSMSSPamerPath.Size = new System.Drawing.Size(351, 20);
+      this.edtSMSSPamerPath.Size = new System.Drawing.Size(296, 20);
       this.edtSMSSPamerPath.TabIndex = 6;
       // 
       // cbRunSMSSpamer
       // 
       this.cbRunSMSSpamer.AutoSize = true;
-      this.cbRunSMSSpamer.Location = new System.Drawing.Point(11, 79);
+      this.cbRunSMSSpamer.Location = new System.Drawing.Point(11, 101);
       this.cbRunSMSSpamer.Name = "cbRunSMSSpamer";
       this.cbRunSMSSpamer.Size = new System.Drawing.Size(108, 17);
       this.cbRunSMSSpamer.TabIndex = 5;
@@ -155,9 +159,9 @@
       // 
       this.edtSleep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtSleep.Location = new System.Drawing.Point(117, 45);
+      this.edtSleep.Location = new System.Drawing.Point(172, 45);
       this.edtSleep.Name = "edtSleep";
-      this.edtSleep.Size = new System.Drawing.Size(351, 20);
+      this.edtSleep.Size = new System.Drawing.Size(296, 20);
       this.edtSleep.TabIndex = 4;
       // 
       // label3
@@ -193,9 +197,9 @@
       // 
       this.edtSaveImagePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtSaveImagePath.Location = new System.Drawing.Point(117, 13);
+      this.edtSaveImagePath.Location = new System.Drawing.Point(172, 13);
       this.edtSaveImagePath.Name = "edtSaveImagePath";
-      this.edtSaveImagePath.Size = new System.Drawing.Size(351, 20);
+      this.edtSaveImagePath.Size = new System.Drawing.Size(296, 20);
       this.edtSaveImagePath.TabIndex = 0;
       // 
       // tabMySql
@@ -504,6 +508,24 @@
       this.btnSave.UseVisualStyleBackColor = true;
       this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
       // 
+      // label15
+      // 
+      this.label15.AutoSize = true;
+      this.label15.Location = new System.Drawing.Point(8, 74);
+      this.label15.Name = "label15";
+      this.label15.Size = new System.Drawing.Size(158, 13);
+      this.label15.TabIndex = 9;
+      this.label15.Text = "Sleep after auction update (sec)";
+      // 
+      // edtSleepSecAfterAuctionUpdate
+      // 
+      this.edtSleepSecAfterAuctionUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edtSleepSecAfterAuctionUpdate.Location = new System.Drawing.Point(172, 71);
+      this.edtSleepSecAfterAuctionUpdate.Name = "edtSleepSecAfterAuctionUpdate";
+      this.edtSleepSecAfterAuctionUpdate.Size = new System.Drawing.Size(296, 20);
+      this.edtSleepSecAfterAuctionUpdate.TabIndex = 10;
+      // 
       // frmSettings
       // 
       this.AcceptButton = this.btnSave;
@@ -575,5 +597,7 @@
     private System.Windows.Forms.TextBox edtSMSSPamerPath;
     private System.Windows.Forms.Button btnBrowserSMSSpamerPath;
     private System.Windows.Forms.CheckBox cbPublishParsedData;
+    private System.Windows.Forms.Label label15;
+    private System.Windows.Forms.TextBox edtSleepSecAfterAuctionUpdate;
   }
 }
