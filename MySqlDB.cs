@@ -458,17 +458,19 @@ namespace AvitoRuslanParser
       return resultStr;
     }
 
-    public int UpdateAuction(GetMultipleItemsResponse list)
+    public int UpdateAuction(GetMultipleItemsResponse list, out string TimeLeft)
     {
       //Тело запроса!!!!!!!
       const string sql = @"update fct_grabber_ebay set price=@price where ebay_id=@id";
       decimal price = 0;
       ulong id = 0;
       int published = 0;
+      TimeLeft = "ERROR";
       try
       {
         foreach (var item in list.Item)
         {
+          TimeLeft = item.TimeLeft;
           bool is_auction = item.TimeLeft == "PT0S";
           if (!is_auction) break;
 
@@ -484,7 +486,7 @@ namespace AvitoRuslanParser
           cmd.Parameters.AddWithValue("@id", id);
           int result = cmd.ExecuteNonQuery();
 
-          if (price > 0 && Properties.Default.PublishParsedData)
+          if (Properties.Default.PublishParsedData)
           {
             ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
             published = 1;
