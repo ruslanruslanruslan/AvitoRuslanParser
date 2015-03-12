@@ -443,6 +443,77 @@ namespace AvitoRuslanParser
         AddLog("Parser: " + ex.Message, LogMessageColor.Error());
       }
     }
+
+    private void EbayUpdateAuctions()
+    {
+      try
+      {
+        if (true)
+        {
+          AddLog("Parser: start update auctions", LogMessageColor.Information());
+          var auctionlinks = mySqlDB.LoadAuctionLink();
+          foreach (long item in auctionlinks)
+          {
+            bool bLongSleep = false;
+            try
+            {
+              AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
+              var parsedItems = SearchApi.ParseItems(new long[] { item });
+              if (parsedItems.Ack == "Success")
+              {
+                AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
+                string timeLeft;
+                if (mySqlDB.UpdateAuction(parsedItems, out timeLeft) == 1)
+                {
+                  AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
+                  bLongSleep = true;
+                }
+                else
+                {
+                  AddLog("Parser: auction " + item.ToString() + " not published: Auction time left: " + timeLeft, LogMessageColor.Information());
+                }
+              }
+              else
+              {
+                string err = String.Empty;
+                if (parsedItems.Errors != null)
+                {
+                  if (parsedItems.Errors.LongMessage.Length > 0)
+                  {
+                    err = parsedItems.Errors.LongMessage;
+                  }
+                  else
+                  {
+                    err = parsedItems.Errors.ShortMessage;
+                  }
+                }
+                AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
+              }
+            }
+            catch (Exception ex)
+            {
+              AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+            }
+            AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
+            Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
+            AddLog("Parser: sleep off", LogMessageColor.Information());
+            if (bLongSleep)
+            {
+              if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
+              AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
+              Thread.Sleep(sleepSec * 1000);
+              AddLog("Parser: sleep off", LogMessageColor.Information());
+            }
+          }
+          AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
+        }
+      }
+      catch (Exception ex)
+      {
+        AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+      }
+    }
+
     private void buttonParsingEbay_Click(object sender, EventArgs e)
     {
       SetZeroCounters();
@@ -452,62 +523,8 @@ namespace AvitoRuslanParser
         Task.Factory.StartNew(() =>
         {
           buttonParsingEbay.Enabled = false;
-          try
-          {
-            if (true)
-            {
-              AddLog("Parser: start update auctions", LogMessageColor.Information());
-              var auctionlinks = mySqlDB.LoadAuctionLink();
-              foreach (long item in auctionlinks)
-              {
-                try
-                {
-                  AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
-                  var parsedItems = SearchApi.ParseItems(new long[] { item });
-                  if (parsedItems.Ack == "Success")
-                  {
-                    AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
-                    if (mySqlDB.UpdateAuction(parsedItems) == 1)
-                    {
-                      AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
-                      if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-                      AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-                      Thread.Sleep(sleepSec * 1000);
-                      AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
-                    }
-                  }
-                  else
-                  {
-                    string err = String.Empty;
-                    if (parsedItems.Errors != null)
-                    {
-                      if (parsedItems.Errors.LongMessage.Length > 0)
-                      {
-                        err = parsedItems.Errors.LongMessage;
-                      }
-                      else
-                      {
-                        err = parsedItems.Errors.ShortMessage;
-                      }
-                    }
-                    AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
-                  }
-                }
-                catch (Exception ex)
-                {
-                  AddLog("Parser: " + ex.Message, LogMessageColor.Error());
-                }
-                AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
-                Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
-                AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
-              }
-              AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
-            }
-          }
-          catch (Exception ex)
-          {
-            AddLog("Parser: " + ex.Message, LogMessageColor.Error());
-          }
+
+          EbayUpdateAuctions();
 
           foreach (var item in links)
           {
@@ -539,62 +556,9 @@ namespace AvitoRuslanParser
         Task.Factory.StartNew(() =>
         {
           buttonParsingAvitoEbay.Enabled = false;
-          try
-          {
-            if (true)
-            {
-              AddLog("Parser: start update auctions", LogMessageColor.Information());
-              var auctionlinks = mySqlDB.LoadAuctionLink();
-              foreach (long item in auctionlinks)
-              {
-                try
-                {
-                  AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
-                  var parsedItems = SearchApi.ParseItems(new long[] { item });
-                  if (parsedItems.Ack == "Success")
-                  {
-                    AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
-                    if (mySqlDB.UpdateAuction(parsedItems) == 1)
-                    {
-                      AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
-                      if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-                      AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-                      Thread.Sleep(sleepSec * 1000);
-                      AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
-                    }
-                  }
-                  else
-                  {
-                    string err = String.Empty;
-                    if (parsedItems.Errors != null)
-                    {
-                      if (parsedItems.Errors.LongMessage.Length > 0)
-                      {
-                        err = parsedItems.Errors.LongMessage;
-                      }
-                      else
-                      {
-                        err = parsedItems.Errors.ShortMessage;
-                      }
-                    }
-                    AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
-                  }
-                }
-                catch (Exception ex)
-                {
-                  AddLog("Parser: " + ex.Message, LogMessageColor.Error());
-                }
-                AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
-                Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
-                AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
-              }
-              AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());
-            }
-          }
-          catch (Exception ex)
-          {
-            AddLog("Parser: " + ex.Message, LogMessageColor.Error());
-          }
+
+          EbayUpdateAuctions();
+
           foreach (var item in links)
           {
             try
