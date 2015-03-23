@@ -27,6 +27,10 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
     {
       string cost = null;
       var res = Doc.DocumentNode.SelectSingleNode("//span[@class='p_i_price t-item-price']/span");
+      if (res == null)
+      {
+        res = Doc.DocumentNode.SelectSingleNode("//span[@class='p_i_price']");
+      }
       if (res != null)
       {
         cost = res.InnerText.Replace("&nbsp;", "");

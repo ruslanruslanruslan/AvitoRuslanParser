@@ -12,7 +12,6 @@ using MySql.Data.MySqlClient;
 using ParsersChe.WebClientParser.Proxy;
 using System.Threading;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using NLog;
 using System.Threading.Tasks;
 using AvitoRuslanParser.EbayParser;
 using AvitoRuslanParser.Helpfuls;
@@ -24,7 +23,6 @@ namespace AvitoRuslanParser
   public partial class frmMain : Form
   {
 
-    private static Logger logger = LogManager.GetCurrentClassLogger();
     int sleepSec = -1;
     private int countParsed = 0;
     private int countInserted = 0;
@@ -235,7 +233,7 @@ namespace AvitoRuslanParser
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
             IncParsed();
             countPre++;
-            if (result[PartsPage.Cost] != null)
+            if (result[PartsPage.Cost] != null && result[PartsPage.Cost].First<string>() != String.Empty)
             {
               AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
               string idResourceList = mySqlDB.ResourceListIDAvito();
@@ -595,14 +593,21 @@ namespace AvitoRuslanParser
 
     private void AddLog(string msg, Color msgColor)
     {
-      int start = rtbLog.Text.Length - 1;
-      if (start < 0)
-        start = 0;
-      rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
-      rtbLog.Select(start, rtbLog.Text.Length - start + 1);
-      rtbLog.SelectionColor = msgColor;
-      rtbLog.SelectionStart = rtbLog.Text.Length;
-      rtbLog.ScrollToCaret();
+      try
+      {
+        int start = rtbLog.Text.Length - 1;
+        if (start < 0)
+          start = 0;
+        rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+        rtbLog.Select(start, rtbLog.Text.Length - start + 1);
+        rtbLog.SelectionColor = msgColor;
+        rtbLog.SelectionStart = rtbLog.Text.Length;
+        rtbLog.ScrollToCaret();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error adding log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
     }
     private void AddLogStatistic(string category, int countPrepared, int countInserted)
     {
