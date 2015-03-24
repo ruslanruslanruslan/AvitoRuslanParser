@@ -1,10 +1,11 @@
 ﻿using AvitoRuslanParser.EbayParser;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.ExceptionServices;
 using System.Windows.Forms;
+using System.Security;
 using AvitoRuslanParser;
 
 namespace AvitoRuslanParser
@@ -15,11 +16,10 @@ namespace AvitoRuslanParser
     /// Главная точка входа для приложения.
     /// </summary>
     [STAThread]
+    [HandleProcessCorruptedStateExceptions]
+    [SecurityCritical]
     static void Main()
     {
-      //   SearchApi.ParseItems(new long[] { 201117381586, 191228445949, 141318265370 });
-      // Logger logger = LogManager.GetCurrentClassLogger();
-      // logger.Info("hello");
       try
       {
         Application.EnableVisualStyles();
