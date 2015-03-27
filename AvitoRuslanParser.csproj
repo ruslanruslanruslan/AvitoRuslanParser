@@ -52,6 +52,9 @@
     <Reference Include="ParsersChe">
       <HintPath>ParsersChe\bin\Debug\ParsersChe.dll</HintPath>
     </Reference>
+    <Reference Include="SLF">
+      <HintPath>..\..\..\..\AvitoRuslanParser\bin\Debug\SLF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -115,7 +118,6 @@
     <None Include="packages.config" />
     <None Include="Properties.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Properties.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
