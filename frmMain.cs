@@ -23,7 +23,6 @@ namespace AvitoRuslanParser
   public partial class frmMain : Form
   {
 
-    int sleepSec = -1;
     private int countParsed = 0;
     private int countInserted = 0;
     public static string URLLink;
@@ -196,6 +195,11 @@ namespace AvitoRuslanParser
           Parser.PathImages = Properties.Default.PathToImg;
 
           var linksAds = Parser.LoadLinks(linkSection[0]);
+          if (linksAds == null)
+          {
+            AddLog("Parser: Couldn't retrieve ad links from given section " + linkSection[1], LogMessageColor.Error());
+            return;
+          }
           AddLog("Parser: " + linkSection[1], LogMessageColor.Information());
           AddLog("Parser: Count new ad: " + linksAds.Count().ToString(), LogMessageColor.Information());
           int i = 0;
@@ -233,6 +237,11 @@ namespace AvitoRuslanParser
             AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
             IncParsed();
             countPre++;
+
+            AddLog("Parser: sleep after parse on. " + Properties.Default.SleepAfterParseSec + " sec", LogMessageColor.Information());
+            Thread.Sleep(Properties.Default.SleepAfterParseSec * 1000);
+            AddLog("Parser: sleep after parse off", LogMessageColor.Information());
+
             if (result[PartsPage.Cost] != null && result[PartsPage.Cost].First<string>() != String.Empty)
             {
               AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
@@ -251,6 +260,10 @@ namespace AvitoRuslanParser
                 AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
                 AddLog("Parser: End publishing ad", LogMessageColor.Information());
+
+                AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
+                AddLog("Parser: sleep after publication off", LogMessageColor.Information());
               }
               else
               {
@@ -261,14 +274,8 @@ namespace AvitoRuslanParser
               countIns++;
 
             }
-
-            if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-            AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-            Thread.Sleep(sleepSec * 1000);
-            AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
           }
           AddLogStatistic(linkSection[1], mySqlDB.CountAd, countIns);
-
         }
         catch (Exception ex)
         {
@@ -358,47 +365,54 @@ namespace AvitoRuslanParser
           var parsedItems = SearchApi.ParseItems(item);
           foreach (var unit in parsedItems.Item)
           {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(unit.ViewItemURLForNaturalSearch);
-            sb.AppendLine(unit.Title);
-            sb.AppendLine("cost: " + unit.CurrentPrice.Value.ToString());
-            sb.AppendLine("country: " + unit.Country);
-            sb.AppendLine("city: " + unit.Location);
-            sb.AppendLine("author: " + unit.Seller.UserID);
-            sb.AppendLine("ebay section: " + unit.PrimaryCategoryName);
-            AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
+            AddLog("url: " + unit.ViewItemURLForNaturalSearch, LogMessageColor.Information());
+            AddLog("title: " + unit.Title, LogMessageColor.Information());
+            AddLog("cost: " + unit.CurrentPrice.Value.ToString(), LogMessageColor.Information());
+            AddLog("country: " + unit.Country, LogMessageColor.Information());
+            AddLog("city: " + unit.Location, LogMessageColor.Information());
+            AddLog("author: " + unit.Seller.UserID, LogMessageColor.Information());
+            AddLog("ebay section: " + unit.PrimaryCategoryName, LogMessageColor.Information());
+          }
+          bool isAuction = true;
+          if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
+          {
+            if (Properties.Default.PublishParsedData)
+            {
+              AddLog("Parser: Begin loading images", LogMessageColor.Information());
+              imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+              AddLog("Parser: End loading images", LogMessageColor.Information());
+            }
+            isAuction = parsedItems.Item[0].TimeLeft != null;
+            if (isAuction)
+            {
+              AddLog("Parser: It is auction", LogMessageColor.Information());
+            }
+            else
+            {
+              AddLog("Parser: It is advertisement", LogMessageColor.Information());
+            }
           }
           AddLog("Parser: End parsing ad", LogMessageColor.Information());
           IncParsed();
+
+          AddLog("Parser: sleep after parse on. " + Properties.Default.SleepAfterParseSec + " sec", LogMessageColor.Information());
+          Thread.Sleep(Properties.Default.SleepAfterParseSec * 1000);
+          AddLog("Parser: sleep after parse off", LogMessageColor.Information());
+
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
           try
           {
             mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
 
-            bool isAuction = true;
-            if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
-            {
-              if (Properties.Default.PublishParsedData)
-              {
-                AddLog("Parser: Begin loading images", LogMessageColor.Information());
-                imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-                AddLog("Parser: End loading images", LogMessageColor.Information());
-              }
-              isAuction = parsedItems.Item[0].TimeLeft != null;
-              if (isAuction)
-              {
-                AddLog("Parser: It is auction", LogMessageColor.Information());
-              }
-              else
-              {
-                AddLog("Parser: It is advertisement", LogMessageColor.Information());
-              }
-            }
             if (Properties.Default.PublishParsedData && !isAuction)
             {
               AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
               mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
               AddLog("Parser: End publishing ad", LogMessageColor.Information());
+
+              AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
+              Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
+              AddLog("Parser: sleep after publication off", LogMessageColor.Information());
             }
             AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
             incInserted();
@@ -407,11 +421,6 @@ namespace AvitoRuslanParser
           {
             AddLog("Parser: " + ex.Message, LogMessageColor.Error());
           }
-
-          if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-          AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-          Thread.Sleep(sleepSec * 1000);
-          AddLog("Parser: sleep off" + Environment.NewLine + Environment.NewLine, LogMessageColor.Information());
         }
 
         AddLog("Parser: End pasring section " + sectionItem.CategoryName, LogMessageColor.Information());
@@ -452,7 +461,6 @@ namespace AvitoRuslanParser
           var auctionlinks = mySqlDB.LoadAuctionLink();
           foreach (long item in auctionlinks)
           {
-            bool bLongSleep = false;
             try
             {
               AddLog("Parser: updating auction: " + item.ToString() + "...", LogMessageColor.Information());
@@ -460,11 +468,19 @@ namespace AvitoRuslanParser
               if (parsedItems.Ack == "Success")
               {
                 AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack, LogMessageColor.Information());
+
+                AddLog("Parser: sleep after parse on. " + Properties.Default.SleepAfterParseSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepAfterParseSec * 1000);
+                AddLog("Parser: sleep after parse off", LogMessageColor.Information());
+
                 string timeLeft;
                 if (mySqlDB.UpdateAuction(parsedItems, out timeLeft) == 1)
                 {
                   AddLog("Parser: auction " + item.ToString() + " published", LogMessageColor.Information());
-                  bLongSleep = true;
+
+                  AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
+                  Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
+                  AddLog("Parser: sleep after publication off", LogMessageColor.Information());
                 }
                 else
                 {
@@ -486,21 +502,15 @@ namespace AvitoRuslanParser
                   }
                 }
                 AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
+
+                AddLog("Parser: sleep after parse on. " + Properties.Default.SleepAfterParseSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepAfterParseSec * 1000);
+                AddLog("Parser: sleep after parse off", LogMessageColor.Information());
               }
             }
             catch (Exception ex)
             {
               AddLog("Parser: " + ex.Message, LogMessageColor.Error());
-            }
-            AddLog("Parser: sleep on. " + Properties.Default.SleepSecAfterAuctionUpdate + " sec", LogMessageColor.Information());
-            Thread.Sleep(Properties.Default.SleepSecAfterAuctionUpdate * 1000);
-            AddLog("Parser: sleep off", LogMessageColor.Information());
-            if (bLongSleep)
-            {
-              if (sleepSec == -1) sleepSec = Properties.Default.SleepSec;
-              AddLog("Parser: sleep on. " + sleepSec + " sec", LogMessageColor.Information());
-              Thread.Sleep(sleepSec * 1000);
-              AddLog("Parser: sleep off", LogMessageColor.Information());
             }
           }
           AddLog("Parser: finish update auctions" + Environment.NewLine, LogMessageColor.Information());

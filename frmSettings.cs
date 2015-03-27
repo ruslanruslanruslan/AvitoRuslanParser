@@ -26,7 +26,7 @@ namespace AvitoRuslanParser
       else
         edtSaveImagePath.Text = Properties.Default.PathToImg;
       edtPathToProxyFile.Text = Properties.Default.PathToProxy;
-      edtSleep.Text = Properties.Default.SleepSec.ToString();
+      edtSleepAfterParse.Text = Properties.Default.SleepAfterParseSec.ToString();
       edtUsername.Text = Properties.Default.User;
       edtPassword.Text = Properties.Default.Password;
       edtMySqlServerAddress.Text = Properties.Default.MySqlServerAddress;
@@ -39,7 +39,7 @@ namespace AvitoRuslanParser
       cbRunSMSSpamer.Checked = Properties.Default.RunSMSSpamer;
       edtSMSSPamerPath.Text = Properties.Default.SMSSpamerPath;
       cbPublishParsedData.Checked = Properties.Default.PublishParsedData;
-      edtSleepSecAfterAuctionUpdate.Text = Properties.Default.SleepSecAfterAuctionUpdate.ToString();
+      edtSleepSecAfterPublication.Text = Properties.Default.SleepSecAfterPublicationSec.ToString();
     }
 
     private void btnSave_Click(object sender, EventArgs e)
@@ -77,8 +77,8 @@ namespace AvitoRuslanParser
       }
 
       Properties.Default.PathToProxy = edtPathToProxyFile.Text;
-      Properties.Default.SleepSec = Convert.ToInt32(edtSleep.Text);
-      Properties.Default.SleepSecAfterAuctionUpdate = Convert.ToInt32(edtSleepSecAfterAuctionUpdate.Text);
+      Properties.Default.SleepAfterParseSec = Convert.ToInt32(edtSleepAfterParse.Text);
+      Properties.Default.SleepSecAfterPublicationSec = Convert.ToInt32(edtSleepSecAfterPublication.Text);
       Properties.Default.User = edtUsername.Text;
       Properties.Default.Password = edtPassword.Text;
       if (edtMySqlServerAddress.Text.Length == 0 || edtMySqlServerDatabase.Text.Length == 0 || edtMySqlServerPort.Text.Length == 0 ||

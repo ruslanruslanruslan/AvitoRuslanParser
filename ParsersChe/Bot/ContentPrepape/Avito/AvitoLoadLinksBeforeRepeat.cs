@@ -24,10 +24,11 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
 
       var units = Doc.DocumentNode.SelectNodes("//a[@class='photo-wrapper']");
 
+      if (units == null)
+        return;
+
       foreach (var item in units)
       {
-
-
         string resultRef;
         string href = item.GetAttributeValue("href", "");
         if (!string.IsNullOrEmpty(href))
@@ -57,7 +58,6 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
             IncLink();
           }
         }
-
       }
     }
 

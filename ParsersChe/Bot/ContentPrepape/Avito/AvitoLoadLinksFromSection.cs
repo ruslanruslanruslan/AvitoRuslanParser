@@ -62,6 +62,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
     public virtual void LoadLinkWithAllPage()
     {
       LoadLinkFromPage();
+      if (IncLink == null)
+        return;
       while (isNextPage)
       {
         Console.WriteLine("Task " + Task.CurrentId.ToString() + " page: " + numberPage.ToString());

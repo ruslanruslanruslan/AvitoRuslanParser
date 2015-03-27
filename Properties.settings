@@ -20,7 +20,7 @@
     <Setting Name="PathToProxy" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SleepSec" Type="System.Int32" Scope="User">
+    <Setting Name="SleepAfterParseSec" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="MySqlServerAddress" Type="System.String" Scope="User">
@@ -53,7 +53,7 @@
     <Setting Name="PublishParsedData" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SleepSecAfterAuctionUpdate" Type="System.Int32" Scope="User">
+    <Setting Name="SleepSecAfterPublicationSec" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
   </Settings>

@@ -30,11 +30,13 @@
     {
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabMain = new System.Windows.Forms.TabPage();
+      this.edtSleepSecAfterPublication = new System.Windows.Forms.TextBox();
+      this.label15 = new System.Windows.Forms.Label();
       this.cbPublishParsedData = new System.Windows.Forms.CheckBox();
       this.btnBrowserSMSSpamerPath = new System.Windows.Forms.Button();
       this.edtSMSSPamerPath = new System.Windows.Forms.TextBox();
       this.cbRunSMSSpamer = new System.Windows.Forms.CheckBox();
-      this.edtSleep = new System.Windows.Forms.TextBox();
+      this.edtSleepAfterParse = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.btnSaveImagePathBrowse = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
@@ -71,8 +73,6 @@
       this.btnSave = new System.Windows.Forms.Button();
       this.dlgBrowser = new System.Windows.Forms.FolderBrowserDialog();
       this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-      this.label15 = new System.Windows.Forms.Label();
-      this.edtSleepSecAfterAuctionUpdate = new System.Windows.Forms.TextBox();
       this.tabControl1.SuspendLayout();
       this.tabMain.SuspendLayout();
       this.tabMySql.SuspendLayout();
@@ -96,13 +96,13 @@
       // 
       // tabMain
       // 
-      this.tabMain.Controls.Add(this.edtSleepSecAfterAuctionUpdate);
+      this.tabMain.Controls.Add(this.edtSleepSecAfterPublication);
       this.tabMain.Controls.Add(this.label15);
       this.tabMain.Controls.Add(this.cbPublishParsedData);
       this.tabMain.Controls.Add(this.btnBrowserSMSSpamerPath);
       this.tabMain.Controls.Add(this.edtSMSSPamerPath);
       this.tabMain.Controls.Add(this.cbRunSMSSpamer);
-      this.tabMain.Controls.Add(this.edtSleep);
+      this.tabMain.Controls.Add(this.edtSleepAfterParse);
       this.tabMain.Controls.Add(this.label3);
       this.tabMain.Controls.Add(this.btnSaveImagePathBrowse);
       this.tabMain.Controls.Add(this.label1);
@@ -114,6 +114,24 @@
       this.tabMain.TabIndex = 0;
       this.tabMain.Text = "Main";
       this.tabMain.UseVisualStyleBackColor = true;
+      // 
+      // edtSleepSecAfterPublication
+      // 
+      this.edtSleepSecAfterPublication.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edtSleepSecAfterPublication.Location = new System.Drawing.Point(172, 71);
+      this.edtSleepSecAfterPublication.Name = "edtSleepSecAfterPublication";
+      this.edtSleepSecAfterPublication.Size = new System.Drawing.Size(296, 20);
+      this.edtSleepSecAfterPublication.TabIndex = 10;
+      // 
+      // label15
+      // 
+      this.label15.AutoSize = true;
+      this.label15.Location = new System.Drawing.Point(8, 74);
+      this.label15.Name = "label15";
+      this.label15.Size = new System.Drawing.Size(138, 13);
+      this.label15.TabIndex = 9;
+      this.label15.Text = "Sleep after publication (sec)";
       // 
       // cbPublishParsedData
       // 
@@ -155,23 +173,23 @@
       this.cbRunSMSSpamer.Text = "Run SMSSpamer";
       this.cbRunSMSSpamer.UseVisualStyleBackColor = true;
       // 
-      // edtSleep
+      // edtSleepAfterParse
       // 
-      this.edtSleep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.edtSleepAfterParse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtSleep.Location = new System.Drawing.Point(172, 45);
-      this.edtSleep.Name = "edtSleep";
-      this.edtSleep.Size = new System.Drawing.Size(296, 20);
-      this.edtSleep.TabIndex = 4;
+      this.edtSleepAfterParse.Location = new System.Drawing.Point(172, 45);
+      this.edtSleepAfterParse.Name = "edtSleepAfterParse";
+      this.edtSleepAfterParse.Size = new System.Drawing.Size(296, 20);
+      this.edtSleepAfterParse.TabIndex = 4;
       // 
       // label3
       // 
       this.label3.AutoSize = true;
       this.label3.Location = new System.Drawing.Point(8, 48);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(60, 13);
+      this.label3.Size = new System.Drawing.Size(113, 13);
       this.label3.TabIndex = 3;
-      this.label3.Text = "Sleep (sec)";
+      this.label3.Text = "Sleep after parse (sec)";
       // 
       // btnSaveImagePathBrowse
       // 
@@ -508,24 +526,6 @@
       this.btnSave.UseVisualStyleBackColor = true;
       this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
       // 
-      // label15
-      // 
-      this.label15.AutoSize = true;
-      this.label15.Location = new System.Drawing.Point(8, 74);
-      this.label15.Name = "label15";
-      this.label15.Size = new System.Drawing.Size(158, 13);
-      this.label15.TabIndex = 9;
-      this.label15.Text = "Sleep after auction update (sec)";
-      // 
-      // edtSleepSecAfterAuctionUpdate
-      // 
-      this.edtSleepSecAfterAuctionUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.edtSleepSecAfterAuctionUpdate.Location = new System.Drawing.Point(172, 71);
-      this.edtSleepSecAfterAuctionUpdate.Name = "edtSleepSecAfterAuctionUpdate";
-      this.edtSleepSecAfterAuctionUpdate.Size = new System.Drawing.Size(296, 20);
-      this.edtSleepSecAfterAuctionUpdate.TabIndex = 10;
-      // 
       // frmSettings
       // 
       this.AcceptButton = this.btnSave;
@@ -570,7 +570,7 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Button btnProxyFileBrowse;
     private System.Windows.Forms.OpenFileDialog dlgOpenFile;
-    private System.Windows.Forms.TextBox edtSleep;
+    private System.Windows.Forms.TextBox edtSleepAfterParse;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Label label4;
@@ -598,6 +598,6 @@
     private System.Windows.Forms.Button btnBrowserSMSSpamerPath;
     private System.Windows.Forms.CheckBox cbPublishParsedData;
     private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.TextBox edtSleepSecAfterAuctionUpdate;
+    private System.Windows.Forms.TextBox edtSleepSecAfterPublication;
   }
 }
