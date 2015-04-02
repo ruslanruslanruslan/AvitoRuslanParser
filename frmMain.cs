@@ -82,17 +82,6 @@ namespace AvitoRuslanParser
           buttonParsingAvitoEbay.Enabled = false;
         }
       }
-      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
-      {
-        Task.Factory.StartNew(() =>
-          {
-            string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
-              Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
-              Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
-            System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
-          }
-        );
-      }
     }
 
     private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -296,6 +285,7 @@ namespace AvitoRuslanParser
 
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
+      StartSMSSpamer();
       SetZeroCounters();
       try
       {
@@ -305,10 +295,14 @@ namespace AvitoRuslanParser
           btnParsingAvito.Enabled = false;
           foreach (var item in links)
           {
-            AddLog("Parser: start next section", LogMessageColor.Information());
             try
             {
-              LoadSection(item);
+              var uri = new Uri(item[0]);
+              if (uri.Host == "www.avito.ru")
+              {
+                AddLog("Parser: start next section", LogMessageColor.Information());
+                LoadSection(item);
+              }
             }
             catch (Exception ex)
             {
@@ -557,6 +551,7 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
+      StartSMSSpamer();
       SetZeroCounters();
       try
       {
@@ -629,6 +624,21 @@ namespace AvitoRuslanParser
     private void rtbLog_LinkClicked(object sender, LinkClickedEventArgs e)
     {
       System.Diagnostics.Process.Start(e.LinkText);
+    }
+
+    private void StartSMSSpamer()
+    {
+      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
+      {
+        Task.Factory.StartNew(() =>
+        {
+          string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
+            Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
+            Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
+          System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
+        }
+        );
+      }
     }
   }
 }
