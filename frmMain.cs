@@ -27,6 +27,7 @@ namespace AvitoRuslanParser
     private int countInserted = 0;
     public static string URLLink;
     private MySqlDB mySqlDB;
+    private Object thislock = new Object();
 
     public frmMain()
     {
@@ -600,14 +601,17 @@ namespace AvitoRuslanParser
     {
       try
       {
-        int start = rtbLog.Text.Length - 1;
-        if (start < 0)
-          start = 0;
-        rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
-        rtbLog.Select(start, rtbLog.Text.Length - start + 1);
-        rtbLog.SelectionColor = msgColor;
-        rtbLog.SelectionStart = rtbLog.Text.Length;
-        rtbLog.ScrollToCaret();
+        lock (thislock)
+        {
+          int start = rtbLog.Text.Length - 1;
+          if (start < 0)
+            start = 0;
+          rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+          rtbLog.Select(start, rtbLog.Text.Length - start + 1);
+          rtbLog.SelectionColor = msgColor;
+          rtbLog.SelectionStart = rtbLog.Text.Length;
+          rtbLog.ScrollToCaret();
+        }
       }
       catch (Exception ex)
       {

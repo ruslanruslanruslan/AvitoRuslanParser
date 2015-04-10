@@ -33,10 +33,20 @@ namespace ParsersChe.WebClientParser.Proxy
       proxyColl.ReadProxy(list);
     }
 
-    public void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
       proxyColl.Dispose();
+    }
 
+    ~ProxyCollSeparate()
+    {
+      Dispose(false);
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     public void Wait()

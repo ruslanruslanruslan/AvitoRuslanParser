@@ -104,7 +104,8 @@ namespace ParsersChe.WebClientParser
           using (StreamReader sr = new StreamReader(responseStream, encoding))
           {
             content = sr.ReadToEnd();
-            webResp.Close();
+            //webResp.Close();
+            webResp = null;
             if (content.Equals("обновите страницу, пожалуйста")) throw new WebException("ParsersChe error: Proxy no Russian");
             repeat = false;
           }

@@ -31,9 +31,20 @@ namespace ParsersChe.Bot
       // this.cookieContainers = InfoPage.ReadSerObjectToFile(path) as CookieContainer;
     }
 
-    public void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
       //  WriteSerizialiationCookie();
+    }
+
+    ~WebClientBot()
+    {
+      Dispose(false);
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
     }
   }
 }

@@ -11,7 +11,7 @@ using AvitoRuslanParser.EbayParser;
 
 namespace AvitoRuslanParser
 {
-  public class MySqlDB
+  public class MySqlDB : IDisposable
   {
     private const string hostAvito = "www.avito.ru";
     private const string hostEbay = "www.ebay.com";
@@ -29,6 +29,22 @@ namespace AvitoRuslanParser
       Server = _Server;
       Port = _Port;
       Database = _Database;
+    }
+
+    ~MySqlDB()
+    {
+      Dispose(false);
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      Close();
     }
 
     public string Server
@@ -73,26 +89,31 @@ namespace AvitoRuslanParser
       }
     }
 
+    private MySqlConnection Connect()
+    {
+      if (m_mySqlConnection == null)
+      {
+        m_mySqlConnection = new MySqlConnection(ConnectionString);
+      }
+      if (m_mySqlConnection.State == System.Data.ConnectionState.Broken || m_mySqlConnection.State == System.Data.ConnectionState.Closed)
+      {
+        try
+        {
+          m_mySqlConnection.Open();
+        }
+        catch (Exception ex)
+        {
+          throw new Exception("MySql error: Невозможно соединиться с сервером базы данных: " + ex.Message, ex);
+        }
+      }
+      return m_mySqlConnection;
+    }
+
     public MySqlConnection mySqlConnection
     {
       get
       {
-        if (m_mySqlConnection == null)
-        {
-          m_mySqlConnection = new MySqlConnection(ConnectionString);
-        }
-        if (m_mySqlConnection.State == System.Data.ConnectionState.Broken || m_mySqlConnection.State == System.Data.ConnectionState.Closed)
-        {
-          try
-          {
-            m_mySqlConnection.Open();
-          }
-          catch (Exception ex)
-          {
-            throw new Exception("MySql error: Невозможно соединиться с сервером базы данных: " + ex.Message, ex);
-          }
-        }
-        return m_mySqlConnection;
+        return Connect();
       }
     }
 
@@ -144,7 +165,6 @@ namespace AvitoRuslanParser
         {
           results.Add(Convert.ToString(reader["s_name"]));
         }
-        reader.Close();
       }
       catch (MySqlException ex)
       {
