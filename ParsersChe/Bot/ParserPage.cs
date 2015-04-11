@@ -15,6 +15,7 @@ namespace ParsersChe.Bot.ActionOverPage
     private IHttpWeb httpWeb;
     public Dictionary<PartsPage, IEnumerable<string>> ResultsParsing { get; set; }
     private IEnumerable<IPrepareContent> contentPreparers;
+    private string pageUrl;
 
     public IEnumerable<IPrepareContent> ContentPreparersAction
     {
@@ -26,6 +27,11 @@ namespace ParsersChe.Bot.ActionOverPage
       get { return httpWeb; }
       set { httpWeb = value; }
     }
+    protected string PageUrl
+    {
+      get { return pageUrl; }
+      set { pageUrl = value; }
+    }
 
     public ParserPage(IEnumerable<IPrepareContent> contentPreparers, IHttpWeb httWeb)
     {
@@ -35,7 +41,7 @@ namespace ParsersChe.Bot.ActionOverPage
     public ParserPage(IEnumerable<IPrepareContent> contentPreparers, IHttpWeb httWeb, string url)
       : this(contentPreparers, httWeb)
     {
-      LoadPage(url);
+      PageUrl = url;
     }
 
     public virtual void RunActions()
@@ -56,6 +62,7 @@ namespace ParsersChe.Bot.ActionOverPage
     }
 
     public abstract void LoadPage(string url);
+    public abstract void LoadPage();
 
   }
 }

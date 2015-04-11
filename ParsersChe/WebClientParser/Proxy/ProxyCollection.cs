@@ -32,9 +32,22 @@ namespace ParsersChe.WebClientParser.Proxy
 
     public abstract void WriteProxy();
 
-    public void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
       this.WriteProxy();
     }
+
+    ~ProxyCollection()
+    {
+      Dispose(false);
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+
   }
 }

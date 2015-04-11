@@ -27,6 +27,7 @@ namespace AvitoRuslanParser
     private int countInserted = 0;
     public static string URLLink;
     private MySqlDB mySqlDB;
+    private Object thislock = new Object();
 
     public frmMain()
     {
@@ -81,17 +82,6 @@ namespace AvitoRuslanParser
           buttonParsingEbay.Enabled = false;
           buttonParsingAvitoEbay.Enabled = false;
         }
-      }
-      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
-      {
-        Task.Factory.StartNew(() =>
-          {
-            string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
-              Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
-              Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
-            System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
-          }
-        );
       }
     }
 
@@ -296,6 +286,7 @@ namespace AvitoRuslanParser
 
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
+      StartSMSSpamer();
       SetZeroCounters();
       try
       {
@@ -305,10 +296,14 @@ namespace AvitoRuslanParser
           btnParsingAvito.Enabled = false;
           foreach (var item in links)
           {
-            AddLog("Parser: start next section", LogMessageColor.Information());
             try
             {
-              LoadSection(item);
+              var uri = new Uri(item[0]);
+              if (uri.Host == "www.avito.ru")
+              {
+                AddLog("Parser: start next section", LogMessageColor.Information());
+                LoadSection(item);
+              }
             }
             catch (Exception ex)
             {
@@ -557,6 +552,7 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
+      StartSMSSpamer();
       SetZeroCounters();
       try
       {
@@ -605,14 +601,17 @@ namespace AvitoRuslanParser
     {
       try
       {
-        int start = rtbLog.Text.Length - 1;
-        if (start < 0)
-          start = 0;
-        rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
-        rtbLog.Select(start, rtbLog.Text.Length - start + 1);
-        rtbLog.SelectionColor = msgColor;
-        rtbLog.SelectionStart = rtbLog.Text.Length;
-        rtbLog.ScrollToCaret();
+        lock (thislock)
+        {
+          int start = rtbLog.Text.Length - 1;
+          if (start < 0)
+            start = 0;
+          rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+          rtbLog.Select(start, rtbLog.Text.Length - start + 1);
+          rtbLog.SelectionColor = msgColor;
+          rtbLog.SelectionStart = rtbLog.Text.Length;
+          rtbLog.ScrollToCaret();
+        }
       }
       catch (Exception ex)
       {
@@ -629,6 +628,21 @@ namespace AvitoRuslanParser
     private void rtbLog_LinkClicked(object sender, LinkClickedEventArgs e)
     {
       System.Diagnostics.Process.Start(e.LinkText);
+    }
+
+    private void StartSMSSpamer()
+    {
+      if (Properties.Default.RunSMSSpamer && Properties.Default.SMSSpamerPath.Length > 0)
+      {
+        Task.Factory.StartNew(() =>
+        {
+          string arguments = "--send-sms-from-db -server " + Properties.Default.MySqlServerAddress + " -database " +
+            Properties.Default.MySqlServerDatabase + " -login " + Properties.Default.MySqlServerUsername + " -password " +
+            Properties.Default.MySqlServerPassword + " -port " + Properties.Default.MySqlServerPort;
+          System.Diagnostics.Process.Start(Properties.Default.SMSSpamerPath, arguments);
+        }
+        );
+      }
     }
   }
 }

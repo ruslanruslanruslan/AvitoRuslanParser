@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AvitoRuslanParser" GeneratedClassName="Properties">
   <Profiles />
   <Settings>
-    <Setting Name="Setting" Type="System.String" Scope="User">
-      <Value Profile="(Default)">d</Value>
-    </Setting>
     <Setting Name="LinkOnAd" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

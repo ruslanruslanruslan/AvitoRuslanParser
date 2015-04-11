@@ -17,6 +17,8 @@
             {
                 components.Dispose();
             }
+            if (mySqlDB != null)
+              mySqlDB.Dispose();
             base.Dispose(disposing);
         }
 

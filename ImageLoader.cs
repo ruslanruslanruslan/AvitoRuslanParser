@@ -28,27 +28,37 @@ namespace AvitoRuslanParser
 
     public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2)
     {
-      HttpWebRequest req = web.GetHttpWebReq(itemImage);
-      HttpWebResponse resp = web.GetHttpWebResp(req);
-      if (resp != null)
+      int timeout = 60 * 1000;
+      try
       {
-        Stream imageStream = resp.GetResponseStream();
-        if (imageStream != null)
+        HttpWebRequest req = web.GetHttpWebReq(itemImage);
+        req.Timeout = timeout;
+        HttpWebResponse resp = web.GetHttpWebResp(req);
+        if (resp != null)
         {
-          try
+          resp.GetResponseStream().ReadTimeout = timeout;
+          Stream imageStream = resp.GetResponseStream();
+          if (imageStream != null)
           {
-            var image = Image.FromStream(imageStream);
-            ResizeAndSave(image, image.Size, "_original", guid);
-            ResizeAndSave(image, new Size(295, 190), "_preview", guid);
-            ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
-            //ResizeAndSave(image, new Size(1, 1), "", guid);
+            try
+            {
+              var image = Image.FromStream(imageStream);
+              ResizeAndSave(image, image.Size, "_original", guid);
+              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
+              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
+              //ResizeAndSave(image, new Size(1, 1), "", guid);
+            }
+            catch (Exception ex)
+            {
+              throw new Exception("LoadImage error: " + ex.Message, ex);
+            }
+            return true;
           }
-          catch (Exception ex)
-          {
-            throw new Exception("LoadImage error: " + ex.Message, ex);
-          }
-          return true;
         }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Request timeout: " + ex.Message, ex);
       }
       return false;
     }

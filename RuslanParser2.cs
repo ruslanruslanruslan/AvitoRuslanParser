@@ -46,6 +46,7 @@ namespace AvitoRuslanParser
                     }
                            }, webCl
               );
+        parser.LoadPage(url);
         parser.RunActions();
         //MySqlDB.InsertItemResource(MySqlDB.ResourceID(), link);
         // ProxyCollectionSingl.Instance.Dispose();

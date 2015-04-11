@@ -69,14 +69,22 @@ namespace ParsersChe.WebClientParser
     public string GetContent(HttpWebResponse webResp, Encoding encoding)
     {
       string content = string.Empty;
+      Stream responseStream = null;
       try
       {
-        using (var responseStream = webResp.GetResponseStream())
+        try
         {
+          responseStream = webResp.GetResponseStream();
           using (StreamReader sr = new StreamReader(responseStream, encoding))
           {
+            responseStream = null;
             content = sr.ReadToEnd();
           }
+        }
+        finally
+        {
+          if (responseStream != null)
+            responseStream.Dispose();
         }
       }
       catch (Exception)

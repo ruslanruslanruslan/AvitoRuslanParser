@@ -25,18 +25,6 @@ namespace AvitoRuslanParser {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("d")]
-        public string Setting {
-            get {
-                return ((string)(this["Setting"]));
-            }
-            set {
-                this["Setting"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LinkOnAd {
             get {
@@ -100,10 +88,10 @@ namespace AvitoRuslanParser {
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int SleepAfterParseSec {
             get {
-              return ((int)(this["SleepAfterParseSec"]));
+                return ((int)(this["SleepAfterParseSec"]));
             }
             set {
-              this["SleepAfterParseSec"] = value;
+                this["SleepAfterParseSec"] = value;
             }
         }
         
@@ -232,10 +220,10 @@ namespace AvitoRuslanParser {
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int SleepSecAfterPublicationSec {
             get {
-              return ((int)(this["SleepSecAfterPublicationSec"]));
+                return ((int)(this["SleepSecAfterPublicationSec"]));
             }
             set {
-              this["SleepSecAfterPublicationSec"] = value;
+                this["SleepSecAfterPublicationSec"] = value;
             }
         }
     }

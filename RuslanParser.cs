@@ -38,6 +38,7 @@ namespace AvitoRuslanParser
                     new AvitoLoadLinksBeforeRepeat(webCl,8,x=>mySqlDB.IsNewAdAvito(x))
                            }, webCl
         );
+      parser.LoadPage(url);
       parser.RunActions();
       var result = parser.ResultsParsing;
       var links = result[PartsPage.LinkOnAd];
@@ -61,6 +62,7 @@ namespace AvitoRuslanParser
                     new AvitoIdAd()
                     }, webCl
         );
+      parser.LoadPage(url);
       parser.RunActions();
       //     ProxyCollectionSingl.Instance.Dispose();
       var result = parser.ResultsParsing;
