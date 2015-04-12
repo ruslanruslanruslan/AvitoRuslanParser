@@ -75,6 +75,7 @@
     <Compile Include="EbayParser\EbayLoadImage.cs" />
     <Compile Include="EbayParser\ItemInfo.cs" />
     <Compile Include="EbayParser\SearchApi.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="frmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
