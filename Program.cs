@@ -22,6 +22,7 @@ namespace AvitoRuslanParser
     {
       try
       {
+        AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new frmMain());
@@ -30,6 +31,11 @@ namespace AvitoRuslanParser
       {
         MessageBox.Show("Exception:" + Environment.NewLine + ex.Message + Environment.NewLine + "Stack trace:" + Environment.NewLine + ex.StackTrace);
       }
+    }
+
+    static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs ex)
+    {
+      MessageBox.Show("Exception:" + Environment.NewLine + ex.ExceptionObject.ToString());
     }
 
 

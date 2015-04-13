@@ -6,17 +6,21 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using ParsersChe.WebClientParser.Proxy;
-using System.Threading;
-using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using System.Threading.Tasks;
 using AvitoRuslanParser.EbayParser;
 using AvitoRuslanParser.Helpfuls;
+using ParsersChe.WebClientParser.Proxy;
+using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.WebClientParser;
-using System.Text.RegularExpressions;
+using Extensions;
+
 
 namespace AvitoRuslanParser
 {
@@ -32,7 +36,7 @@ namespace AvitoRuslanParser
     public frmMain()
     {
       InitializeComponent();
-      System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
+      System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = true;
       mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword,
         Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
     }
@@ -40,20 +44,20 @@ namespace AvitoRuslanParser
     public void IncParsed()
     {
       countParsed++;
-      labelParsed.Text = countParsed.ToString();
+      labelParsed.SetPropertyThreadSafe(() => labelParsed.Text, countParsed.ToString());
     }
     public void incInserted()
     {
       countInserted++;
-      labelInserted.Text = countInserted.ToString();
+      labelInserted.SetPropertyThreadSafe(() => labelInserted.Text, countInserted.ToString());
     }
 
     public void SetZeroCounters()
     {
       countInserted = 0;
       countParsed = 0;
-      labelParsed.Text = "0";
-      labelInserted.Text = "0";
+      labelParsed.SetPropertyThreadSafe(() => labelParsed.Text, "0");
+      labelInserted.SetPropertyThreadSafe(() => labelInserted.Text, "0");
     }
 
     private void frmMain_Load(object sender, EventArgs e)
@@ -126,7 +130,7 @@ namespace AvitoRuslanParser
     {
       try
       {
-        label6.Text = "Start";
+        label6.SetPropertyThreadSafe(() => label6.Text, "Start");
         //Ссылка на обьявление
         mySqlDB.DeleteUnTransformated();
         //Создаем класс и вводим параметры 
@@ -151,7 +155,7 @@ namespace AvitoRuslanParser
       {
         AddLog("Parser: " + ex.Message, LogMessageColor.Error());
       }
-      label6.Text = "Finish";
+      label6.SetPropertyThreadSafe(() => label6.Text, "Finish");
     }
     private void btnEnter_Click(object sender, EventArgs e)
     {//Проверку на пустые знаяения полей
@@ -174,7 +178,7 @@ namespace AvitoRuslanParser
       {
         try
         {
-          label6.Text = "Start";
+          label6.SetPropertyThreadSafe(() => label6.Text, "Start");
 
           //Ссылка на обьявление
           //  URLLink = LinkAdtextBox.Text;
@@ -271,7 +275,7 @@ namespace AvitoRuslanParser
         {
           AddLog("Parser: " + ex.Message, LogMessageColor.Error());
         }
-        label6.Text = "Finish";
+        label6.SetPropertyThreadSafe(() => label6.Text, "Finish");
       }
     }
     private void SaveField()
@@ -286,14 +290,14 @@ namespace AvitoRuslanParser
 
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();
-      SetZeroCounters();
+      StartSMSSpamer();      
       try
-      {
-        var links = mySqlDB.LoadSectionsLink();
+      {        
         Task.Factory.StartNew(() =>
         {
-          btnParsingAvito.Enabled = false;
+          btnParsingAvito.SetPropertyThreadSafe(() => btnParsingAvito.Enabled, false);
+          SetZeroCounters();
+          var links = mySqlDB.LoadSectionsLink();
           foreach (var item in links)
           {
             try
@@ -311,6 +315,7 @@ namespace AvitoRuslanParser
             }
           }
           //ProxyCollectionSingl.Instance.Dispose();
+          btnParsingAvito.SetPropertyThreadSafe(() => btnParsingAvito.Enabled, true);
           btnParsingAvito.Enabled = true;
         });
       }
@@ -518,16 +523,18 @@ namespace AvitoRuslanParser
     }
 
     private void buttonParsingEbay_Click(object sender, EventArgs e)
-    {
-      SetZeroCounters();
+    {      
       try
       {
-        var links = mySqlDB.LoadSectionLinkEbay();
         Task.Factory.StartNew(() =>
         {
-          buttonParsingEbay.Enabled = false;
+          buttonParsingEbay.SetPropertyThreadSafe(() => buttonParsingEbay.Enabled, false);
+
+          SetZeroCounters();
 
           EbayUpdateAuctions();
+
+          var links = mySqlDB.LoadSectionLinkEbay();
 
           foreach (var item in links)
           {
@@ -541,7 +548,7 @@ namespace AvitoRuslanParser
               AddLog("Parser: " + ex.Message, LogMessageColor.Error());
             }
           }
-          buttonParsingEbay.Enabled = true;
+          buttonParsingEbay.SetPropertyThreadSafe(() => buttonParsingEbay.Enabled, true);
         });
       }
       catch (Exception ex)
@@ -552,16 +559,18 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();
-      SetZeroCounters();
+      StartSMSSpamer();      
       try
-      {
-        var links = mySqlDB.LoadSectionsLinkEx();
+      {        
         Task.Factory.StartNew(() =>
         {
-          buttonParsingAvitoEbay.Enabled = false;
+          buttonParsingAvitoEbay.SetPropertyThreadSafe(() => buttonParsingAvitoEbay.Enabled, false);
+
+          SetZeroCounters();
 
           EbayUpdateAuctions();
+
+          var links = mySqlDB.LoadSectionsLinkEx();
 
           foreach (var item in links)
           {
@@ -577,7 +586,7 @@ namespace AvitoRuslanParser
             }
           }
           ProxyCollectionSingl.Instance.Dispose();
-          buttonParsingAvitoEbay.Enabled = true;
+          buttonParsingAvitoEbay.SetPropertyThreadSafe(() => buttonParsingAvitoEbay.Enabled, true);
         });
       }
       catch (Exception ex)
@@ -599,30 +608,54 @@ namespace AvitoRuslanParser
 
     private void AddLog(string msg, Color msgColor)
     {
-      try
+      if (rtbLog.InvokeRequired)
       {
-        lock (thislock)
-        {
-          int start = rtbLog.Text.Length - 1;
-          if (start < 0)
-            start = 0;
-          rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
-          rtbLog.Select(start, rtbLog.Text.Length - start + 1);
-          rtbLog.SelectionColor = msgColor;
-          rtbLog.SelectionStart = rtbLog.Text.Length;
-          rtbLog.ScrollToCaret();
-        }
+        rtbLog.Invoke(new MethodInvoker(() => AddLog(msg, msgColor)));
       }
-      catch (Exception ex)
+      else
       {
-        MessageBox.Show(ex.Message, "Error adding log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        try
+        {
+          lock (thislock)
+          {
+            int start = rtbLog.Text.Length - 1;
+            if (start < 0)
+              start = 0;
+            rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+            rtbLog.Select(start, rtbLog.Text.Length - start + 1);
+            rtbLog.SelectionColor = msgColor;
+            rtbLog.SelectionStart = rtbLog.Text.Length;
+            rtbLog.ScrollToCaret();
+          }
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show(ex.Message, "Error adding log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
       }
     }
     private void AddLogStatistic(string category, int countPrepared, int countInserted)
     {
-      rtbLogStatistics.AppendText(DateTime.Now.ToLongTimeString() + " | " + category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
-      rtbLogStatistics.SelectionStart = rtbLogStatistics.Text.Length;
-      rtbLogStatistics.ScrollToCaret();
+      if (rtbLogStatistics.InvokeRequired)
+      {
+        rtbLogStatistics.Invoke(new MethodInvoker(() => AddLogStatistic(category, countPrepared, countInserted)));
+      }
+      else
+      {
+        try
+        {
+          lock (thislock)
+          {
+            rtbLogStatistics.AppendText(DateTime.Now.ToLongTimeString() + " | " + category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
+            rtbLogStatistics.SelectionStart = rtbLogStatistics.Text.Length;
+            rtbLogStatistics.ScrollToCaret();
+          }
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show(ex.Message, "Error adding log statistics", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+      }
     }
 
     private void rtbLog_LinkClicked(object sender, LinkClickedEventArgs e)
