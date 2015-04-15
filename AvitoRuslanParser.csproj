@@ -130,7 +130,10 @@
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="External Libraries\eBay.Services.dll" />
+    <Content Include="External Libraries\SLF.dll" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
