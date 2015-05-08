@@ -290,7 +290,9 @@ namespace AvitoRuslanParser
 
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();      
+      StartSMSSpamer();
+      if (!CheckPublishingOn())
+        return;
       try
       {        
         Task.Factory.StartNew(() =>
@@ -523,7 +525,9 @@ namespace AvitoRuslanParser
     }
 
     private void buttonParsingEbay_Click(object sender, EventArgs e)
-    {      
+    {
+      if (!CheckPublishingOn())
+        return;
       try
       {
         Task.Factory.StartNew(() =>
@@ -559,7 +563,9 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();      
+      StartSMSSpamer();
+      if (!CheckPublishingOn())
+        return;
       try
       {        
         Task.Factory.StartNew(() =>
@@ -677,5 +683,14 @@ namespace AvitoRuslanParser
         );
       }
     }
+
+    private bool CheckPublishingOn()
+    {
+      if (!Properties.Default.PublishParsedData)
+        return MessageBox.Show("Pusblishing is off. Are you sure you want to proceed?", "Publishing is off", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+      else
+        return true;
+    }
+
   }
 }
