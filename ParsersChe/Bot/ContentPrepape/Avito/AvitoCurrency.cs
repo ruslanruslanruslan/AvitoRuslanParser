@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 {
   public class AvitoCurrency : WebClientBot, IPrepareContent
   {

@@ -1,4 +1,4 @@
-﻿using ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito;
+﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;

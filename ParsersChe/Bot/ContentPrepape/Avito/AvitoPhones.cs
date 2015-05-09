@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
 {
   public class AvitoPhones : IPrepareContent
   {

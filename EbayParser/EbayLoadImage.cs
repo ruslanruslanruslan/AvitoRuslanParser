@@ -36,8 +36,9 @@ namespace AvitoRuslanParser.EbayParser
       imageLoader = new ImageLoader(PathToFolder, ftpUsername, ftpPassword);
     }
 
-    public void LoadImages(IEnumerable<string> LinksImages)
+    public string LoadImages(IEnumerable<string> LinksImages)
     {
+      string error = String.Empty;
       if (LinksImages != null)
         foreach (var item in LinksImages)
         {
@@ -53,9 +54,10 @@ namespace AvitoRuslanParser.EbayParser
           }
           catch (Exception ex)
           {
-            throw new Exception("LoadImage error: " + ex.Message, ex);
+            error = "LoadImage error: " + ex.Message;
           }
         }
+      return error;
     }
   }
 }

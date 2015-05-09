@@ -1,6 +1,6 @@
 ﻿using ParsersChe.Bot.ActionOverPage;
-using ParsersChe.Bot.ActionOverPage.ContentPrepape;
-using ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito;
+using ParsersChe.Bot.ActionOverPage.ContentPrepare;
+using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.Bot.ContentPrepape.Avito;
 using ParsersChe.WebClientParser;

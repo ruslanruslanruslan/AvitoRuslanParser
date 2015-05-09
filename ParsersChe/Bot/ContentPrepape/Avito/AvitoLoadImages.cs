@@ -7,12 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 {
   public class AvitoLoadImages : WebClientBot, IPrepareContent
   {
     public string PathToFolder { get; private set; }
-    private IList<string> linksImages;
+    protected IList<string> linksImages;
 
     public IList<string> LinksImages
     {
@@ -27,8 +27,17 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       get { return resultDown; }
       set { resultDown = value; }
     }
-    public AvitoLoadImages(IHttpWeb httpweb, string pathFolder)
+
+    protected ImageParsedCountHelper imageParsedCountHelper = null;
+    public ImageParsedCountHelper ImageParsedCount
     {
+      get { return imageParsedCountHelper; }
+      set { imageParsedCountHelper = value; }
+    }
+
+    public AvitoLoadImages(IHttpWeb httpweb, string pathFolder, ImageParsedCountHelper imageCount = null)
+    {
+      imageParsedCountHelper = imageCount;
       this.WebCl = httpweb;
       PathToFolder = pathFolder.TrimEnd('/', '\\');
       if ((pathFolder.ToLower()).StartsWith("ftp://") == false)
@@ -75,6 +84,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       if (linksImages != null)
       {
         linksImages = linksImages.Distinct().ToList();
+        if (imageParsedCountHelper != null)
+          imageParsedCountHelper.Count = linksImages.Count;
         foreach (var item in linksImages)
         {
           bool result;
@@ -136,5 +147,15 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       }
     }
     #endregion
+  }
+
+  public class ImageParsedCountHelper
+  {
+    private int count = 0;
+    public int Count
+    {
+      get { return count; }
+      set { count = value; }
+    }
   }
 }

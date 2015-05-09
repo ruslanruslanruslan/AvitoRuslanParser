@@ -1,5 +1,5 @@
 ﻿using ParsersChe.Bot;
-using ParsersChe.Bot.ActionOverPage.ContentPrepape;
+using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using System;
 using System.Collections.Generic;
