@@ -202,6 +202,9 @@ namespace AvitoRuslanParser
           int countIns = 0;
           foreach (var item in linksAds)
           {
+            imageCount.ErrorList.Clear();
+            imageCount.CountParsed = 0;
+            imageCount.CountDownloaded = 0;
             AddLog("Parser: start parse link: " + item, LogMessageColor.Information());
             i++;
             if (i == 25)
@@ -251,7 +254,12 @@ namespace AvitoRuslanParser
                 Parser2.PathImages2 = Properties.Default.PathToImg;
 
                 var result2 = Parser2.Run(item);
-                AddLog("Parser: " + imageCount.Count + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+                foreach (var error in imageCount.ErrorList)
+                {
+                  AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
+                }
                 AddLog("Parser: Loading images end", LogMessageColor.Information());
                 AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
@@ -385,16 +393,19 @@ namespace AvitoRuslanParser
               AddLog("Parser: Begin loading images", LogMessageColor.Information());
               try
               {
-                string result = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-                if (result != String.Empty)
-                  AddLog(result, LogMessageColor.Error());
+                var imageCount = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+                foreach (var error in imageCount.ErrorList)
+                {
+                  AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
+                }
               }
               catch (Exception ex)
               {
                 AddLog("Parser: " + ex.Message, LogMessageColor.Error());
               }
               AddLog("Parser: End loading images", LogMessageColor.Information());
-              AddLog("Parser: " + parsedItems.Item[0].PictureURL.Count() + " images parsed", LogMessageColor.Information());
             }
             isAuction = parsedItems.Item[0].TimeLeft != null;
             if (isAuction)

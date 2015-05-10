@@ -85,22 +85,31 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
       {
         linksImages = linksImages.Distinct().ToList();
         if (imageParsedCountHelper != null)
-          imageParsedCountHelper.Count = linksImages.Count;
+          imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in linksImages)
         {
-          bool result;
-          HttpWebRequest req = WebCl.GetHttpWebReq(item);
-          HttpWebResponse resp = WebCl.GetHttpWebResp(req);
-          if (resp != null)
+          try
           {
-            if (resultDown == null) { resultDown = new List<string>(); }
-            string path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
-
-            result = WebCl.DownloadImage(resp, path);
-            if (result)
+            bool result;
+            HttpWebRequest req = WebCl.GetHttpWebReq(item);
+            HttpWebResponse resp = WebCl.GetHttpWebResp(req);
+            if (resp != null)
             {
-              resultDown.Add(path);
+              if (resultDown == null) { resultDown = new List<string>(); }
+              string path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
+
+              result = WebCl.DownloadImage(resp, path);
+              if (result)
+              {
+                resultDown.Add(path);
+                imageParsedCountHelper.CountDownloaded++;
+                imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
+              }
             }
+          }
+          catch (Exception ex)
+          {
+            imageParsedCountHelper.ErrorList.Add("LoadImage error: " + item + ": " + ex.Message, true);
           }
         }
       }
@@ -151,11 +160,25 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 
   public class ImageParsedCountHelper
   {
-    private int count = 0;
-    public int Count
+    private int countParsed = 0;
+    public int CountParsed
     {
-      get { return count; }
-      set { count = value; }
+      get { return countParsed; }
+      set { countParsed = value; }
+    }
+
+    private int countDownloaded = 0;
+    public int CountDownloaded
+    {
+      get { return countDownloaded; }
+      set { countDownloaded = value; }
+    }
+
+    private Dictionary<string, bool> errorList = new Dictionary<string,bool>();
+    public Dictionary<string, bool> ErrorList
+    {
+      get { return errorList; }
+      set { errorList = value; }
     }
   }
 }

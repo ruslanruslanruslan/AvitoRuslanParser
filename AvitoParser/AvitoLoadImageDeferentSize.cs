@@ -45,7 +45,7 @@ namespace AvitoRuslanParser.AvitoParser
       {
         LinksImages = LinksImages.Distinct().ToList();
         if (imageParsedCountHelper != null)
-          imageParsedCountHelper.Count = linksImages.Count;
+          imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in LinksImages)
         {
           string guid = GetidImage();
@@ -56,11 +56,13 @@ namespace AvitoRuslanParser.AvitoParser
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink);
               mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
+              imageParsedCountHelper.CountDownloaded++;
+              imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
             }
           }
           catch (Exception ex)
           {
-            throw new Exception("LoadImage error: " + ex.Message, ex);
+            imageParsedCountHelper.ErrorList.Add("LoadImage error: " + item + ": " + ex.Message, true);
           }
         }
       }

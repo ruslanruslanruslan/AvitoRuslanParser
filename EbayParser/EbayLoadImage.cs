@@ -36,10 +36,12 @@ namespace AvitoRuslanParser.EbayParser
       imageLoader = new ImageLoader(PathToFolder, ftpUsername, ftpPassword);
     }
 
-    public string LoadImages(IEnumerable<string> LinksImages)
+    public EbayImageParsedCountHelper LoadImages(IEnumerable<string> LinksImages)
     {
-      string error = String.Empty;
+      EbayImageParsedCountHelper helper = new EbayImageParsedCountHelper();
       if (LinksImages != null)
+      {
+        helper.CountParsed = LinksImages.Count();
         foreach (var item in LinksImages)
         {
           string guid = mySqlDB.ResourceID();
@@ -50,14 +52,42 @@ namespace AvitoRuslanParser.EbayParser
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink);
               mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
+              helper.CountDownloaded++;
+              helper.ErrorList.Add("LoadImage success: " + item, false);
             }
           }
           catch (Exception ex)
           {
-            error = "LoadImage error: " + ex.Message;
+            helper.ErrorList.Add("LoadImage error: " + item + ": " + ex.Message, true);
           }
         }
-      return error;
+      }
+      return helper;
     }
   }
+
+  class EbayImageParsedCountHelper
+  {
+    private int countParsed = 0;
+    public int CountParsed
+    {
+      get { return countParsed; }
+      set { countParsed = value; }
+    }
+
+    private int countDownloaded = 0;
+    public int CountDownloaded
+    {
+      get { return countDownloaded; }
+      set { countDownloaded = value; }
+    }
+
+    private Dictionary<string, bool> errorList = new Dictionary<string,bool>();
+    public Dictionary<string, bool> ErrorList
+    {
+      get { return errorList; }
+      set { errorList = value; }
+    }
+  }
+
 }
