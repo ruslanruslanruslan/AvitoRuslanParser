@@ -1,4 +1,4 @@
-﻿using ParsersChe.Bot.ActionOverPage.ContentPrepape;
+﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;

@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
 {
   public class AvitoLoadLinksFromSection : WebClientBot, IPrepareContent
   {

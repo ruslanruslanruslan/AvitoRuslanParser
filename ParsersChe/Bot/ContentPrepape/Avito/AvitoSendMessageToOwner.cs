@@ -10,7 +10,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
 {
   public class AvitoSendMessageToOwner : WebClientBot, IPrepareContent
   {

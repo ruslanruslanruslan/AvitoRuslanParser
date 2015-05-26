@@ -114,7 +114,7 @@ namespace AvitoRuslanParser
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
         {
           imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-          isAuction = parsedItems.Item[0].BuyItNowAvailable != null;
+          isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
         }
 
         if (!isAuction)
@@ -146,7 +146,7 @@ namespace AvitoRuslanParser
         //id я не вставлял так как непонятно было и неподходило под структуру бд
         string idResourceList = mySqlDB.ResourceListIDAvito();
         mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
-        var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
+        var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper());
         Parser2.PathImages2 = Properties.Default.PathToImg;
         var result2 = Parser2.Run(URLLink);
         mySqlDB.ExecuteProcAvito(idResourceList);
@@ -184,7 +184,8 @@ namespace AvitoRuslanParser
           //  URLLink = LinkAdtextBox.Text;
           //Создаем класс и вводим параметры 
           var Parser = new RuslanParser(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB);
-          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
+          var imageCount = new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper();
+          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, imageCount);
 
           Parser.PathImages = Properties.Default.PathToImg;
 
@@ -201,6 +202,9 @@ namespace AvitoRuslanParser
           int countIns = 0;
           foreach (var item in linksAds)
           {
+            imageCount.ErrorList.Clear();
+            imageCount.CountParsed = 0;
+            imageCount.CountDownloaded = 0;
             AddLog("Parser: start parse link: " + item, LogMessageColor.Information());
             i++;
             if (i == 25)
@@ -250,6 +254,12 @@ namespace AvitoRuslanParser
                 Parser2.PathImages2 = Properties.Default.PathToImg;
 
                 var result2 = Parser2.Run(item);
+                AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+                foreach (var error in imageCount.ErrorList)
+                {
+                  AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
+                }
                 AddLog("Parser: Loading images end", LogMessageColor.Information());
                 AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
@@ -290,7 +300,9 @@ namespace AvitoRuslanParser
 
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();      
+      StartSMSSpamer();
+      if (!CheckPublishingOn())
+        return;
       try
       {        
         Task.Factory.StartNew(() =>
@@ -379,10 +391,23 @@ namespace AvitoRuslanParser
             if (Properties.Default.PublishParsedData)
             {
               AddLog("Parser: Begin loading images", LogMessageColor.Information());
-              imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+              try
+              {
+                var imageCount = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+                foreach (var error in imageCount.ErrorList)
+                {
+                  AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
+                }
+              }
+              catch (Exception ex)
+              {
+                AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+              }
               AddLog("Parser: End loading images", LogMessageColor.Information());
             }
-            isAuction = parsedItems.Item[0].TimeLeft != null;
+            isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
             if (isAuction)
             {
               AddLog("Parser: It is auction", LogMessageColor.Information());
@@ -523,7 +548,9 @@ namespace AvitoRuslanParser
     }
 
     private void buttonParsingEbay_Click(object sender, EventArgs e)
-    {      
+    {
+      if (!CheckPublishingOn())
+        return;
       try
       {
         Task.Factory.StartNew(() =>
@@ -559,7 +586,9 @@ namespace AvitoRuslanParser
 
     private void buttonParsingAvitoEbay_Click(object sender, EventArgs e)
     {
-      StartSMSSpamer();      
+      StartSMSSpamer();
+      if (!CheckPublishingOn())
+        return;
       try
       {        
         Task.Factory.StartNew(() =>
@@ -677,5 +706,14 @@ namespace AvitoRuslanParser
         );
       }
     }
+
+    private bool CheckPublishingOn()
+    {
+      if (!Properties.Default.PublishParsedData)
+        return MessageBox.Show("Pusblishing is off. Are you sure you want to proceed?", "Publishing is off", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+      else
+        return true;
+    }
+
   }
 }

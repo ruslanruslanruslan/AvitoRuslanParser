@@ -7,12 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
+namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 {
   public class AvitoLoadImages : WebClientBot, IPrepareContent
   {
     public string PathToFolder { get; private set; }
-    private IList<string> linksImages;
+    protected IList<string> linksImages;
 
     public IList<string> LinksImages
     {
@@ -27,8 +27,17 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       get { return resultDown; }
       set { resultDown = value; }
     }
-    public AvitoLoadImages(IHttpWeb httpweb, string pathFolder)
+
+    protected ImageParsedCountHelper imageParsedCountHelper = null;
+    public ImageParsedCountHelper ImageParsedCount
     {
+      get { return imageParsedCountHelper; }
+      set { imageParsedCountHelper = value; }
+    }
+
+    public AvitoLoadImages(IHttpWeb httpweb, string pathFolder, ImageParsedCountHelper imageCount = null)
+    {
+      imageParsedCountHelper = imageCount;
       this.WebCl = httpweb;
       PathToFolder = pathFolder.TrimEnd('/', '\\');
       if ((pathFolder.ToLower()).StartsWith("ftp://") == false)
@@ -75,21 +84,32 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       if (linksImages != null)
       {
         linksImages = linksImages.Distinct().ToList();
+        if (imageParsedCountHelper != null)
+          imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in linksImages)
         {
-          bool result;
-          HttpWebRequest req = WebCl.GetHttpWebReq(item);
-          HttpWebResponse resp = WebCl.GetHttpWebResp(req);
-          if (resp != null)
+          try
           {
-            if (resultDown == null) { resultDown = new List<string>(); }
-            string path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
-
-            result = WebCl.DownloadImage(resp, path);
-            if (result)
+            bool result;
+            HttpWebRequest req = WebCl.GetHttpWebReq(item);
+            HttpWebResponse resp = WebCl.GetHttpWebResp(req);
+            if (resp != null)
             {
-              resultDown.Add(path);
+              if (resultDown == null) { resultDown = new List<string>(); }
+              string path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
+
+              result = WebCl.DownloadImage(resp, path);
+              if (result)
+              {
+                resultDown.Add(path);
+                imageParsedCountHelper.CountDownloaded++;
+                imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
+              }
             }
+          }
+          catch (Exception ex)
+          {
+            imageParsedCountHelper.ErrorList.Add("LoadImage error: " + item + ": " + ex.Message, true);
           }
         }
       }
@@ -136,5 +156,29 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito
       }
     }
     #endregion
+  }
+
+  public class ImageParsedCountHelper
+  {
+    private int countParsed = 0;
+    public int CountParsed
+    {
+      get { return countParsed; }
+      set { countParsed = value; }
+    }
+
+    private int countDownloaded = 0;
+    public int CountDownloaded
+    {
+      get { return countDownloaded; }
+      set { countDownloaded = value; }
+    }
+
+    private Dictionary<string, bool> errorList = new Dictionary<string,bool>();
+    public Dictionary<string, bool> ErrorList
+    {
+      get { return errorList; }
+      set { errorList = value; }
+    }
   }
 }

@@ -21,5 +21,9 @@ namespace AvitoRuslanParser
     {
       return Color.Red;
     }
+    public static Color Success()
+    {
+      return Color.LimeGreen;
+    }
   }
 }

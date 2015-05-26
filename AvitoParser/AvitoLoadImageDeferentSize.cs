@@ -1,4 +1,4 @@
-﻿using ParsersChe.Bot.ActionOverPage.ContentPrepape.Avito;
+﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
@@ -30,8 +30,8 @@ namespace AvitoRuslanParser.AvitoParser
     {
       return mySqlDB.ResourceListIDAvito();
     }
-    public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword)
-      : base(httpweb, pathFolder)
+    public AvitoLoadImageDeferentSize(IHttpWeb httpweb, string pathFolder, MySqlDB _mySqlDB, string _ftpUsername, string _ftpPassword, ImageParsedCountHelper imageParsed)
+      : base(httpweb, pathFolder, imageParsed)
     {
       mySqlDB = _mySqlDB;
       ftpUsername = _ftpUsername;
@@ -44,6 +44,8 @@ namespace AvitoRuslanParser.AvitoParser
       if (LinksImages != null)
       {
         LinksImages = LinksImages.Distinct().ToList();
+        if (imageParsedCountHelper != null)
+          imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in LinksImages)
         {
           string guid = GetidImage();
@@ -54,14 +56,17 @@ namespace AvitoRuslanParser.AvitoParser
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink);
               mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
+              imageParsedCountHelper.CountDownloaded++;
+              imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
             }
           }
           catch (Exception ex)
           {
-            throw new Exception("LoadImage error: " + ex.Message, ex);
+            imageParsedCountHelper.ErrorList.Add("LoadImage error: " + item + ": " + ex.Message, true);
           }
         }
       }
     }
   }
+
 }
