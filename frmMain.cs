@@ -114,7 +114,7 @@ namespace AvitoRuslanParser
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
         {
           imgParser.LoadImages(parsedItems.Item[0].PictureURL);
-          isAuction = parsedItems.Item[0].BuyItNowAvailable != null;
+          isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
         }
 
         if (!isAuction)
@@ -407,7 +407,7 @@ namespace AvitoRuslanParser
               }
               AddLog("Parser: End loading images", LogMessageColor.Information());
             }
-            isAuction = parsedItems.Item[0].TimeLeft != null;
+            isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
             if (isAuction)
             {
               AddLog("Parser: It is auction", LogMessageColor.Information());
