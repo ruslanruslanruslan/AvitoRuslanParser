@@ -293,13 +293,14 @@ namespace AvitoRuslanParser
         }
       }
     }
-    public void InsertItemResource(string resourceid, string url)
+    public void InsertItemResource(string resourceid, string url, string directory)
     {
       if (resourceid != null)
       {
         //Тело запроса!!!!!!!
+        const string fixedDirectory = @"oc-content/uploads/";
         const string sql = @" insert into oc_t_item_resource
-                                    select @resourceid, 1, null, ""jpg"", ""image/jpeg"", ""oc-content/uploads/""";
+                                    select @resourceid, 1, null, ""jpg"", ""image/jpeg"", @directory";
         try
         {
           MySqlCommand cmd = new MySqlCommand();
@@ -307,6 +308,7 @@ namespace AvitoRuslanParser
           cmd.CommandText = sql;
           cmd.Prepare();
           cmd.Parameters.AddWithValue("@resourceid", resourceid);
+          cmd.Parameters.AddWithValue("@directory", fixedDirectory + directory);
 
           int result = cmd.ExecuteNonQuery();
         }

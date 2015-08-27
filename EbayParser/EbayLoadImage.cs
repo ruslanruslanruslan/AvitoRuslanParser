@@ -48,9 +48,14 @@ namespace AvitoRuslanParser.EbayParser
           string guid2 = mySqlDB.ResourceListIDEbay();
           try
           {
-            if (imageLoader.LoadImage(item, web, guid, guid2))
+            string dirName = string.Empty;
+            if (guid.Length > 3)
+              dirName = guid.Substring(0, 3);
+            else
+              dirName = guid;
+            if (imageLoader.LoadImage(item, web, guid, guid2, dirName))
             {
-              mySqlDB.InsertItemResource(guid, frmMain.URLLink);
+              mySqlDB.InsertItemResource(guid, frmMain.URLLink, dirName);
               mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
               helper.CountDownloaded++;
               helper.ErrorList.Add("LoadImage success: " + item, false);

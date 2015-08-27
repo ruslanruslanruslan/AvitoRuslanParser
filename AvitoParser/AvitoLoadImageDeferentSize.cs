@@ -52,9 +52,15 @@ namespace AvitoRuslanParser.AvitoParser
           string guid2 = GetidImageList();
           try
           {
-            if (imageLoader.LoadImage(item, WebCl, guid, guid2))
+            string dirName = string.Empty;
+            if (guid.Length > 3)
+              dirName = guid.Substring(0, 3);
+            else
+              dirName = guid;
+
+            if (imageLoader.LoadImage(item, WebCl, guid, guid2, dirName))
             {
-              mySqlDB.InsertItemResource(guid, frmMain.URLLink);
+              mySqlDB.InsertItemResource(guid, frmMain.URLLink, dirName);
               mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
               imageParsedCountHelper.CountDownloaded++;
               imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
