@@ -75,7 +75,11 @@ namespace AvitoRuslanParser
       {
         path = PathToFolder;
         if (!path.EndsWith("\\"))
-          path += "\\";        
+          path += "\\";
+        if (dirName != string.Empty)
+          path = path + dirName + "\\";
+        if (!Directory.Exists(path))
+          Directory.CreateDirectory(path);
       }
       path += filename;
       //ResultDown.Add(path);
