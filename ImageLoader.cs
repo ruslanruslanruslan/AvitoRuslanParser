@@ -26,7 +26,7 @@ namespace AvitoRuslanParser
       ftpPassword = _ftpPasword;
     }
 
-    public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2)
+    public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2, string dirName)
     {
       int timeout = 60 * 1000;
       try
@@ -43,10 +43,9 @@ namespace AvitoRuslanParser
             try
             {
               var image = Image.FromStream(imageStream);
-              ResizeAndSave(image, image.Size, "_original", guid);
-              ResizeAndSave(image, new Size(295, 190), "_preview", guid);
-              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid);
-              //ResizeAndSave(image, new Size(1, 1), "", guid);
+              ResizeAndSave(image, image.Size, "_original", guid, dirName);
+              ResizeAndSave(image, new Size(295, 190), "_preview", guid, dirName);
+              ResizeAndSave(image, new Size(80, 80), "_thumbnail", guid, dirName);
             }
             catch (Exception ex)
             {
@@ -63,10 +62,10 @@ namespace AvitoRuslanParser
       return false;
     }
 
-    private void ResizeAndSave(Image image, Size size, string prefix, string guid)
+    private void ResizeAndSave(Image image, Size size, string prefix, string guid, string dirName)
     {
       var litleImage = ResizeImage(image, size);
-      string path;
+      string path, ftpfilepath;
       string filename = guid + prefix + ".jpg";
       if ((PathToFolder.ToLower()).StartsWith("ftp://"))
       {
@@ -74,21 +73,55 @@ namespace AvitoRuslanParser
       }
       else
       {
-        path = PathToFolder + "\\";
+        path = PathToFolder;
+        if (!path.EndsWith("\\"))
+          path += "\\";        
       }
       path += filename;
       //ResultDown.Add(path);
       litleImage.Save(path, ImageFormat.Jpeg);
       if ((PathToFolder.ToLower()).StartsWith("ftp://"))
       {
-        FtpWebRequest ftpClient = (FtpWebRequest)FtpWebRequest.Create(PathToFolder + "\\" + filename);
+        if (PathToFolder.EndsWith("/"))
+          ftpfilepath = PathToFolder + dirName;
+        else
+          ftpfilepath = PathToFolder + "/" + dirName;
+
+        FtpWebRequest ftpClient = null;
+
+        if (dirName != string.Empty)
+        {
+          ftpClient = (FtpWebRequest)FtpWebRequest.Create(ftpfilepath);
+          try
+          {
+            ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
+            ftpClient.Method = WebRequestMethods.Ftp.MakeDirectory;
+            ftpClient.UseBinary = true;
+            FtpWebResponse response = (FtpWebResponse)ftpClient.GetResponse();
+            var ftpStream = response.GetResponseStream();
+            ftpStream.Close();
+            response.Close();
+          }
+          catch (Exception)
+          {
+            // Directory already exists
+          }
+        }
+
+        if (ftpfilepath.EndsWith("/"))
+          ftpfilepath += filename;
+        else
+          ftpfilepath = ftpfilepath + "/" + filename;
+
+        ftpClient = (FtpWebRequest)FtpWebRequest.Create(ftpfilepath);
         ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
         ftpClient.Method = System.Net.WebRequestMethods.Ftp.UploadFile;
         ftpClient.UseBinary = true;
         ftpClient.KeepAlive = true;
+        ftpClient.UsePassive = false;
         System.IO.FileInfo fi = new System.IO.FileInfo(path);
         ftpClient.ContentLength = fi.Length;
-        byte[] buffer = new byte[4097];
+        byte[] buffer = new byte[fi.Length];
         int bytes = 0;
         int total_bytes = (int)fi.Length;
         System.IO.FileStream fs = fi.OpenRead();
