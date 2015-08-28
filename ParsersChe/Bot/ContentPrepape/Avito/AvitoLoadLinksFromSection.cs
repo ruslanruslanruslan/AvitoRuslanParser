@@ -1,9 +1,7 @@
 ﻿using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.WebClientParser;
-using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -46,17 +44,14 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
       this.httpWeb = httpWeb;
     }
     protected static readonly string avitoHost = "http://www.avito.ru";
-    public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
+    public KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
       Content = content;
       Url = url;
       Doc = doc;
-
-
+      
       LoadLinkWithAllPage();
-      var result = links;
-      PartsPage part = PartsPage.LinkOnAd;
-      return new KeyValuePair<PartsPage, IEnumerable<string>>(part, result);
+      return new KeyValuePair<PartsPage, IEnumerable<string>>(PartsPage.LinkOnAd, links);
     }
 
     public virtual void LoadLinkWithAllPage()
@@ -68,7 +63,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
       {
         Console.WriteLine("Task " + Task.CurrentId.ToString() + " page: " + numberPage.ToString());
         PrepareUrl();
-        string url = Url;
+        var url = Url;
         HttpWebRequest req = httpWeb.GetHttpWebReq(url);
         req.AllowAutoRedirect = false;
 
@@ -82,14 +77,11 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
             LoadLinkFromPage();
           }
           else
-          {
             isNextPage = false;
-          }
         }
         else
-        {
+
           isNextPage = false;
-        }
       }
     }
 
@@ -99,38 +91,34 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
       foreach (var item in units)
       {
         string resultRef;
-        string href = item.GetAttributeValue("href", "");
+        var href = item.GetAttributeValue("href", "");
         if (!string.IsNullOrEmpty(href))
         {
-          if (links == null) { links = new List<string>(); }
+          if (links == null)
+            links = new List<string>();
           resultRef = avitoHost + href;
           links.Add(resultRef);
           if (IncLink != null)
-          {
             IncLink();
-          }
         }
-
       }
     }
 
     protected void PrepareUrl()
     {
       numberPage++;
-      bool isPageParam = Regex.IsMatch(Url, "p=\\d+");
+      var isPageParam = Regex.IsMatch(Url, "p=\\d+");
 
       if (isPageParam)
-      {
         Url = Regex.Replace(Url, "p=\\d+", "p=" + numberPage);
-      }
       else
       {
-        string seperate = "&";
-        bool isParam = Regex.IsMatch(Url, "\\?");
-        if (!isParam) { seperate = "?"; }
+        var seperate = "&";
+        var isParam = Regex.IsMatch(Url, "\\?");
+        if (!isParam)
+          seperate = "?";
         Url += seperate + "p=" + numberPage;
       }
-
     }
   }
 }

@@ -2,13 +2,9 @@
 using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using ParsersChe.Bot.ContentPrepape.Avito;
 using ParsersChe.WebClientParser;
-using ParsersChe.WebClientParser.Proxy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using AvitoRuslanParser.AvitoParser;
 
 namespace AvitoRuslanParser
@@ -38,7 +34,7 @@ namespace AvitoRuslanParser
     {
       Dictionary<PartsPage, IEnumerable<string>> result = null;
       IHttpWeb webCl = new WebCl();
-      string url = link;
+      var url = link;
       try
       {
         ParserPage parser = new SimpleParserPage

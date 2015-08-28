@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ParsersChe.WebClientParser;
 
 namespace AvitoRuslanParser
@@ -28,16 +23,16 @@ namespace AvitoRuslanParser
 
     public bool LoadImage(string itemImage, IHttpWeb web, string guid, string guid2, string dirName)
     {
-      int timeout = 60 * 1000;
+      const int timeout = 60 * 1000;
       try
       {
-        HttpWebRequest req = web.GetHttpWebReq(itemImage);
+        var req = web.GetHttpWebReq(itemImage);
         req.Timeout = timeout;
-        HttpWebResponse resp = web.GetHttpWebResp(req);
+        var resp = web.GetHttpWebResp(req);
         if (resp != null)
         {
           resp.GetResponseStream().ReadTimeout = timeout;
-          Stream imageStream = resp.GetResponseStream();
+          var imageStream = resp.GetResponseStream();
           if (imageStream != null)
           {
             try
@@ -66,11 +61,9 @@ namespace AvitoRuslanParser
     {
       var litleImage = ResizeImage(image, size);
       string path, ftpfilepath;
-      string filename = guid + prefix + ".jpg";
+      var filename = guid + prefix + ".jpg";
       if ((PathToFolder.ToLower()).StartsWith("ftp://"))
-      {
         path = Path.GetTempPath();
-      }
       else
       {
         path = PathToFolder;
@@ -95,13 +88,13 @@ namespace AvitoRuslanParser
 
         if (dirName != string.Empty)
         {
-          ftpClient = (FtpWebRequest)FtpWebRequest.Create(ftpfilepath);
+          ftpClient = (FtpWebRequest)WebRequest.Create(ftpfilepath);
           try
           {
-            ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
+            ftpClient.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
             ftpClient.Method = WebRequestMethods.Ftp.MakeDirectory;
             ftpClient.UseBinary = true;
-            FtpWebResponse response = (FtpWebResponse)ftpClient.GetResponse();
+            var response = (FtpWebResponse)ftpClient.GetResponse();
             var ftpStream = response.GetResponseStream();
             ftpStream.Close();
             response.Close();
@@ -117,19 +110,19 @@ namespace AvitoRuslanParser
         else
           ftpfilepath = ftpfilepath + "/" + filename;
 
-        ftpClient = (FtpWebRequest)FtpWebRequest.Create(ftpfilepath);
-        ftpClient.Credentials = new System.Net.NetworkCredential(ftpUsername, ftpPassword);
-        ftpClient.Method = System.Net.WebRequestMethods.Ftp.UploadFile;
+        ftpClient = (FtpWebRequest)WebRequest.Create(ftpfilepath);
+        ftpClient.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
+        ftpClient.Method = WebRequestMethods.Ftp.UploadFile;
         ftpClient.UseBinary = true;
         ftpClient.KeepAlive = true;
         ftpClient.UsePassive = false;
-        System.IO.FileInfo fi = new System.IO.FileInfo(path);
+        var fi = new FileInfo(path);
         ftpClient.ContentLength = fi.Length;
-        byte[] buffer = new byte[fi.Length];
-        int bytes = 0;
-        int total_bytes = (int)fi.Length;
-        System.IO.FileStream fs = fi.OpenRead();
-        System.IO.Stream rs = ftpClient.GetRequestStream();
+        var buffer = new byte[fi.Length];
+        var bytes = 0;
+        var total_bytes = (int)fi.Length;
+        var fs = fi.OpenRead();
+        var rs = ftpClient.GetRequestStream();
         while (total_bytes > 0)
         {
           bytes = fs.Read(buffer, 0, buffer.Length);
@@ -139,13 +132,11 @@ namespace AvitoRuslanParser
         //fs.Flush();
         fs.Close();
         rs.Close();
-        FtpWebResponse uploadResponse = (FtpWebResponse)ftpClient.GetResponse();
+        var uploadResponse = (FtpWebResponse)ftpClient.GetResponse();
         var value = uploadResponse.StatusDescription;
         uploadResponse.Close();
         if (File.Exists(path))
-        {
           File.Delete(path);
-        }
       }
     }
 
@@ -153,15 +144,15 @@ namespace AvitoRuslanParser
     {
       int newWidth;
       int newHeight;
-      int minW = 35;
-      int minH = 30;
+      var minW = 35;
+      var minH = 30;
       if (preserveAspectRatio)
       {
-        int originalWidth = image.Width;
-        int originalHeight = image.Height;
-        float percentWidth = (float)size.Width / (float)originalWidth;
-        float percentHeight = (float)size.Height / (float)originalHeight;
-        float percent = percentHeight < percentWidth ? percentHeight : percentWidth;
+        var originalWidth = image.Width;
+        var originalHeight = image.Height;
+        var percentWidth = size.Width / (float)originalWidth;
+        var percentHeight = size.Height / (float)originalHeight;
+        var percent = percentHeight < percentWidth ? percentHeight : percentWidth;
         newWidth = (int)(originalWidth * percent);
         newHeight = (int)(originalHeight * percent);
       }
@@ -170,24 +161,23 @@ namespace AvitoRuslanParser
         newWidth = size.Width;
         newHeight = size.Height;
       }
-      minW = (int)(minW * (float)((float)newWidth / (float)image.Width));
-      minH = (int)(minH * (float)((float)newHeight / (float)image.Height));
+      minW = (int)(minW * (newWidth / (float)image.Width));
+      minH = (int)(minH * (newHeight / (float)image.Height));
 
 
-      Image newImage = new Bitmap(newWidth, newHeight);
-      using (Graphics graphicsHandle = Graphics.FromImage(newImage))
+      var newImage = new Bitmap(newWidth, newHeight);
+      using (var graphicsHandle = Graphics.FromImage(newImage))
       {
         graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphicsHandle.DrawImage(image, 0, 0, newWidth, newHeight);
-
       }
 
       //Image newImage2 = new Bitmap(newWidth - minW, newHeight - minH);
-      Image newImage2 = DrawFilledRectangle(size.Width, size.Height);
+      var newImage2 = DrawFilledRectangle(size.Width, size.Height);
 
-      int xMove = (size.Width - (newWidth)) / 2;
-      int yMove = (size.Height - (newHeight)) / 2;
-      using (Graphics graphicsHandle = Graphics.FromImage(newImage2))
+      var xMove = (size.Width - (newWidth)) / 2;
+      var yMove = (size.Height - (newHeight)) / 2;
+      using (var graphicsHandle = Graphics.FromImage(newImage2))
       {
         graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphicsHandle.DrawImage(newImage, new Rectangle(xMove, yMove, newWidth, newHeight), 0, 0, newWidth - minW * 2, newHeight - minH, GraphicsUnit.Pixel);
@@ -197,10 +187,10 @@ namespace AvitoRuslanParser
 
     private Bitmap DrawFilledRectangle(int x, int y)
     {
-      Bitmap bmp = new Bitmap(x, y);
-      using (Graphics graph = Graphics.FromImage(bmp))
+      var bmp = new Bitmap(x, y);
+      using (var graph = Graphics.FromImage(bmp))
       {
-        Rectangle ImageSize = new Rectangle(0, 0, x, y);
+        var ImageSize = new Rectangle(0, 0, x, y);
         graph.FillRectangle(Brushes.White, ImageSize);
       }
       return bmp;

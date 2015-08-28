@@ -2,8 +2,6 @@
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,13 +21,12 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     public AvitoLoadLinksBeforeDateRepeat(IHttpWeb httpWeb, int limitLink, Func<int, bool> IsNewAd, DateTime date, int maxWrongDate)
       : base(httpWeb)
     {
-      this.limitLinks = limitLink;
+      limitLinks = limitLink;
       this.IsNewAd = IsNewAd;
       this.maxWrongDate = maxWrongDate;
       this.date = date;
       LoadMonth();
     }
-
 
     public override void LoadLinkWithAllPage()
     {
@@ -39,8 +36,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         if (Sleep != null) Sleep();
         Console.WriteLine("Task " + Task.CurrentId.ToString() + " page: " + NumberPage.ToString());
         PrepareUrl();
-        string url = Url;
-        HttpWebRequest req = HttpWeb.GetHttpWebReq(url);
+        var url = Url;
+        var req = HttpWeb.GetHttpWebReq(url);
         req.AllowAutoRedirect = false;
 
         var resp = HttpWeb.GetHttpWebResp(req);
@@ -53,20 +50,15 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
             LoadLinkFromPage();
           }
           else
-          {
             IsNextPage = false;
-          }
         }
         else
-        {
           IsNextPage = false;
-        }
       }
     }
 
     public override void LoadLinkFromPage()
     {
-      //var units = Doc.DocumentNode.SelectNodes("//a[@class='second-link']");
       var units = Doc.DocumentNode.SelectNodes("//div[@class='b-catalog-table']/div");
       foreach (var item in units)
       {
@@ -78,17 +70,17 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         string resultRef;
         var linkNode = item.SelectSingleNode("div/h3/a[@class='second-link']");
         if (linkNode == null) continue;
-        string href = linkNode.GetAttributeValue("href", "");
+        var href = linkNode.GetAttributeValue("href", "");
         var dateUnit = item.SelectSingleNode("div[@class='date']");
         if (!string.IsNullOrEmpty(href) && dateUnit != null)
         {
           if (Links == null) { Links = new List<string>(); }
           resultRef = avitoHost + href;
-          int idAd = GetIdAd(resultRef);
-          bool isNew = IsNewAd(idAd);
+          var idAd = GetIdAd(resultRef);
+          var isNew = IsNewAd(idAd);
 
-          string textDate = dateUnit.FirstChild.InnerText.Trim();
-          DateTime dateAd = GetDateFromAllText(textDate);
+          var textDate = dateUnit.FirstChild.InnerText.Trim();
+          var dateAd = GetDateFromAllText(textDate);
 
           if (!isNew) { currentCountRepeat++; }
           if (currentCountRepeat >= limitLinks)
@@ -103,7 +95,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
               Links.Add(resultRef);
               wrongDateCount = 0;
             }
-            else { wrongDateCount++; }
+            else
+              wrongDateCount++;
           }
         }
 
@@ -112,14 +105,13 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
 
     private int GetIdAd(string url)
     {
-      string res = InfoPage.GetDatafromText(url, "\\d+$");
-      int resInt = Convert.ToInt32(res);
-      return resInt;
+      var res = InfoPage.GetDatafromText(url, "\\d+$");
+      return Convert.ToInt32(res);
     }
 
     public DateTime GetDateFromAllText(string textDate)
     {
-      DateTime date = new DateTime();
+      var date = new DateTime();
       switch (textDate)
       {
         case "Вчера": date = DateTime.Today.AddDays(-1); break;
@@ -130,10 +122,10 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     }
     private DateTime PrepareDateFromText(string dateText)
     {
-      string numDay = InfoPage.GetDatafromText(dateText, "\\d+");
-      string monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
-      int day = Convert.ToInt32(numDay);
-      int month = this.month[monthName];
+      var numDay = InfoPage.GetDatafromText(dateText, "\\d+");
+      var monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
+      var day = Convert.ToInt32(numDay);
+      var month = this.month[monthName];
       return new DateTime(DateTime.Today.Year, month, day);
 
     }

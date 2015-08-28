@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -65,7 +64,7 @@ namespace AntigateUnravel
     public byte[] UploadFiles(string address, IEnumerable<UploadFile> files, NameValueCollection values, CookieContainer cookie)
     {
 
-      var request = (HttpWebRequest)HttpWebRequest.Create(address);
+      var request = (HttpWebRequest)WebRequest.Create(address);
       request.Method = "POST";
       request.CookieContainer = cookie;
       //  request.Headers["User-Agent"]="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
@@ -115,7 +114,7 @@ namespace AntigateUnravel
     }
     public string UploadValue(string address, IEnumerable<UploadFile> files, NameValueCollection values, string cookie)
     {
-      HttpWebRequest request = (HttpWebRequest)WebRequest.Create(address);
+      var request = (HttpWebRequest)WebRequest.Create(address);
       request.Method = "POST";
       request.Accept = "text/html, application/xhtml+xml, */*";
       request.Referer = "http://www.avito.ru/profile";

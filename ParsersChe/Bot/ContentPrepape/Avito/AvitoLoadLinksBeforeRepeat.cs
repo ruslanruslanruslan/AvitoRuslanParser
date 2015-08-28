@@ -2,8 +2,6 @@
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
 {
@@ -16,12 +14,11 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     public AvitoLoadLinksBeforeRepeat(IHttpWeb httpWeb, int limitLink, Func<int, bool> IsNewAd)
       : base(httpWeb)
     {
-      this.limitLinks = limitLink;
+      limitLinks = limitLink;
       this.IsNewAd = IsNewAd;
     }
     public override void LoadLinkFromPage()
     {
-
       var units = Doc.DocumentNode.SelectNodes("//a[@class='photo-wrapper']");
 
       if (units == null)
@@ -30,16 +27,18 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       foreach (var item in units)
       {
         string resultRef;
-        string href = item.GetAttributeValue("href", "");
+        var href = item.GetAttributeValue("href", "");
         if (!string.IsNullOrEmpty(href))
         {
-          if (Links == null) { Links = new List<string>(); }
+          if (Links == null)
+            Links = new List<string>();
 
           resultRef = avitoHost + href;
 
-          int idAd = GetIdAd(resultRef);
-          bool isNew = IsNewAd(idAd);
-          if (!isNew) { currentCountRepeat++; }
+          var idAd = GetIdAd(resultRef);
+          var isNew = IsNewAd(idAd);
+          if (!isNew)
+            currentCountRepeat++;
           if (currentCountRepeat >= limitLinks)
           {
             IsNextPage = false;
@@ -49,23 +48,18 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
           {
             Links.Add(resultRef);
             if (AddData != null)
-            {
               AddData(resultRef);
-            }
           }
           if (IncLink != null)
-          {
             IncLink();
-          }
         }
       }
     }
 
     private int GetIdAd(string url)
     {
-      string res = InfoPage.GetDatafromText(url, "\\d+$");
-      int resInt = Convert.ToInt32(res);
-      return resInt;
+      var res = InfoPage.GetDatafromText(url, "\\d+$");
+      return Convert.ToInt32(res);
     }
   }
 }

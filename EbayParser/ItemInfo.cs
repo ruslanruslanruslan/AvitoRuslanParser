@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AvitoRuslanParser.EbayParser
+﻿namespace AvitoRuslanParser.EbayParser
 {
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
-  [System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:ebay:apis:eBLBaseComponents", IsNullable = false)]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Xml.Serialization.XmlRoot(Namespace = "urn:ebay:apis:eBLBaseComponents", IsNullable = false)]
   public partial class GetMultipleItemsResponse
   {
 
@@ -32,11 +26,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.timestampField;
+        return timestampField;
       }
       set
       {
-        this.timestampField = value;
+        timestampField = value;
       }
     }
 
@@ -45,11 +39,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.ackField;
+        return ackField;
       }
       set
       {
-        this.ackField = value;
+        ackField = value;
       }
     }
 
@@ -58,11 +52,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.buildField;
+        return buildField;
       }
       set
       {
-        this.buildField = value;
+        buildField = value;
       }
     }
 
@@ -71,48 +65,48 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.versionField;
+        return versionField;
       }
       set
       {
-        this.versionField = value;
+        versionField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Item")]
+    [System.Xml.Serialization.XmlElement("Item")]
     public GetMultipleItemsResponseItem[] Item
     {
       get
       {
-        return this.itemField;
+        return itemField;
       }
       set
       {
-        this.itemField = value;
+        itemField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("Errors")]
+    [System.Xml.Serialization.XmlElement("Errors")]
     public GetMultipleItemsResponseErrors Errors
     {
       get
       {
-        return this.errorsField;
+        return errorsField;
       }
       set
       {
-        this.errorsField = value;
+        errorsField = value;
       }
     }
 
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseErrors
   {
     private string shortMessageField;
@@ -131,11 +125,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.shortMessageField;
+        return shortMessageField;
       }
       set
       {
-        this.shortMessageField = value;
+        shortMessageField = value;
       }
     }
 
@@ -143,11 +137,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.longMessageField;
+        return longMessageField;
       }
       set
       {
-        this.longMessageField = value;
+        longMessageField = value;
       }
     }
 
@@ -155,11 +149,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.errorCodeField;
+        return errorCodeField;
       }
       set
       {
-        this.errorCodeField = value;
+        errorCodeField = value;
       }
     }
 
@@ -167,24 +161,24 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.severityCodeField;
+        return severityCodeField;
       }
       set
       {
-        this.severityCodeField = value;
+        severityCodeField = value;
       }
     }
 
-    [System.Xml.Serialization.XmlElementAttribute("ErrorParameters")]
+    [System.Xml.Serialization.XmlElement("ErrorParameters")]
     public GetMultipleItemsResponseErrorsErrorParameters ErrorParameters
     {
       get
       {
-        return this.errorParametersField;
+        return errorParametersField;
       }
       set
       {
-        this.errorParametersField = value;
+        errorParametersField = value;
       }
     }
 
@@ -192,19 +186,19 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.errorClassificationField;
+        return errorClassificationField;
       }
       set
       {
-        this.errorClassificationField = value;
+        errorClassificationField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseErrorsErrorParameters
   {
     private ulong paramIDField;
@@ -215,11 +209,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.paramIDField;
+        return paramIDField;
       }
       set
       {
-        this.paramIDField = value;
+        paramIDField = value;
       }
     }
 
@@ -227,25 +221,25 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.valueField;
+        return valueField;
       }
       set
       {
-        this.valueField = value;
+        valueField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItem
   {
-    [System.Xml.Serialization.XmlElementAttribute("Description")]
+    [System.Xml.Serialization.XmlElement("Description")]
     public string Description { get; set; }
 
-    [System.Xml.Serialization.XmlElementAttribute("BuyItNowAvailable")]
+    [System.Xml.Serialization.XmlElement("BuyItNowAvailable")]
     public bool? BuyItNowAvailable { get; set; }
 
     private bool bestOfferEnabledField;
@@ -333,11 +327,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.bestOfferEnabledField;
+        return bestOfferEnabledField;
       }
       set
       {
-        this.bestOfferEnabledField = value;
+        bestOfferEnabledField = value;
       }
     }
 
@@ -346,11 +340,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.itemIDField;
+        return itemIDField;
       }
       set
       {
-        this.itemIDField = value;
+        itemIDField = value;
       }
     }
 
@@ -359,11 +353,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.endTimeField;
+        return endTimeField;
       }
       set
       {
-        this.endTimeField = value;
+        endTimeField = value;
       }
     }
 
@@ -372,11 +366,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.startTimeField;
+        return startTimeField;
       }
       set
       {
-        this.startTimeField = value;
+        startTimeField = value;
       }
     }
 
@@ -385,11 +379,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.viewItemURLForNaturalSearchField;
+        return viewItemURLForNaturalSearchField;
       }
       set
       {
-        this.viewItemURLForNaturalSearchField = value;
+        viewItemURLForNaturalSearchField = value;
       }
     }
 
@@ -398,11 +392,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.listingTypeField;
+        return listingTypeField;
       }
       set
       {
-        this.listingTypeField = value;
+        listingTypeField = value;
       }
     }
 
@@ -411,11 +405,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.locationField;
+        return locationField;
       }
       set
       {
-        this.locationField = value;
+        locationField = value;
       }
     }
 
@@ -424,11 +418,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.paymentMethodsField;
+        return paymentMethodsField;
       }
       set
       {
-        this.paymentMethodsField = value;
+        paymentMethodsField = value;
       }
     }
 
@@ -437,25 +431,25 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.galleryURLField;
+        return galleryURLField;
       }
       set
       {
-        this.galleryURLField = value;
+        galleryURLField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("PictureURL")]
+    [System.Xml.Serialization.XmlElement("PictureURL")]
     public string[] PictureURL
     {
       get
       {
-        return this.pictureURLField;
+        return pictureURLField;
       }
       set
       {
-        this.pictureURLField = value;
+        pictureURLField = value;
       }
     }
 
@@ -464,25 +458,25 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.postalCodeField;
+        return postalCodeField;
       }
       set
       {
-        this.postalCodeField = value;
+        postalCodeField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    [System.Xml.Serialization.XmlIgnore()]
     public bool PostalCodeSpecified
     {
       get
       {
-        return this.postalCodeFieldSpecified;
+        return postalCodeFieldSpecified;
       }
       set
       {
-        this.postalCodeFieldSpecified = value;
+        postalCodeFieldSpecified = value;
       }
     }
 
@@ -491,11 +485,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.primaryCategoryNameField;
+        return primaryCategoryNameField;
       }
       set
       {
-        this.primaryCategoryNameField = value;
+        primaryCategoryNameField = value;
       }
     }
 
@@ -504,11 +498,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.quantityField;
+        return quantityField;
       }
       set
       {
-        this.quantityField = value;
+        quantityField = value;
       }
     }
 
@@ -517,11 +511,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.sellerField;
+        return sellerField;
       }
       set
       {
-        this.sellerField = value;
+        sellerField = value;
       }
     }
 
@@ -530,11 +524,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.bidCountField;
+        return bidCountField;
       }
       set
       {
-        this.bidCountField = value;
+        bidCountField = value;
       }
     }
 
@@ -543,11 +537,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.convertedCurrentPriceField;
+        return convertedCurrentPriceField;
       }
       set
       {
-        this.convertedCurrentPriceField = value;
+        convertedCurrentPriceField = value;
       }
     }
 
@@ -556,11 +550,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.currentPriceField;
+        return currentPriceField;
       }
       set
       {
-        this.currentPriceField = value;
+        currentPriceField = value;
       }
     }
 
@@ -569,11 +563,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.highBidderField;
+        return highBidderField;
       }
       set
       {
-        this.highBidderField = value;
+        highBidderField = value;
       }
     }
 
@@ -582,11 +576,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.listingStatusField;
+        return listingStatusField;
       }
       set
       {
-        this.listingStatusField = value;
+        listingStatusField = value;
       }
     }
 
@@ -595,7 +589,7 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.quantitySoldField;
+        return quantitySoldField;
       }
       set
       {
@@ -604,16 +598,16 @@ namespace AvitoRuslanParser.EbayParser
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("ShipToLocations")]
+    [System.Xml.Serialization.XmlElement("ShipToLocations")]
     public string[] ShipToLocations
     {
       get
       {
-        return this.shipToLocationsField;
+        return shipToLocationsField;
       }
       set
       {
-        this.shipToLocationsField = value;
+        shipToLocationsField = value;
       }
     }
 
@@ -622,25 +616,25 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.siteField;
+        return siteField;
       }
       set
       {
-        this.siteField = value;
+        siteField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(DataType = "duration")]
+    [System.Xml.Serialization.XmlElement(DataType = "duration")]
     public string TimeLeft
     {
       get
       {
-        return this.timeLeftField;
+        return timeLeftField;
       }
       set
       {
-        this.timeLeftField = value;
+        timeLeftField = value;
       }
     }
 
@@ -649,11 +643,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.titleField;
+        return titleField;
       }
       set
       {
-        this.titleField = value;
+        titleField = value;
       }
     }
 
@@ -662,11 +656,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.hitCountField;
+        return hitCountField;
       }
       set
       {
-        this.hitCountField = value;
+        hitCountField = value;
       }
     }
 
@@ -675,11 +669,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.primaryCategoryIDPathField;
+        return primaryCategoryIDPathField;
       }
       set
       {
-        this.primaryCategoryIDPathField = value;
+        primaryCategoryIDPathField = value;
       }
     }
 
@@ -688,11 +682,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.storefrontField;
+        return storefrontField;
       }
       set
       {
-        this.storefrontField = value;
+        storefrontField = value;
       }
     }
 
@@ -701,11 +695,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.countryField;
+        return countryField;
       }
       set
       {
-        this.countryField = value;
+        countryField = value;
       }
     }
 
@@ -714,11 +708,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.returnPolicyField;
+        return returnPolicyField;
       }
       set
       {
-        this.returnPolicyField = value;
+        returnPolicyField = value;
       }
     }
 
@@ -727,11 +721,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.minimumToBidField;
+        return minimumToBidField;
       }
       set
       {
-        this.minimumToBidField = value;
+        minimumToBidField = value;
       }
     }
 
@@ -740,11 +734,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.productIDField;
+        return productIDField;
       }
       set
       {
-        this.productIDField = value;
+        productIDField = value;
       }
     }
 
@@ -753,11 +747,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.autoPayField;
+        return autoPayField;
       }
       set
       {
-        this.autoPayField = value;
+        autoPayField = value;
       }
     }
 
@@ -766,11 +760,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.integratedMerchantCreditCardEnabledField;
+        return integratedMerchantCreditCardEnabledField;
       }
       set
       {
-        this.integratedMerchantCreditCardEnabledField = value;
+        integratedMerchantCreditCardEnabledField = value;
       }
     }
 
@@ -779,11 +773,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.handlingTimeField;
+        return handlingTimeField;
       }
       set
       {
-        this.handlingTimeField = value;
+        handlingTimeField = value;
       }
     }
 
@@ -792,25 +786,25 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.topRatedListingField;
+        return topRatedListingField;
       }
       set
       {
-        this.topRatedListingField = value;
+        topRatedListingField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    [System.Xml.Serialization.XmlIgnore()]
     public bool TopRatedListingSpecified
     {
       get
       {
-        return this.topRatedListingFieldSpecified;
+        return topRatedListingFieldSpecified;
       }
       set
       {
-        this.topRatedListingFieldSpecified = value;
+        topRatedListingFieldSpecified = value;
       }
     }
 
@@ -819,11 +813,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.globalShippingField;
+        return globalShippingField;
       }
       set
       {
-        this.globalShippingField = value;
+        globalShippingField = value;
       }
     }
 
@@ -832,11 +826,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.quantitySoldByPickupInStoreField;
+        return quantitySoldByPickupInStoreField;
       }
       set
       {
-        this.quantitySoldByPickupInStoreField = value;
+        quantitySoldByPickupInStoreField = value;
       }
     }
 
@@ -845,19 +839,19 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.newBestOfferField;
+        return newBestOfferField;
       }
       set
       {
-        this.newBestOfferField = value;
+        newBestOfferField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemSeller
   {
 
@@ -878,11 +872,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.userIDField;
+        return userIDField;
       }
       set
       {
-        this.userIDField = value;
+        userIDField = value;
       }
     }
 
@@ -891,11 +885,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.feedbackRatingStarField;
+        return feedbackRatingStarField;
       }
       set
       {
-        this.feedbackRatingStarField = value;
+        feedbackRatingStarField = value;
       }
     }
 
@@ -904,11 +898,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.feedbackScoreField;
+        return feedbackScoreField;
       }
       set
       {
-        this.feedbackScoreField = value;
+        feedbackScoreField = value;
       }
     }
 
@@ -917,11 +911,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.positiveFeedbackPercentField;
+        return positiveFeedbackPercentField;
       }
       set
       {
-        this.positiveFeedbackPercentField = value;
+        positiveFeedbackPercentField = value;
       }
     }
 
@@ -930,33 +924,33 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.topRatedSellerField;
+        return topRatedSellerField;
       }
       set
       {
-        this.topRatedSellerField = value;
+        topRatedSellerField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    [System.Xml.Serialization.XmlIgnore()]
     public bool TopRatedSellerSpecified
     {
       get
       {
-        return this.topRatedSellerFieldSpecified;
+        return topRatedSellerFieldSpecified;
       }
       set
       {
-        this.topRatedSellerFieldSpecified = value;
+        topRatedSellerFieldSpecified = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemConvertedCurrentPrice
   {
 
@@ -970,33 +964,33 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.currencyIDField;
+        return currencyIDField;
       }
       set
       {
-        this.currencyIDField = value;
+        currencyIDField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [System.Xml.Serialization.XmlText()]
     public decimal Value
     {
       get
       {
-        return this.valueField;
+        return valueField;
       }
       set
       {
-        this.valueField = value;
+        valueField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemCurrentPrice
   {
 
@@ -1005,21 +999,21 @@ namespace AvitoRuslanParser.EbayParser
     private decimal valueField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
+    [System.Xml.Serialization.XmlAttribute()]
     public string currencyID
     {
       get
       {
-        return this.currencyIDField;
+        return currencyIDField;
       }
       set
       {
-        this.currencyIDField = value;
+        currencyIDField = value;
       }
     }
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
+    [System.Xml.Serialization.XmlText()]
     public decimal Value
     {
       get
@@ -1034,9 +1028,9 @@ namespace AvitoRuslanParser.EbayParser
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemHighBidder
   {
 
@@ -1102,9 +1096,9 @@ namespace AvitoRuslanParser.EbayParser
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemStorefront
   {
 
@@ -1117,11 +1111,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.storeURLField;
+        return storeURLField;
       }
       set
       {
-        this.storeURLField = value;
+        storeURLField = value;
       }
     }
 
@@ -1130,19 +1124,19 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.storeNameField;
+        return storeNameField;
       }
       set
       {
-        this.storeNameField = value;
+        storeNameField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemReturnPolicy
   {
 
@@ -1159,11 +1153,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.refundField;
+        return refundField;
       }
       set
       {
-        this.refundField = value;
+        refundField = value;
       }
     }
 
@@ -1172,11 +1166,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.returnsWithinField;
+        return returnsWithinField;
       }
       set
       {
-        this.returnsWithinField = value;
+        returnsWithinField = value;
       }
     }
 
@@ -1185,11 +1179,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.returnsAcceptedField;
+        return returnsAcceptedField;
       }
       set
       {
-        this.returnsAcceptedField = value;
+        returnsAcceptedField = value;
       }
     }
 
@@ -1198,19 +1192,19 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.shippingCostPaidByField;
+        return shippingCostPaidByField;
       }
       set
       {
-        this.shippingCostPaidByField = value;
+        shippingCostPaidByField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemMinimumToBid
   {
 
@@ -1224,11 +1218,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.currencyIDField;
+        return currencyIDField;
       }
       set
       {
-        this.currencyIDField = value;
+        currencyIDField = value;
       }
     }
 
@@ -1238,19 +1232,19 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.valueField;
+        return valueField;
       }
       set
       {
-        this.valueField = value;
+        valueField = value;
       }
     }
   }
 
   /// <remarks/>
-  [System.SerializableAttribute()]
-  [System.ComponentModel.DesignerCategoryAttribute("code")]
-  [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
+  [System.Serializable()]
+  [System.ComponentModel.DesignerCategory("code")]
+  [System.Xml.Serialization.XmlType(AnonymousType = true, Namespace = "urn:ebay:apis:eBLBaseComponents")]
   public partial class GetMultipleItemsResponseItemProductID
   {
 
@@ -1264,11 +1258,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.typeField;
+        return typeField;
       }
       set
       {
-        this.typeField = value;
+        typeField = value;
       }
     }
 
@@ -1278,11 +1272,11 @@ namespace AvitoRuslanParser.EbayParser
     {
       get
       {
-        return this.valueField;
+        return valueField;
       }
       set
       {
-        this.valueField = value;
+        valueField = value;
       }
     }
   }

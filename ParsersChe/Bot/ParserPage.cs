@@ -1,13 +1,8 @@
 ﻿using ParsersChe.WebClientParser;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using HtmlAgilityPack;
-using System.Collections;
 namespace ParsersChe.Bot.ActionOverPage
 {
   public abstract class ParserPage : WebClientBot, IActionPage, ILoadContent

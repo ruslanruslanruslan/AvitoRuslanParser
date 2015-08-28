@@ -5,10 +5,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
 {
@@ -27,30 +23,28 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       if (LinksImages != null)
         foreach (var item in LinksImages)
         {
-          HttpWebRequest req = WebCl.GetHttpWebReq(item);
-          HttpWebResponse resp = WebCl.GetHttpWebResp(req);
+          var req = WebCl.GetHttpWebReq(item);
+          var resp = WebCl.GetHttpWebResp(req);
           if (resp != null)
           {
             if (ResultDown == null) { ResultDown = new List<string>(); }
             var wcpr = WebCl as WebClProxy;
 
-            Stream imageStream = wcpr.GetStream(resp);
+            var imageStream = wcpr.GetStream(resp);
             if (imageStream != null)
             {
-              string guid = GetidImage();
+              var guid = GetidImage();
               var image = Image.FromStream(imageStream);
               ReseizeSave(image, image.Size, "", guid);
             }
           }
         }
-
-
     }
 
     public void ReseizeSave(Image image, Size size, string prefix, string guid)
     {
       var litleImage = ResizeImage(image, size);
-      string path = PathToFolder + "\\" + guid + "_" + prefix + ".jpg";
+      var path = PathToFolder + "\\" + guid + "_" + prefix + ".jpg";
       ResultDown.Add(path);
       litleImage.Save(path, ImageFormat.Jpeg);
     }
@@ -59,15 +53,15 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     {
       int newWidth;
       int newHeight;
-      int minW = 35;
-      int minH = 30;
+      var minW = 35;
+      var minH = 30;
       if (preserveAspectRatio)
       {
-        int originalWidth = image.Width;
-        int originalHeight = image.Height;
-        float percentWidth = (float)size.Width / (float)originalWidth;
-        float percentHeight = (float)size.Height / (float)originalHeight;
-        float percent = percentHeight < percentWidth ? percentHeight : percentWidth;
+        var originalWidth = image.Width;
+        var originalHeight = image.Height;
+        var percentWidth = size.Width / (float)originalWidth;
+        var percentHeight = size.Height / (float)originalHeight;
+        var percent = percentHeight < percentWidth ? percentHeight : percentWidth;
         newWidth = (int)(originalWidth * percent);
         newHeight = (int)(originalHeight * percent);
       }
@@ -76,20 +70,19 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         newWidth = size.Width;
         newHeight = size.Height;
       }
-      minW = (int)(minW * (float)((float)newWidth / (float)image.Width));
-      minH = (int)(minH * (float)((float)newHeight / (float)image.Height));
+      minW = (int)(minW * (newWidth / (float)image.Width));
+      minH = (int)(minH * (newHeight / (float)image.Height));
 
 
-      Image newImage = new Bitmap(newWidth, newHeight);
-      using (Graphics graphicsHandle = Graphics.FromImage(newImage))
+      var newImage = new Bitmap(newWidth, newHeight);
+      using (var graphicsHandle = Graphics.FromImage(newImage))
       {
         graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphicsHandle.DrawImage(image, 0, 0, newWidth, newHeight);
-
       }
 
-      Image newImage2 = new Bitmap(newWidth - minW, newHeight - minH);
-      using (Graphics graphicsHandle = Graphics.FromImage(newImage2))
+      var newImage2 = new Bitmap(newWidth - minW, newHeight - minH);
+      using (var graphicsHandle = Graphics.FromImage(newImage2))
       {
         graphicsHandle.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphicsHandle.DrawImage(newImage, new Rectangle(0, 0, newWidth - minW, newHeight - minH), 0, 0, newWidth - minW, newHeight - minH, GraphicsUnit.Pixel);

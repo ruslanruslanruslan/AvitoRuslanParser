@@ -1,19 +1,12 @@
-﻿using AvitoRuslanParser;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 using AvitoRuslanParser.EbayParser;
 using AvitoRuslanParser.Helpfuls;
 using ParsersChe.WebClientParser.Proxy;
@@ -36,7 +29,7 @@ namespace AvitoRuslanParser
     public frmMain()
     {
       InitializeComponent();
-      System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = true;
+      CheckForIllegalCrossThreadCalls = true;
       mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword,
         Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
     }
@@ -65,15 +58,15 @@ namespace AvitoRuslanParser
       LoadField();
       try
       {
-        foreach (string str in mySqlDB.GetCategories())
+        foreach (var str in mySqlDB.GetCategories())
         {
           cbCategories.Items.Add(str);
         }
       }
       catch (Exception)
       {
-        frmSettings frm = new frmSettings(true);
-        DialogResult result = frm.ShowDialog();
+        var frm = new frmSettings(true);
+        var result = frm.ShowDialog();
         if (result == DialogResult.Cancel)
           Application.Exit();
         if (result == DialogResult.Abort)
@@ -103,13 +96,13 @@ namespace AvitoRuslanParser
     {
       try
       {
-        long id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
+        var id = Convert.ToInt64(Regex.Match(URLLink, "\\d{7,}").Value);
         var imgParser = new EbayLoadImage(new WebCl(), Properties.Default.PathToImg, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword);
         var parsedItems = SearchApi.ParseItems(new long[] { id });
 
 
         mySqlDB.InsertFctEbayGrabber(parsedItems, cbCategories.Text);
-        bool isAuction = true;
+        var isAuction = true;
 
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
         {
@@ -144,7 +137,7 @@ namespace AvitoRuslanParser
         // тут мы передаем в метод вставки данные
         //result, index ID, ссылку на обьявления
         //id я не вставлял так как непонятно было и неподходило под структуру бд
-        string idResourceList = mySqlDB.ResourceListIDAvito();
+        var idResourceList = mySqlDB.ResourceListIDAvito();
         mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
         var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper());
         Parser2.PathImages2 = Properties.Default.PathToImg;
@@ -165,8 +158,10 @@ namespace AvitoRuslanParser
       {
         URLLink = LinkAdtextBox.Text;
         var uri = new Uri(URLLink);
-        if (uri.Host == "www.avito.ru") { OneLinkAvito(); }
-        else if (uri.Host == "www.ebay.com") { OneLinkEbay(); }
+        if (uri.Host == "www.avito.ru")
+          OneLinkAvito();
+        else if (uri.Host == "www.ebay.com")
+          OneLinkEbay();
       }
     }
 
@@ -197,9 +192,9 @@ namespace AvitoRuslanParser
           }
           AddLog("Parser: " + linkSection[1], LogMessageColor.Information());
           AddLog("Parser: Count new ad: " + linksAds.Count().ToString(), LogMessageColor.Information());
-          int i = 0;
-          int countPre = 0;
-          int countIns = 0;
+          var i = 0;
+          var countPre = 0;
+          var countIns = 0;
           foreach (var item in linksAds)
           {
             imageCount.ErrorList.Clear();
@@ -208,15 +203,13 @@ namespace AvitoRuslanParser
             AddLog("Parser: start parse link: " + item, LogMessageColor.Information());
             i++;
             if (i == 25)
-            {
               i = -1;
-            }
             URLLink = item;
             mySqlDB.DeleteUnTransformated();
             var result = Parser.Run(item);
             //  result["Phone"] = result["Phone"].ToString().Split('"')[3];
             //
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine();
             foreach (var element in result)
             {
@@ -225,9 +218,7 @@ namespace AvitoRuslanParser
                 sb.Append(element.Key + " - ");
                 if (element.Value != null)
                   foreach (var t in element.Value)
-                  {
                     sb.Append(t + " |");
-                  }
                 sb.Append(Environment.NewLine);
               }
             }
@@ -243,7 +234,7 @@ namespace AvitoRuslanParser
             if (result[PartsPage.Cost] != null && result[PartsPage.Cost].First<string>() != String.Empty)
             {
               AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
-              string idResourceList = mySqlDB.ResourceListIDAvito();
+              var idResourceList = mySqlDB.ResourceListIDAvito();
               mySqlDB.InsertFctAvitoGrabber(result, idResourceList, item, linkSection[1]);
               AddLog("Parser: ad inserted", LogMessageColor.Information());
               incInserted();
@@ -339,7 +330,7 @@ namespace AvitoRuslanParser
 
     private void LoadSectionEbay(SectionItem sectionItem)
     {
-      int cryticalCount = 8;
+      var cryticalCount = 8;
       var searchApi = new SearchApi();
       searchApi.PerPage = 100;
       searchApi.Section = sectionItem.Link;
@@ -351,7 +342,7 @@ namespace AvitoRuslanParser
         var ids = searchApi.SearchLinks();
         AddLog("Parser: Count new ad: " + ids.Count().ToString(), LogMessageColor.Information());
         IList<long> newIds = new List<long>();
-        int countCurrentRepeat = 0;
+        var countCurrentRepeat = 0;
 
         foreach (var item in ids)
         {
@@ -385,7 +376,7 @@ namespace AvitoRuslanParser
             AddLog("author: " + unit.Seller.UserID, LogMessageColor.Information());
             AddLog("ebay section: " + unit.PrimaryCategoryName, LogMessageColor.Information());
           }
-          bool isAuction = true;
+          var isAuction = true;
           if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
           {
             if (Properties.Default.PublishParsedData)
@@ -397,9 +388,7 @@ namespace AvitoRuslanParser
                 AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
                 AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
                 foreach (var error in imageCount.ErrorList)
-                {
                   AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
-                }
               }
               catch (Exception ex)
               {
@@ -409,13 +398,9 @@ namespace AvitoRuslanParser
             }
             isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
             if (isAuction)
-            {
               AddLog("Parser: It is auction", LogMessageColor.Information());
-            }
             else
-            {
               AddLog("Parser: It is advertisement", LogMessageColor.Information());
-            }
           }
           AddLog("Parser: End parsing ad", LogMessageColor.Information());
           IncParsed();
@@ -462,13 +447,9 @@ namespace AvitoRuslanParser
       try
       {
         if (sectionItem.site == SectionItem.Site.Avito)
-        {
           LoadSection(new string[] { sectionItem.Link, sectionItem.CategoryName });
-        }
         else
-        {
           LoadSectionEbay(sectionItem);
-        }
       }
       catch (Exception ex)
       {
@@ -514,17 +495,13 @@ namespace AvitoRuslanParser
               }
               else
               {
-                string err = String.Empty;
+                var err = string.Empty;
                 if (parsedItems.Errors != null)
                 {
                   if (parsedItems.Errors.LongMessage.Length > 0)
-                  {
                     err = parsedItems.Errors.LongMessage;
-                  }
                   else
-                  {
                     err = parsedItems.Errors.ShortMessage;
-                  }
                 }
                 AddLog("Parser: update auction: " + item.ToString() + "\t" + parsedItems.Ack + ":\t" + err, LogMessageColor.Error());
 
@@ -626,7 +603,7 @@ namespace AvitoRuslanParser
 
     private void btnSettings_Click(object sender, EventArgs e)
     {
-      frmSettings frm = new frmSettings();
+      var frm = new frmSettings();
       frm.ShowDialog();
     }
 
@@ -647,7 +624,7 @@ namespace AvitoRuslanParser
         {
           lock (thislock)
           {
-            int start = rtbLog.Text.Length - 1;
+            var start = rtbLog.Text.Length - 1;
             if (start < 0)
               start = 0;
             rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);

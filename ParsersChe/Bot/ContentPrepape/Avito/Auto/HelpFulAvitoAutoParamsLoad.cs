@@ -1,8 +1,5 @@
 ﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
@@ -26,9 +23,9 @@ namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
                  }
                  return isMaker;
                });
-        if (res != null && res.Count<HtmlNode>() > 0)
+        if (res != null && res.Count() > 0)
         {
-          var resNode = res.First<HtmlNode>();
+          var resNode = res.First();
           textRes = resNode.InnerText.Trim(); ;
         }
       }
@@ -47,10 +44,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
           bool resultL = Regex.IsMatch(content, marker);
           return resultL;
         });
-        if (res != null && res.Count<HtmlNode>() > 0)
-        {
+        if (res != null && res.Count() > 0)
           result = true;
-        }
       }
       return result;
     }

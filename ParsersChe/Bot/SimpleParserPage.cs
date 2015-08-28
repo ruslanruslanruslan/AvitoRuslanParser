@@ -1,9 +1,6 @@
 ﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using ParsersChe.WebClientParser;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage
@@ -24,13 +21,11 @@ namespace ParsersChe.Bot.ActionOverPage
     public override void LoadPage(string url)
     {
       this.Url = url;
-      HttpWebRequest req = HttpWeb.GetHttpWebReq(url);
+      var req = HttpWeb.GetHttpWebReq(url);
       req.AllowAutoRedirect = true;
-      HttpWebResponse res = HttpWeb.GetHttpWebResp(req);
+      var res = HttpWeb.GetHttpWebResp(req);
       if (res != null)
-      {
         Content = HttpWeb.GetContent(res, Encoding.UTF8);
-      }
     }
 
     public override void LoadPage()

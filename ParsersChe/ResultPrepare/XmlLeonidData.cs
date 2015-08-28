@@ -1,5 +1,4 @@
 ﻿using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,11 +27,11 @@ namespace ParsersChe.ResultPrepare
       foreach (var item in Data)
       {
         separate = string.Empty;
-        string maker = GetSingleDateByKey(PartsPage.Maker, item);
-        string model = GetSingleDateByKey(PartsPage.Model, item);
-        string city = GetSingleDateByKey(PartsPage.City, item);
-        string key_words = string.Format("Продам {0} {1} в городе {2}", maker, model, city);
-        XElement el = new XElement("advert");
+        var maker = GetSingleDateByKey(PartsPage.Maker, item);
+        var model = GetSingleDateByKey(PartsPage.Model, item);
+        var city = GetSingleDateByKey(PartsPage.City, item);
+        var key_words = string.Format("Продам {0} {1} в городе {2}", maker, model, city);
+        var el = new XElement("advert");
         ATX("name_adv", PartsPage.Title, el, item);
         ATX("email", "avto-tim@list.ru", el);
         ATX("site", "www.avito.ru", el);
@@ -45,7 +44,7 @@ namespace ParsersChe.ResultPrepare
         ATX("name_user", PartsPage.Seller, el, item);
         ATX("type", "Предложение, продаю", el);
         #region createParams
-        XElement elParam = new XElement("addparam");
+        var elParam = new XElement("addparam");
         ATAP("Марка автомобиля", maker, elParam);
         ATAP("Модель", model, elParam);
         ATAP("Год выпуска", PartsPage.Year, elParam, item);
@@ -71,15 +70,15 @@ namespace ParsersChe.ResultPrepare
     }
     private void ATXImg(string name, PartsPage part, XElement el, Dictionary<PartsPage, IEnumerable<string>> dict)
     {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       var node = dict[part];
       if (node != null)
       {
-        string separate = string.Empty;
-        foreach (string item in node)
+        var separate = string.Empty;
+        foreach (var item in node)
         {
           sb.Append(separate);
-          string nameFile = Path.GetFileName(item);
+          var nameFile = Path.GetFileName(item);
           sb.Append(nameFile);
           if (separate.Equals(string.Empty))
             separate = ";";
@@ -93,12 +92,12 @@ namespace ParsersChe.ResultPrepare
     }
     private void ATX(string name, PartsPage part, XElement el, Dictionary<PartsPage, IEnumerable<string>> dict)
     {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       var node = dict[part];
       if (node != null)
       {
-        string separate = string.Empty;
-        foreach (string item in node)
+        var separate = string.Empty;
+        foreach (var item in node)
         {
           sb.Append(separate);
           sb.Append(item);
@@ -133,18 +132,14 @@ namespace ParsersChe.ResultPrepare
       var node = dict[part];
 
       if (node != null && node.Count<string>() > 0)
-      {
         value = node.First<string>();
-      }
       if (value != null)
       {
         value = value.Replace(" ", "");
         value = InfoPage.GetDatafromText(value, "\\d+");
       }
       else
-      {
         value = "Не указан";
-      }
       paramNode.Value += this.separate + name + " = " + value;
 
       separate = ";";
@@ -154,9 +149,7 @@ namespace ParsersChe.ResultPrepare
       string value = string.Empty;
       var node = dict[part];
       if (node != null && node.Count<string>() > 0)
-      {
         value = node.First<string>();
-      }
       return value;
     }
   }

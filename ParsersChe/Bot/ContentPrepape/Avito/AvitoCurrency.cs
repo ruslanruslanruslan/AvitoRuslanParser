@@ -1,25 +1,18 @@
 ﻿using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 {
   public class AvitoCurrency : WebClientBot, IPrepareContent
   {
-    public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
+    public KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
       Doc = doc;
       var result = GetCurrency();
       if (result != null)
-      {
-        return new KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>>(PartsPage.Currency, new List<string> { result });
-      }
+        return new KeyValuePair<PartsPage, IEnumerable<string>>(PartsPage.Currency, new List<string> { result });
       else
-      {
         return new KeyValuePair<PartsPage, IEnumerable<string>>(PartsPage.Currency, null);
-      }
     }
     private string GetCurrency()
     {
@@ -29,9 +22,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
       {
         var res = ress.ChildNodes["#text"];
         if (res != null)
-        {
           cur = res.InnerText.Trim();
-        }
       }
       return cur;
     }

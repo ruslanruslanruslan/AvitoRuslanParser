@@ -1,16 +1,7 @@
 ﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
 using ParsersChe.WebClientParser;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using MySql.Data.MySqlClient;
-using AvitoRuslanParser;
 
 
 namespace AvitoRuslanParser.AvitoParser
@@ -48,11 +39,11 @@ namespace AvitoRuslanParser.AvitoParser
           imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in LinksImages)
         {
-          string guid = GetidImage();
-          string guid2 = GetidImageList();
+          var guid = GetidImage();
+          var guid2 = GetidImageList();
           try
           {
-            string dirName = string.Empty;
+            var dirName = string.Empty;
             if (guid.Length > 3)
               dirName = guid.Substring(0, 3);
             else

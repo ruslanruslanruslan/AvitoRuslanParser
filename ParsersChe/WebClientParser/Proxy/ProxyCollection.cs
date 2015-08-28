@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace ParsersChe.WebClientParser.Proxy
 {
@@ -26,7 +24,6 @@ namespace ParsersChe.WebClientParser.Proxy
       this.path = path;
     }
 
-
     public abstract void ReadProxy();
     public abstract void ReadProxy(IList<string> proxyList);
 
@@ -34,7 +31,7 @@ namespace ParsersChe.WebClientParser.Proxy
 
     protected virtual void Dispose(bool disposing)
     {
-      this.WriteProxy();
+      WriteProxy();
     }
 
     ~ProxyCollection()

@@ -1,8 +1,6 @@
 ﻿using AutoRuParser.Bots;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -14,16 +12,16 @@ namespace ParsersChe.WebClientParser
     public virtual HttpWebRequest GetHttpWebReq(string url)
     {
       this.url = url;
-      HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+      var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
       httpWebRequest.UserAgent = HttpHeaders.UserAgentIE10.Value;
       return httpWebRequest;
     }
 
     public HttpWebResponse GetHttpWebResp(HttpWebRequest webReq)
     {
-      int countTry = 20;
-      int count404Eror = 0;
-      bool repeat = true;
+      var countTry = 20;
+      var count404Eror = 0;
+      var repeat = true;
 
       HttpWebResponse res = null;
       while (repeat && countTry > 0 && count404Eror < 3)
@@ -31,21 +29,16 @@ namespace ParsersChe.WebClientParser
         {
           res = (HttpWebResponse)webReq.GetResponse();
           repeat = false;
-
         }
         catch (WebException wex)
         {
           res = null;
           countTry--;
-          int code = 0;
+          var code = 0;
           if (wex.Response != null)
-          {
             code = (int)((HttpWebResponse)wex.Response).StatusCode;
-          }
           if (code == 404 || code == 302)
-          {
             count404Eror++;
-          }
           Log(wex, "GetHttpWebResp");
         }
         catch
@@ -68,14 +61,14 @@ namespace ParsersChe.WebClientParser
     }
     public string GetContent(HttpWebResponse webResp, Encoding encoding)
     {
-      string content = string.Empty;
+      var content = string.Empty;
       Stream responseStream = null;
       try
       {
         try
         {
           responseStream = webResp.GetResponseStream();
-          using (StreamReader sr = new StreamReader(responseStream, encoding))
+          using (var sr = new StreamReader(responseStream, encoding))
           {
             responseStream = null;
             content = sr.ReadToEnd();
@@ -96,18 +89,18 @@ namespace ParsersChe.WebClientParser
 
     public bool DownloadImage(HttpWebResponse webResp, string fileName)
     {
-      bool result = false;
-      int countTry = 3;
-      bool repeat = true;
+      var result = false;
+      var countTry = 3;
+      var repeat = true;
       while (repeat && countTry > 0 && webResp != null)
       {
         // if the remote file was found, download it
         try
         {
-          using (Stream inputStream = webResp.GetResponseStream())
-          using (Stream outputStream = File.OpenWrite(fileName))
+          using (var inputStream = webResp.GetResponseStream())
+          using (var outputStream = File.OpenWrite(fileName))
           {
-            byte[] buffer = new byte[4096];
+            var buffer = new byte[4096];
             int bytesRead;
             do
             {
@@ -129,7 +122,7 @@ namespace ParsersChe.WebClientParser
 
     public void WritePostLine(ref HttpWebRequest req, string postString)
     {
-      byte[] ByteArr = System.Text.Encoding.UTF8.GetBytes(postString);
+      var ByteArr = Encoding.UTF8.GetBytes(postString);
       req.ContentLength = ByteArr.Length;
       req.GetRequestStream().Write(ByteArr, 0, ByteArr.Length);
     }
