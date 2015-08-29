@@ -23,6 +23,8 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       var res = Doc.DocumentNode.SelectNodes("//span[@class='pseudo-link']"); // c-1
       if (res == null)
         res = Doc.DocumentNode.SelectNodes("//span[@class='pseudo-link icon-link']"); 
+      if (res == null)
+        res = Doc.DocumentNode.SelectNodes("//span[@class='pseudo-link ']");
       if (res != null)
       {
         if (res.Count > 1)

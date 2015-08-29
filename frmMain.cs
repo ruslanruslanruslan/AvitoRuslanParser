@@ -133,16 +133,27 @@ namespace AvitoRuslanParser
         //Parser.LoadGuid = (() => MySqlDB.SeletGuid());
         //Parser.LoadGuid = (() => "1532");
         //тут мы присваем результат переменной result
-        var result = Parser.Run(URLLink);
+        Dictionary<PartsPage, IEnumerable<string>> result = null;
+        try
+        {
+          result = Parser.Run(URLLink);
+        }
+        catch (Exception ex)
+        {
+          AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+        }
         // тут мы передаем в метод вставки данные
         //result, index ID, ссылку на обьявления
         //id я не вставлял так как непонятно было и неподходило под структуру бд
-        var idResourceList = mySqlDB.ResourceListIDAvito();
-        mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
-        var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper());
-        Parser2.PathImages2 = Properties.Default.PathToImg;
-        var result2 = Parser2.Run(URLLink);
-        mySqlDB.ExecuteProcAvito(idResourceList);
+        if (result != null)
+        {
+          var idResourceList = mySqlDB.ResourceListIDAvito();
+          mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
+          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper());
+          Parser2.PathImages2 = Properties.Default.PathToImg;
+          var result2 = Parser2.Run(URLLink);
+          mySqlDB.ExecuteProcAvito(idResourceList);
+        }
       }
       catch (Exception ex)
       {
@@ -206,9 +217,16 @@ namespace AvitoRuslanParser
               i = -1;
             URLLink = item;
             mySqlDB.DeleteUnTransformated();
-            var result = Parser.Run(item);
-            //  result["Phone"] = result["Phone"].ToString().Split('"')[3];
-            //
+            Dictionary<PartsPage, IEnumerable<string>> result = null;
+            try
+            {
+              result = Parser.Run(item);
+            }
+            catch (Exception ex)
+            {
+              AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+              continue;
+            }
             var sb = new StringBuilder();
             sb.AppendLine();
             foreach (var element in result)

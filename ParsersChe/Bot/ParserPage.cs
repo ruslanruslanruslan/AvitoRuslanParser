@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.Bot.ActionOverPage.ContentPrepare;
 using HtmlAgilityPack;
+using System;
+
 namespace ParsersChe.Bot.ActionOverPage
 {
   public abstract class ParserPage : WebClientBot, IActionPage, ILoadContent
@@ -46,12 +48,17 @@ namespace ParsersChe.Bot.ActionOverPage
         ResultsParsing = new Dictionary<PartsPage, IEnumerable<string>>();
         var doc = new HtmlDocument();
         doc.LoadHtml(Content);
+        // Check if page is blocked
+        //string result = null;
+        var res = doc.DocumentNode.SelectNodes("//title"); // c-1
+        if (res != null && res.Count >= 1 && res[0].InnerText.Contains("Объявление отклонено администрацией сайта"))
+          throw new Exception(res[0].InnerText);
+
         foreach (var item in contentPreparers)
         {
           var result = item.RunActions(Content, Url, doc);
           if (result.Key != PartsPage.Empty)
             ResultsParsing.Add(result.Key, result.Value);
-
         }
       }
     }
