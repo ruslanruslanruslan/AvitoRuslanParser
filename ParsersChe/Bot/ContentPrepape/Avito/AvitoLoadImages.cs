@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 {
@@ -38,41 +36,37 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
     public AvitoLoadImages(IHttpWeb httpweb, string pathFolder, ImageParsedCountHelper imageCount = null)
     {
       imageParsedCountHelper = imageCount;
-      this.WebCl = httpweb;
+      WebCl = httpweb;
       PathToFolder = pathFolder.TrimEnd('/', '\\');
       if ((pathFolder.ToLower()).StartsWith("ftp://") == false)
       {
-        bool isEsist = Directory.Exists(pathFolder);
+        var isEsist = Directory.Exists(pathFolder);
         {
           if (!isEsist)
             throw new FileNotFoundException("LoadImage error: Path no exists '" + pathFolder + "'");
         }
       }
     }
-    public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
+    public KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
       Url = url;
       Doc = doc;
-      // CreateFolderId();
       LoadUrlsImage();
       LoadImages();
-      var result = resultDown;
-      PartsPage part = PartsPage.Image;
-      return new KeyValuePair<PartsPage, IEnumerable<string>>(part, result);
+      return new KeyValuePair<PartsPage, IEnumerable<string>>(PartsPage.Image, resultDown);
     }
 
     private void LoadUrlsImage()
     {
       LoadSingleImage();
-      //if (linksImages == null)
       LoadMoreImages();
     }
     private void CreateFolderId()
     {
-      string id = InfoPage.GetDatafromText(Url, "\\d+$");
+      var id = InfoPage.GetDatafromText(Url, "\\d+$");
       if (!string.IsNullOrEmpty(id))
       {
-        string path = PathToFolder + "\\" + id;
+        var path = PathToFolder + "\\" + id;
         if (!Directory.Exists(path))
           Directory.CreateDirectory(path);
         PathToFolder = path + "\\";
@@ -91,12 +85,13 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
           try
           {
             bool result;
-            HttpWebRequest req = WebCl.GetHttpWebReq(item);
-            HttpWebResponse resp = WebCl.GetHttpWebResp(req);
+            var req = WebCl.GetHttpWebReq(item);
+            var resp = WebCl.GetHttpWebResp(req);
             if (resp != null)
             {
-              if (resultDown == null) { resultDown = new List<string>(); }
-              string path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
+              if (resultDown == null)
+                resultDown = new List<string>();
+              var path = PathToFolder + "\\" + "Base_" + Guid.NewGuid().ToString() + ".jpg";
 
               result = WebCl.DownloadImage(resp, path);
               if (result)
@@ -121,10 +116,11 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
       if (coll == null) coll = Doc.DocumentNode.SelectSingleNode("//td[@class='big-picture more-than-one']/img");
       if (coll != null)
       {
-        string imglink = coll.GetAttributeValue("src", "none");
+        var imglink = coll.GetAttributeValue("src", "none");
         if (!string.IsNullOrEmpty(imglink) && !imglink.Equals("none"))
         {
-          if (linksImages == null) { linksImages = new List<string>(); }
+          if (linksImages == null)
+            linksImages = new List<string>();
           linksImages.Add(http + imglink);
         }
       }
@@ -132,25 +128,20 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito
 
     private void LoadMoreImages()
     {
-
       var colls = Doc.DocumentNode.SelectNodes("//div[@class='items']/div/a");
       if (colls == null) colls = Doc.DocumentNode.SelectNodes("//meta[@property='og:image']");
       if (colls != null)
       {
         foreach (var item in colls)
         {
-          string imglink = item.GetAttributeValue("content", "nonde");
+          var imglink = item.GetAttributeValue("content", "nonde");
           if (!string.IsNullOrEmpty(imglink) && !imglink.Equals("none"))
           {
             if (linksImages == null) { linksImages = new List<string>(); }
             if (imglink.StartsWith(http))
-            {
               linksImages.Add(imglink);
-            }
             else
-            {
               linksImages.Add(http + imglink);
-            }
           }
         }
       }

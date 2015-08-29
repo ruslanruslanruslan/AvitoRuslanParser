@@ -4,16 +4,12 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace AvitoRuslanParser.EbayParser
@@ -41,8 +37,8 @@ namespace AvitoRuslanParser.EbayParser
 
     private void GetDataFromLink(string link)
     {
-      string pattern1 = "_nkw=(.+?)&";
-      string patternt2 = "_nkw=(.+)";
+      var pattern1 = "_nkw=(.+?)&";
+      var patternt2 = "_nkw=(.+)";
       string patternKeyWord = null;
 
       patternKeyWord = Regex.IsMatch(link, pattern1) ? pattern1 : patternt2;
@@ -52,7 +48,7 @@ namespace AvitoRuslanParser.EbayParser
       pattern1 = "_sacat=(\\d+)";
       patternt2 = "/(\\d+)/";
       patternCategory = Regex.IsMatch(link, pattern1) ? pattern1 : patternt2;
-      string category = Regex.Match(link, patternCategory).Groups[1].Value;
+      var category = Regex.Match(link, patternCategory).Groups[1].Value;
       CategoryId = Convert.ToInt32(category);
 
     }
@@ -61,27 +57,27 @@ namespace AvitoRuslanParser.EbayParser
     {
       IList<long> list = new List<long>();
       //181419645692
-      ClientConfig config = new ClientConfig();
+      var config = new ClientConfig();
       config.EndPointAddress = "http://svcs.ebay.com/services/search/FindingService/v1";
       config.ApplicationId = "Artsiom97-3905-4c09-9e4e-4144ac444e6";
 
-      FindingServicePortTypeClient client = FindingServiceClientFactory.getServiceClient(config);
+      var client = FindingServiceClientFactory.getServiceClient(config);
 
-      FindItemsAdvancedRequest request = new FindItemsAdvancedRequest();
+      var request = new FindItemsAdvancedRequest();
       // Set request parameters
       request.keywords = Keywords;
       request.categoryId = new string[] { CategoryId.ToString() };
-      PaginationInput pi = new PaginationInput();
+      var pi = new PaginationInput();
       pi.entriesPerPage = PerPage;
 
       pi.entriesPerPageSpecified = true;
       request.paginationInput = pi;
       // Call the service
-      FindItemsAdvancedResponse response = client.findItemsAdvanced(request);
+      var response = client.findItemsAdvanced(request);
       // Show output
-      SearchItem[] items = response.searchResult.item;
+      var items = response.searchResult.item;
 
-      for (int i = 0; i < items.Length; i++)
+      for (var i = 0; i < items.Length; i++)
       {
         list.Add(Convert.ToInt64(items[i].itemId));
       }
@@ -96,28 +92,28 @@ namespace AvitoRuslanParser.EbayParser
         sb.Append(item.ToString());
         sb.Append(",");
       }
-      string linkApi = string.Format(itemInfoApi, sb.ToString());
-      string linkApiDesc = string.Format(itemInfoDesc, sb.ToString());
+      var linkApi = string.Format(itemInfoApi, sb.ToString());
+      var linkApiDesc = string.Format(itemInfoDesc, sb.ToString());
       string content = null;
 
-      using (WebClient wc = new WebClient())
+      using (var wc = new WebClient())
       {
         wc.Encoding = Encoding.UTF8;
         content = wc.DownloadString(linkApi);
       }
       string contentDesc = null;
-      using (WebClient wc = new WebClient())
+      using (var wc = new WebClient())
       {
         wc.Encoding = Encoding.UTF8;
         contentDesc = wc.DownloadString(linkApiDesc);
       }
 
-      XmlSerializer ser = new XmlSerializer(typeof(GetMultipleItemsResponse));
+      var ser = new XmlSerializer(typeof(GetMultipleItemsResponse));
       GetMultipleItemsResponse items;
 
       try
       {
-        using (StringReader reader = new StringReader(content))
+        using (var reader = new StringReader(content))
         {
           items = (GetMultipleItemsResponse)ser.Deserialize(reader);
         }
@@ -130,7 +126,7 @@ namespace AvitoRuslanParser.EbayParser
       GetMultipleItemsResponse itemDesc = null;
       try
       {
-        using (StringReader reader = new StringReader(contentDesc))
+        using (var reader = new StringReader(contentDesc))
         {
           itemDesc = (GetMultipleItemsResponse)ser.Deserialize(reader);
         }
@@ -142,13 +138,13 @@ namespace AvitoRuslanParser.EbayParser
 
       if (items != null && items.Item != null && items.Item.Count() > 0)
       {
-        for (int i = 0; i < items.Item.Count(); i++)
+        for (var i = 0; i < items.Item.Count(); i++)
         {
-          for (int j = 0; j < items.Item[i].PictureURL.Length; j++)
+          for (var j = 0; j < items.Item[i].PictureURL.Length; j++)
           {
-            string original = items.Item[i].PictureURL[j];
-            string pattern = "_\\d+\\.";
-            string newV = "_57.";
+            var original = items.Item[i].PictureURL[j];
+            var pattern = "_\\d+\\.";
+            var newV = "_57.";
             string newsrc = Regex.Replace(original, pattern, newV);
             items.Item[i].PictureURL[j] = newsrc;
           }
@@ -164,12 +160,12 @@ namespace AvitoRuslanParser.EbayParser
     {
       if (items != null && items.Item != null && items.Item.Count() > 0)
       {
-        for (int i = 0; i < items.Item.Count(); i++)
+        for (var i = 0; i < items.Item.Count(); i++)
         {
           var doc = new HtmlDocument();
           doc.LoadHtml(items.Item[i].Description);
 
-          string desc = HttpUtility.HtmlDecode(GetText(doc.DocumentNode).Replace("&nbsp;", ""));
+          var desc = HttpUtility.HtmlDecode(GetText(doc.DocumentNode).Replace("&nbsp;", ""));
 
           desc = Regex.Replace(desc, "<[\\s|\\S]+?>", string.Empty);
           desc = Regex.Replace(desc, "\\t", "");
@@ -259,7 +255,7 @@ namespace AvitoRuslanParser.EbayParser
       byte[] bytes = null;
       try
       {
-        WebClient wc = new WebClient();
+        var wc = new WebClient();
         bytes = wc.DownloadData(src);
       }
       catch (Exception)

@@ -2,8 +2,6 @@
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
@@ -16,24 +14,19 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     {
       var dateNode = Doc.DocumentNode.SelectSingleNode("//div[@class='item_subtitle']");
       if (dateNode == null)
-      {
         dateNode = Doc.DocumentNode.SelectSingleNode("//div[@class='item_subtitle item_subtitle-empty']");
-      }
       if (dateNode == null)
-      {
         dateNode = Doc.DocumentNode.SelectSingleNode("//div[@class='item_subtitle item-without-images item_subtitle-empty']");
-      }
       LoadMonth();
-      string textAll = dateNode.FirstChild.InnerText.Trim();
-      string textDate = Regex.Match(textAll, "Размещено (.+?) в ").Groups[1].Value;
-      DateTime date = GetDateFromAllText(textDate);
+      var textAll = dateNode.FirstChild.InnerText.Trim();
+      var textDate = Regex.Match(textAll, "Размещено (.+?) в ").Groups[1].Value;
+      var date = GetDateFromAllText(textDate);
       return date.ToLongDateString();
-
     }
 
     public DateTime GetDateFromAllText(string textDate)
     {
-      DateTime date = new DateTime();
+      var date = new DateTime();
       switch (textDate)
       {
         case "вчера": date = DateTime.Today.AddDays(-1); break;
@@ -44,12 +37,11 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     }
     private DateTime PrepareDateFromText(string dateText)
     {
-      string numDay = InfoPage.GetDatafromText(dateText, "\\d+");
-      string monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
-      int day = Convert.ToInt32(numDay);
-      int month = this.month[monthName];
+      var numDay = InfoPage.GetDatafromText(dateText, "\\d+");
+      var monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
+      var day = Convert.ToInt32(numDay);
+      var month = this.month[monthName];
       return new DateTime(DateTime.Today.Year, month, day);
-
     }
     private void LoadMonth()
     {
@@ -67,22 +59,16 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       month.Add("дек", 12);
     }
 
-    public KeyValuePair<ActionOverPage.EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
+    public KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
       Doc = doc;
       Url = url;
-      PartsPage part = PartsPage.Date;
-      string result = LoadDateText();
+      var part = PartsPage.Date;
+      var result = LoadDateText();
       if (result != null)
-      {
         return new KeyValuePair<PartsPage, IEnumerable<string>>(part, new List<string> { result });
-      }
       else
-      {
         return new KeyValuePair<PartsPage, IEnumerable<string>>(part, null);
-      }
     }
-
-
   }
 }

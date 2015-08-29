@@ -2,8 +2,6 @@
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
 {
@@ -14,7 +12,6 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     private int maxWrongDate;
     private Dictionary<string, int> month = new Dictionary<string, int>();
     public AvitoLoadLinksBeforeDate(IHttpWeb httpWeb, DateTime date, int maxWrongDate)
-
       : base(httpWeb)
     {
       this.maxWrongDate = maxWrongDate;
@@ -34,33 +31,31 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         var dateUnit = item.SelectSingleNode("div[@class='t_i_date']");
         if (dateUnit != null)
         {
-          string textDate = dateUnit.FirstChild.InnerText.Trim();
-          DateTime dateAd = GetDateFromAllText(textDate);
+          var textDate = dateUnit.FirstChild.InnerText.Trim();
+          var dateAd = GetDateFromAllText(textDate);
           if (date <= dateAd)
           {
             var linkNode = item.SelectSingleNode("div/h3/a[@class='second-link']");
             string resultRef;
-            string href = linkNode.GetAttributeValue("href", "");
+            var href = linkNode.GetAttributeValue("href", "");
             if (!string.IsNullOrEmpty(href))
             {
-              if (Links == null) { Links = new List<string>(); }
+              if (Links == null)
+                Links = new List<string>();
               resultRef = avitoHost + href;
               Links.Add(resultRef);
             }
             wrongDateCount = 0;
           }
           else
-          {
             wrongDateCount++;
-          }
-
         }
       }
     }
 
     public DateTime GetDateFromAllText(string textDate)
     {
-      DateTime date = new DateTime();
+      var date = new DateTime();
       switch (textDate)
       {
         case "Вчера": date = DateTime.Today.AddDays(-1); break;
@@ -71,12 +66,11 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
     }
     protected DateTime PrepareDateFromText(string dateText)
     {
-      string numDay = InfoPage.GetDatafromText(dateText, "\\d+");
-      string monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
-      int day = Convert.ToInt32(numDay);
-      int month = this.month[monthName];
+      var numDay = InfoPage.GetDatafromText(dateText, "\\d+");
+      var monthName = InfoPage.GetDatafromText(dateText, "[а-я]+");
+      var day = Convert.ToInt32(numDay);
+      var month = this.month[monthName];
       return new DateTime(DateTime.Today.Year, month, day);
-
     }
     private void LoadMonth()
     {
@@ -93,7 +87,5 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       month.Add("нояб", 11);
       month.Add("дек", 12);
     }
-
-
   }
 }

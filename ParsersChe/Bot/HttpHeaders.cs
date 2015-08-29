@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoRuParser.Bots
+﻿namespace AutoRuParser.Bots
 {
   public sealed class HttpHeaders
   {
@@ -28,11 +23,5 @@ namespace AutoRuParser.Bots
     {
       return Value;
     }
-
-
   }
-
-
-
-
 }

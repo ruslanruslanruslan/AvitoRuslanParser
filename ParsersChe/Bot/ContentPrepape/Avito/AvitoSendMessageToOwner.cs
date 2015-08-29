@@ -4,9 +4,6 @@ using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Text;
 using System.Web;
 
@@ -34,15 +31,15 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
     }
     public AvitoSendMessageToOwner(IHttpWeb webCl)
     {
-      this.WebCl = webCl;
+      WebCl = webCl;
     }
-    public KeyValuePair<EnumsPartPage.PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
+    public KeyValuePair<PartsPage, IEnumerable<string>> RunActions(string content, string url, HtmlAgilityPack.HtmlDocument doc)
     {
-      this.Content = content;
-      this.Url = url;
-      this.Doc = doc;
+      Content = content;
+      Url = url;
+      Doc = doc;
       string res = null;
-      int count = 3;
+      var count = 3;
       if (IsPermessionEmail())
       {
         while (string.IsNullOrEmpty(res) || (res.Equals("error") && count > 0))
@@ -52,8 +49,9 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
           count--;
         }
       }
-      else { res = "No Permission"; }
-      PartsPage typeResult = PartsPage.MessageSend;
+      else
+        res = "No Permission";
+      var typeResult = PartsPage.MessageSend;
       if (res != null)
       {
         return new KeyValuePair<PartsPage, IEnumerable<string>>(typeResult, new List<string>()
@@ -62,26 +60,16 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
             });
       }
       else
-      {
         return new KeyValuePair<PartsPage, IEnumerable<string>>(typeResult, null);
-      }
     }
 
     private bool IsPermessionEmail()
     {
-      var res = Doc.DocumentNode.SelectSingleNode("//span[@id='write2author']");
-      if (res != null)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      return Doc.DocumentNode.SelectSingleNode("//span[@id='write2author']") != null;
     }
     private void LoadCaptcha()
     {
-      int count = 3;
+      var count = 3;
       while (string.IsNullOrEmpty(captchaKey) && count > 0)
       {
         var req = WebCl.GetHttpWebReq(linkOnCaptcha);
@@ -89,8 +77,8 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
         var resp = WebCl.GetHttpWebResp(req);
         if (resp != null)
         {
-          Stream streamImg = resp.GetResponseStream();
-          Antigate antigate = new Antigate();
+          var streamImg = resp.GetResponseStream();
+          var antigate = new Antigate();
           antigate.UploadCaptha(streamImg);
           captchaKey = antigate.SendResponses();
         }
@@ -100,12 +88,13 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
 
     private string SendMessage()
     {
-      if (string.IsNullOrEmpty(captchaKey)) { return "captchaKey is empty"; }
+      if (string.IsNullOrEmpty(captchaKey))
+        return "captchaKey is empty";
       string result = null;
-      string urlPrepare = Url.Replace(avitoHost, "").Replace('/', '_');
-      string urlSendMessage = avitoHost + "items/write/" + urlPrepare;
+      var urlPrepare = Url.Replace(avitoHost, "").Replace('/', '_');
+      var urlSendMessage = avitoHost + "items/write/" + urlPrepare;
       #region postLineCreate
-      StringBuilder postLine = new StringBuilder();
+      var postLine = new StringBuilder();
       postLine.Append("name=");
       postLine.Append(HttpUtility.UrlEncode(email.Name));
       postLine.Append("&");
@@ -119,9 +108,9 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
       postLine.Append(captchaKey); ;
       postLine.Append("&subscribe-position=2");
       #endregion
-      string postString = postLine.ToString();
+      var postString = postLine.ToString();
 
-      HttpWebRequest req = WebCl.GetHttpWebReq(urlSendMessage);
+      var req = WebCl.GetHttpWebReq(urlSendMessage);
       req.AllowAutoRedirect = true;
 
       req.Referer = Url;
@@ -130,14 +119,14 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
       req.ContentType = HttpHeaders.ContentTypeUrlEncoded.Value + "; charset=UTF-8";
       req.Headers["X-Requested-With"] = HttpHeaders.XRequestedWithDef.Value;
       WebCl.WritePostLine(ref req, postString);
-      HttpWebResponse res = WebCl.GetHttpWebResp(req);
+      var res = WebCl.GetHttpWebResp(req);
       if (res != null)
       {
         result = WebCl.GetContent(res, Encoding.UTF8);
-        if (!result.Equals("done")) { result = "error"; }
+        if (!result.Equals("done"))
+          result = "error";
       }
       return result;
-
     }
   }
 }

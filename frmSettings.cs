@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AvitoRuslanParser
@@ -47,7 +40,7 @@ namespace AvitoRuslanParser
       if (edtFtpFolder.Text.Length > 0 && edtSaveImagePath.Text.Length > 0)
       {
         MessageBox.Show("You need to fill only one path: 'Path to save images' or 'FTP folder'", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        DialogResult = System.Windows.Forms.DialogResult.None;
+        DialogResult = DialogResult.None;
         return;
       }
       if (edtSaveImagePath.Text.Length > 0)
@@ -57,7 +50,7 @@ namespace AvitoRuslanParser
         if (edtFtpUsername.Text.Length == 0 || edtFtpPassword.Text.Length == 0)
         {
           MessageBox.Show("Incomplete FTP settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          DialogResult = System.Windows.Forms.DialogResult.None;
+          DialogResult = DialogResult.None;
           return;
         }
         else
@@ -67,7 +60,7 @@ namespace AvitoRuslanParser
       if (cbRunSMSSpamer.Checked && edtSMSSPamerPath.Text.Length == 0)
       {
         MessageBox.Show("SMSSPamer path is empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        DialogResult = System.Windows.Forms.DialogResult.None;
+        DialogResult = DialogResult.None;
         return;
       }
       else
@@ -85,10 +78,10 @@ namespace AvitoRuslanParser
         edtMySqlServerUsername.Text.Length == 0 || edtMySqlServerPassword.Text.Length == 0)
       {
         MessageBox.Show("Incomplete MySql settings", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        DialogResult = System.Windows.Forms.DialogResult.None;
+        DialogResult = DialogResult.None;
         return;
       }
-      bool bNeedRestart = false;
+      var bNeedRestart = false;
       if (Properties.Default.MySqlServerAddress != edtMySqlServerAddress.Text || Properties.Default.MySqlServerPort != Convert.ToInt32(edtMySqlServerPort.Text) ||
           Properties.Default.MySqlServerDatabase != edtMySqlServerDatabase.Text || Properties.Default.MySqlServerUsername != edtMySqlServerUsername.Text ||
           Properties.Default.MySqlServerPassword != edtMySqlServerPassword.Text)
@@ -109,7 +102,7 @@ namespace AvitoRuslanParser
 
       // Test MySql connection
 
-      MySqlDB db = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword, Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
+      var db = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword, Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
       try
       {
         var r = db.mySqlConnection;

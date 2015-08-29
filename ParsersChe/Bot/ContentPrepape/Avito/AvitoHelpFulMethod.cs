@@ -1,8 +1,5 @@
 ﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito
@@ -14,9 +11,7 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
       string result = null;
       var res = Doc.DocumentNode.SelectNodes("//dd[@class='item-params c-1']/a/strong");
       if (res != null && res.Count > 0)
-      {
         result = res[0].InnerText.Trim();
-      }
       return result;
     }
 
@@ -29,17 +24,17 @@ namespace ParsersChe.Bot.ContentPrepape.Avito
         var res = ress
                .Where(x =>
                {
-                 bool isMaker = false;
-                 string title = x.GetAttributeValue("title", "none");
+                 var isMaker = false;
+                 var title = x.GetAttributeValue("title", "none");
                  if (!string.IsNullOrEmpty(title) && !title.Equals("none"))
                  {
                    isMaker = Regex.IsMatch(title, marker);
                  }
                  return isMaker;
                });
-        if (res != null && res.Count<HtmlNode>() > 0)
+        if (res != null && res.Count() > 0)
         {
-          var resNode = res.First<HtmlNode>();
+          var resNode = res.First();
           textRes = resNode.InnerText.Trim(); ;
         }
       }

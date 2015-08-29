@@ -1,8 +1,4 @@
 ﻿using ParsersChe.WebClientParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ParsersChe.Bot.ContentPrepape.Irr
 {
@@ -18,17 +14,13 @@ namespace ParsersChe.Bot.ContentPrepape.Irr
     public override void LoadLinkWithAllPage()
     {
       if (NumberPage >= limitPage)
-      {
         IsNextPage = false;
-      }
       base.LoadLinkWithAllPage();
     }
     protected override void PrepareUrl()
     {
       if (NumberPage >= limitPage - 1)
-      {
         IsNextPage = false;
-      }
       base.PrepareUrl();
     }
   }

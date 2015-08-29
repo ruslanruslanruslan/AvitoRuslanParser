@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
-
 
 public class InfoPage
 {
 
   public static string GetDatafromText(string text, string pattern)
   {
-    Match mc = Regex.Match(text, pattern);
+    var mc = Regex.Match(text, pattern);
     return mc.Value;
   }
 
   public static string GetDatafromText(string text, string pattern, int fGroup)
   {
-    Match mc = Regex.Match(text, pattern);
-    string textout = mc.Groups[fGroup].Value;
-    return textout;
+    var mc = Regex.Match(text, pattern);
+    return mc.Groups[fGroup].Value;
   }
 
   public static string Replace(string text, string pattern, string newValue)
@@ -28,7 +25,7 @@ public class InfoPage
   }
   public static void WriteSerObjectToFile(string path, Object obj)
   {
-    BinaryFormatter formatter = new BinaryFormatter();
+    var formatter = new BinaryFormatter();
     using (var fStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
     {
       formatter.Serialize(fStream, obj);
@@ -38,7 +35,7 @@ public class InfoPage
   public static object ReadSerObjectToFile(string path)
   {
     object obj;
-    BinaryFormatter formatter = new BinaryFormatter();
+    var formatter = new BinaryFormatter();
     using (var fStream = File.OpenRead(path))
     {
       obj = formatter.Deserialize(fStream);
