@@ -13,7 +13,7 @@ using ParsersChe.WebClientParser.Proxy;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using ParsersChe.WebClientParser;
 using Extensions;
-
+using ParsersChe.HelpFull;
 
 namespace AvitoRuslanParser
 {
@@ -149,7 +149,7 @@ namespace AvitoRuslanParser
         {
           var idResourceList = mySqlDB.ResourceListIDAvito();
           mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
-          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper());
+          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ImageParsedCountHelper());
           Parser2.PathImages2 = Properties.Default.PathToImg;
           var result2 = Parser2.Run(URLLink);
           mySqlDB.ExecuteProcAvito(idResourceList);
@@ -190,7 +190,7 @@ namespace AvitoRuslanParser
           //  URLLink = LinkAdtextBox.Text;
           //Создаем класс и вводим параметры 
           var Parser = new RuslanParser(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB);
-          var imageCount = new ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito.ImageParsedCountHelper();
+          var imageCount = new ImageParsedCountHelper();
           var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, imageCount);
 
           Parser.PathImages = Properties.Default.PathToImg;
@@ -269,6 +269,10 @@ namespace AvitoRuslanParser
                 {
                   AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
                 }
+
+                foreach (var im in imageCount.Resources)
+                  mySqlDB.InsertassGrabberAvitoResourceList(im.Key, im.Value);
+
                 AddLog("Parser: Loading images end", LogMessageColor.Information());
                 AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                 mySqlDB.ExecuteProcAvito(idResourceList);
@@ -395,6 +399,7 @@ namespace AvitoRuslanParser
             AddLog("ebay section: " + unit.PrimaryCategoryName, LogMessageColor.Information());
           }
           var isAuction = true;
+          ImageParsedCountHelper imageCount = null;
           if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
           {
             if (Properties.Default.PublishParsedData)
@@ -402,7 +407,7 @@ namespace AvitoRuslanParser
               AddLog("Parser: Begin loading images", LogMessageColor.Information());
               try
               {
-                var imageCount = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+                imageCount = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
                 AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
                 AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
                 foreach (var error in imageCount.ErrorList)
@@ -431,7 +436,11 @@ namespace AvitoRuslanParser
           try
           {
             mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
-
+            if (imageCount != null)
+            {
+              foreach (var im in imageCount.Resources)
+                mySqlDB.InsertassGrabberEbayResourceList(im.Key, im.Value);
+            }
             if (Properties.Default.PublishParsedData && !isAuction)
             {
               AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
