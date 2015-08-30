@@ -1,11 +1,4 @@
-﻿using ParsersChe.Bot.ContentPrepape.Avito.Auto;
-using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
-using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 
 namespace ParsersChe.Bot.ContentPrepape.Avito.Auto
 {

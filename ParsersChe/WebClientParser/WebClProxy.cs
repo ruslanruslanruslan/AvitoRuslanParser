@@ -1,9 +1,7 @@
 ﻿using AutoRuParser.Bots;
 using ParsersChe.WebClientParser.Proxy;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -19,10 +17,10 @@ namespace ParsersChe.WebClientParser
       set { url = value; }
     }
     private object obj = new object();
-    public virtual System.Net.HttpWebRequest GetHttpWebReq(string url)
+    public virtual HttpWebRequest GetHttpWebReq(string url)
     {
       this.url = url;
-      HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+      var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
       httpWebRequest.UserAgent = HttpHeaders.UserAgentIE10.Value;
       httpWebRequest.Proxy = ProxyCollectionSingl.Instance.Proxy;
       httpWebRequest.Timeout = 12000;
@@ -35,10 +33,10 @@ namespace ParsersChe.WebClientParser
     {
       var p = ProxyCollectionSingl.Instance.NewProxy;
     }
-    protected virtual System.Net.HttpWebRequest GetHttpWebReqNewProxy(string url)
+    protected virtual HttpWebRequest GetHttpWebReqNewProxy(string url)
     {
       this.url = url;
-      HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+      var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
       httpWebRequest.UserAgent = HttpHeaders.UserAgentIE10.Value;
       httpWebRequest.Proxy = ProxyCollectionSingl.Instance.NewProxy;
       httpWebRequest.Timeout = 8000;
@@ -47,11 +45,11 @@ namespace ParsersChe.WebClientParser
       return httpWebRequest;
     }
 
-    public System.Net.HttpWebResponse GetHttpWebResp(System.Net.HttpWebRequest webReq)
+    public HttpWebResponse GetHttpWebResp(HttpWebRequest webReq)
     {
-      int countTry = 20;
-      int count404Eror = 0;
-      bool repeat = true;
+      var countTry = 20;
+      var count404Eror = 0;
+      var repeat = true;
 
       HttpWebResponse res = null;
       while (repeat && countTry > 0 && count404Eror < 3)
@@ -59,21 +57,16 @@ namespace ParsersChe.WebClientParser
         {
           res = (HttpWebResponse)webReq.GetResponse();
           repeat = false;
-
         }
         catch (WebException wex)
         {
           res = null;
           countTry--;
-          int code = 0;
+          var code = 0;
           if (wex.Response != null)
-          {
             code = (int)((HttpWebResponse)wex.Response).StatusCode;
-          }
           if (code == 404 || code == 302)
-          {
             count404Eror++;
-          }
           Log(wex, "GetHttpWebResp");
           webReq = GetHttpWebReqNewProxy(url);
         }
@@ -84,29 +77,26 @@ namespace ParsersChe.WebClientParser
           webReq = GetHttpWebReqNewProxy(url);
         }
       if (res != null && (int)res.StatusCode == 302)
-      {
         res = null;
-      }
       return res;
     }
 
-
-    public string GetContent(System.Net.HttpWebResponse webResp, Encoding encoding)
+    public string GetContent(HttpWebResponse webResp, Encoding encoding)
     {
       string content = null;
-      int countTry = 3;
-      bool repeat = true;
+      var countTry = 3;
+      var repeat = true;
       while (repeat && countTry > 0 && webResp != null)
         try
         {
           var responseStream = webResp.GetResponseStream();
           responseStream.ReadTimeout = 8000;
-          using (StreamReader sr = new StreamReader(responseStream, encoding))
+          using (var sr = new StreamReader(responseStream, encoding))
           {
             content = sr.ReadToEnd();
-            //webResp.Close();
             webResp = null;
-            if (content.Equals("обновите страницу, пожалуйста")) throw new WebException("ParsersChe error: Proxy no Russian");
+            if (content.Equals("обновите страницу, пожалуйста"))
+              throw new WebException("ParsersChe error: Proxy no Russian");
             repeat = false;
           }
         }
@@ -131,7 +121,6 @@ namespace ParsersChe.WebClientParser
 
     private void Log(WebException exWeb, string nameMethod)
     {
-
       lock (obj)
       {
         try
@@ -147,22 +136,20 @@ namespace ParsersChe.WebClientParser
         catch (Exception)
         {
         }
-
       }
     }
-
-
+    
     public void WritePostLine(ref HttpWebRequest req, string postString)
     {
-      int countTry = 20;
-      int count404Eror = 0;
-      bool repeat = true;
+      var countTry = 20;
+      var count404Eror = 0;
+      var repeat = true;
 
       while (repeat && countTry > 0 && count404Eror < 3)
       {
         try
         {
-          byte[] ByteArr = System.Text.Encoding.UTF8.GetBytes(postString);
+          var ByteArr = Encoding.UTF8.GetBytes(postString);
           req.ContentLength = ByteArr.Length;
           req.GetRequestStream().Write(ByteArr, 0, ByteArr.Length);
           repeat = false;
@@ -170,15 +157,11 @@ namespace ParsersChe.WebClientParser
         catch (WebException wex)
         {
           countTry--;
-          int code = 0;
+          var code = 0;
           if (wex.Response != null)
-          {
             code = (int)((HttpWebResponse)wex.Response).StatusCode;
-          }
           if (code == 404 || code == 302)
-          {
             count404Eror++;
-          }
           Log(wex, "GetHttpWebResp");
           var req2 = GetHttpWebReqNewProxy(url);
           req2.Method = req.Method;
@@ -198,8 +181,8 @@ namespace ParsersChe.WebClientParser
     }
     public Stream GetStream(HttpWebResponse response)
     {
-      int countTry = 3;
-      bool repeat = true;
+      var countTry = 3;
+      var repeat = true;
       Stream str = null;
       while (repeat && countTry > 0 && response != null)
       {
@@ -224,18 +207,18 @@ namespace ParsersChe.WebClientParser
 
     public bool DownloadImage(HttpWebResponse response, string fileName)
     {
-      bool result = false;
-      int countTry = 3;
-      bool repeat = true;
+      var result = false;
+      var countTry = 3;
+      var repeat = true;
       while (repeat && countTry > 0 && response != null)
       {
         // if the remote file was found, download it
         try
         {
-          using (Stream inputStream = response.GetResponseStream())
-          using (Stream outputStream = File.OpenWrite(fileName))
+          using (var inputStream = response.GetResponseStream())
+          using (var outputStream = File.OpenWrite(fileName))
           {
-            byte[] buffer = new byte[4096];
+            var buffer = new byte[4096];
             int bytesRead;
             do
             {
@@ -264,7 +247,6 @@ namespace ParsersChe.WebClientParser
         }
       }
       return result;
-
     }
   }
 }

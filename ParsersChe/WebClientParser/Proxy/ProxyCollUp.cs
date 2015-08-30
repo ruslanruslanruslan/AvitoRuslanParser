@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -51,7 +50,6 @@ namespace ParsersChe.WebClientParser.Proxy
       {
         timer.Interval = value;
         timeCheckCrashProxy = value;
-
       }
     }
 
@@ -151,35 +149,33 @@ namespace ParsersChe.WebClientParser.Proxy
       {
         using (TextWriter tw = new StreamWriter(pathToCrashList, true))
         {
-          WebProxy wb = Proxy as WebProxy;
-          string url = wb.Address.Authority;
+          var wb = Proxy as WebProxy;
+          var url = wb.Address.Authority;
           tw.WriteLine(url);
         }
         CountProxy--;
-        if (!timer.Enabled) { timer.Enabled = true; }
+        if (!timer.Enabled)
+          timer.Enabled = true;
       }
     }
 
     private void CheckerCrashList()
     {
       var proxy = File.ReadAllLines(pathToCrashList);
-      proxy.Reverse<string>();
+      proxy.Reverse();
       if (proxy != null)
       {
-        List<string> listBad = new List<string>();
+        var listBad = new List<string>();
         foreach (var item in proxy)
         {
-          WebProxy wp = new WebProxy(new Uri("http://" + item));
-          if (credential != null) wp.Credentials = credential;
-          bool res = checkerProxy.IsWorkProxy(wp);
+          var wp = new WebProxy(new Uri("http://" + item));
+          if (credential != null)
+            wp.Credentials = credential;
+          var res = checkerProxy.IsWorkProxy(wp);
           if (res)
-          {
             queue.Enqueue(item);
-          }
           else
-          {
             listBad.Add(item);
-          }
         }
         File.WriteAllLines(pathToCrashList, listBad);
       }
@@ -201,8 +197,6 @@ namespace ParsersChe.WebClientParser.Proxy
         checkerProxyTask.Wait();
       }
     }
-
-
 
     public override void ReadProxy(IList<string> proxyList)
     {

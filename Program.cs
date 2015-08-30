@@ -1,12 +1,7 @@
-﻿using AvitoRuslanParser.EbayParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Runtime.ExceptionServices;
 using System.Windows.Forms;
 using System.Security;
-using AvitoRuslanParser;
 
 namespace AvitoRuslanParser
 {

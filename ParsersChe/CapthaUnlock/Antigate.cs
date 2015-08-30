@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -25,9 +21,7 @@ namespace AntigateUnravel
       get
       {
         if (userInfo == null)
-        {
           userInfo = ReadUserInfo("info.txt");
-        }
         return userInfo;
       }
     }
@@ -41,7 +35,7 @@ namespace AntigateUnravel
           text = reader.ReadToEnd();
         }
       }
-      UserInfo2 user = new UserInfo2();
+      var user = new UserInfo2();
 
       user.AntigeitKey = GetValueForName(text, "antigate");
       return user;
@@ -49,8 +43,7 @@ namespace AntigateUnravel
 
     private static string GetValueForName(string text, string nameField)
     {
-      string result = InfoPage.GetDatafromText(text, "" + nameField + "=\"(.+?)\"", 1);
-      return result;
+      return InfoPage.GetDatafromText(text, "" + nameField + "=\"(.+?)\"", 1);
     }
   }
   #endregion
@@ -71,7 +64,7 @@ namespace AntigateUnravel
     private string indexCaptha;
     public void UploadCaptha(Stream streamImage)
     {
-      Uploading up = new Uploading();
+      var up = new Uploading();
       byte[] res;
       using (var stream = streamImage)
       {
@@ -97,7 +90,7 @@ namespace AntigateUnravel
     }
     public void UploadCaptha(string dumpPath)
     {
-      Uploading up = new Uploading();
+      var up = new Uploading();
       byte[] res;
       using (var stream = File.Open(dumpPath, FileMode.Open))
       {
@@ -118,39 +111,29 @@ namespace AntigateUnravel
         res = up.UploadFiles("http://antigate.com/in.php", files, values, "");
       }
 
-      string resText = ByteArrayToString(res);
+      var resText = ByteArrayToString(res);
       indexCaptha = InfoPage.GetDatafromText(resText, "\\d+");
     }
     public string SendResponses()
     {
-      string result = "";
-      string res = "";
-      bool isNotReady = true;
+      var res = "";
+      var isNotReady = true;
       while (isNotReady)
       {
-        string url = "http://antigate.com/res.php?key=" + key + "&action=get&id=" + indexCaptha;
+        var url = "http://antigate.com/res.php?key=" + key + "&action=get&id=" + indexCaptha;
         res = InfoPage.GetPage(url);
         if (!res.Equals("CAPCHA_NOT_READY"))
-        {
           isNotReady = false;
-        }
         else
-        {
           Thread.Sleep(2000);
-        }
-
       }
-      result = InfoPage.GetDatafromText(res, "OK\\|(.+)", 1);
-      return result;
-
+      return InfoPage.GetDatafromText(res, "OK\\|(.+)", 1);
     }
-
 
     private string ByteArrayToString(byte[] input)
     {
-      UTF8Encoding enc = new UTF8Encoding();
-      string str = enc.GetString(input);
-      return str;
+      var enc = new UTF8Encoding();
+      return enc.GetString(input);
     }
   }
 }

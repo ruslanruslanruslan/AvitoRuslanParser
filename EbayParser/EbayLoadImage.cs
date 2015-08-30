@@ -1,16 +1,7 @@
 ﻿using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AvitoRuslanParser;
 
 namespace AvitoRuslanParser.EbayParser
 {
@@ -38,17 +29,17 @@ namespace AvitoRuslanParser.EbayParser
 
     public EbayImageParsedCountHelper LoadImages(IEnumerable<string> LinksImages)
     {
-      EbayImageParsedCountHelper helper = new EbayImageParsedCountHelper();
+      var helper = new EbayImageParsedCountHelper();
       if (LinksImages != null)
       {
         helper.CountParsed = LinksImages.Count();
         foreach (var item in LinksImages)
         {
-          string guid = mySqlDB.ResourceID();
-          string guid2 = mySqlDB.ResourceListIDEbay();
+          var guid = mySqlDB.ResourceID();
+          var guid2 = mySqlDB.ResourceListIDEbay();
           try
           {
-            string dirName = string.Empty;
+            var dirName = string.Empty;
             if (guid.Length > 3)
               dirName = guid.Substring(0, 3);
             else

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
+﻿namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
 {
   public struct EmailUnit
   {

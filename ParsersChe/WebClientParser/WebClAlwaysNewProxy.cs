@@ -1,9 +1,7 @@
 ﻿using AutoRuParser.Bots;
 using ParsersChe.WebClientParser.Proxy;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -13,25 +11,24 @@ namespace ParsersChe.WebClientParser
   {
     private string url;
 
-    public virtual System.Net.HttpWebRequest GetHttpWebReq(string url)
+    public virtual HttpWebRequest GetHttpWebReq(string url)
     {
       this.url = url;
-      HttpWebRequest httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+      var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
       httpWebRequest.UserAgent = HttpHeaders.UserAgentIE10.Value;
       httpWebRequest.Proxy = ProxyCollectionSingl.Instance.NewProxy;
       httpWebRequest.Timeout = 8000;
       return httpWebRequest;
     }
 
-    public virtual System.Net.HttpWebResponse GetHttpWebResp(System.Net.HttpWebRequest webReq)
+    public virtual HttpWebResponse GetHttpWebResp(HttpWebRequest webReq)
     {
-      int countTry = 20;
-      bool repeat = true;
+      var countTry = 20;
+      var repeat = true;
       HttpWebResponse res = null;
       while (repeat && countTry > 0)
         try
         {
-
           res = (HttpWebResponse)webReq.GetResponse();
           repeat = false;
         }
@@ -51,17 +48,17 @@ namespace ParsersChe.WebClientParser
     }
 
 
-    public virtual string GetContent(System.Net.HttpWebResponse webResp, Encoding encoding)
+    public virtual string GetContent(HttpWebResponse webResp, Encoding encoding)
     {
       string content = null;
-      int countTry = 3;
-      bool repeat = true;
+      var countTry = 3;
+      var repeat = true;
       while (repeat && countTry > 0)
         try
         {
           var responseStream = webResp.GetResponseStream();
           responseStream.ReadTimeout = 8000;
-          using (StreamReader sr = new StreamReader(responseStream, encoding))
+          using (var sr = new StreamReader(responseStream, encoding))
           {
             content = sr.ReadToEnd();
             repeat = false;

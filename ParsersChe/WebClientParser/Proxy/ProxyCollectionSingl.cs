@@ -1,9 +1,5 @@
-﻿using ParsersChe.WebClientParser.Proxy.CheckerProxy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
-using System.Text;
 
 namespace ParsersChe.WebClientParser.Proxy
 {
@@ -36,9 +32,7 @@ namespace ParsersChe.WebClientParser.Proxy
         proxyColl = new ProxyQueueTxt(ProxyUser, ProxyPass, proxyPath);
       }
       else if (!string.IsNullOrEmpty(proxyPath))
-      {
         proxyColl = new ProxyQueueTxt(proxyPath);
-      }
 
       proxyColl.ReadProxy();
 
