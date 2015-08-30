@@ -6,6 +6,7 @@ using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
 using AvitoRuslanParser.AvitoParser;
+using ParsersChe.HelpFull;
 
 namespace AvitoRuslanParser
 {

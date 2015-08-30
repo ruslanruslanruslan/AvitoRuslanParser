@@ -1,4 +1,5 @@
-﻿using ParsersChe.WebClientParser;
+﻿using ParsersChe.HelpFull;
+using ParsersChe.WebClientParser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +28,16 @@ namespace AvitoRuslanParser.EbayParser
       imageLoader = new ImageLoader(PathToFolder, ftpUsername, ftpPassword);
     }
 
-    public EbayImageParsedCountHelper LoadImages(IEnumerable<string> LinksImages)
+    public ImageParsedCountHelper LoadImages(IEnumerable<string> LinksImages)
     {
-      var helper = new EbayImageParsedCountHelper();
+      var helper = new ImageParsedCountHelper();
       if (LinksImages != null)
       {
         helper.CountParsed = LinksImages.Count();
         foreach (var item in LinksImages)
         {
-          var guid = mySqlDB.ResourceID();
-          var guid2 = mySqlDB.ResourceListIDEbay();
+          var guid = mySqlDB.ResourceID();          
+          var guid2 = Convert.ToString(Convert.ToInt32(mySqlDB.ResourceListIDEbay()) + 1);
           try
           {
             var dirName = string.Empty;
@@ -47,7 +48,7 @@ namespace AvitoRuslanParser.EbayParser
             if (imageLoader.LoadImage(item, web, guid, guid2, dirName))
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink, dirName);
-              mySqlDB.InsertassGrabberEbayResourceList(guid2, guid);
+              helper.Resources.Add(new KeyValuePair<string, string>(guid2, guid));
               helper.CountDownloaded++;
               helper.ErrorList.Add("LoadImage success: " + item, false);
             }
@@ -61,29 +62,4 @@ namespace AvitoRuslanParser.EbayParser
       return helper;
     }
   }
-
-  class EbayImageParsedCountHelper
-  {
-    private int countParsed = 0;
-    public int CountParsed
-    {
-      get { return countParsed; }
-      set { countParsed = value; }
-    }
-
-    private int countDownloaded = 0;
-    public int CountDownloaded
-    {
-      get { return countDownloaded; }
-      set { countDownloaded = value; }
-    }
-
-    private Dictionary<string, bool> errorList = new Dictionary<string,bool>();
-    public Dictionary<string, bool> ErrorList
-    {
-      get { return errorList; }
-      set { errorList = value; }
-    }
-  }
-
 }
