@@ -294,6 +294,10 @@ namespace AvitoRuslanParser
           cmd.CommandText = sql;
           cmd.Prepare();
           cmd.Parameters.AddWithValue("@resourceid", resourceid);
+          if (directory.EndsWith("\\"))
+            directory.TrimEnd('\\');
+          if (!directory.EndsWith("/"))
+            directory += "/";
           cmd.Parameters.AddWithValue("@directory", fixedDirectory + directory);
 
           var result = cmd.ExecuteNonQuery();
