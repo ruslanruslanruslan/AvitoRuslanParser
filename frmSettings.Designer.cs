@@ -136,12 +136,15 @@
       // cbPublishParsedData
       // 
       this.cbPublishParsedData.AutoSize = true;
+      this.cbPublishParsedData.Checked = true;
+      this.cbPublishParsedData.CheckState = System.Windows.Forms.CheckState.Checked;
       this.cbPublishParsedData.Location = new System.Drawing.Point(11, 133);
       this.cbPublishParsedData.Name = "cbPublishParsedData";
       this.cbPublishParsedData.Size = new System.Drawing.Size(119, 17);
       this.cbPublishParsedData.TabIndex = 8;
       this.cbPublishParsedData.Text = "Publish parsed data";
       this.cbPublishParsedData.UseVisualStyleBackColor = true;
+      this.cbPublishParsedData.Visible = false;
       // 
       // btnBrowserSMSSpamerPath
       // 
