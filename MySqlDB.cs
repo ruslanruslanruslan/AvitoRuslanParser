@@ -294,6 +294,10 @@ namespace AvitoRuslanParser
           cmd.CommandText = sql;
           cmd.Prepare();
           cmd.Parameters.AddWithValue("@resourceid", resourceid);
+          if (directory.EndsWith("\\"))
+            directory.TrimEnd('\\');
+          if (!directory.EndsWith("/"))
+            directory += "/";
           cmd.Parameters.AddWithValue("@directory", fixedDirectory + directory);
 
           var result = cmd.ExecuteNonQuery();
@@ -661,7 +665,7 @@ namespace AvitoRuslanParser
       var is_auction = false;
       try
       {
-        index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);        
+        index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
         is_auction = item.MinimumToBid != null;
         if (is_auction)
           trans = 4;

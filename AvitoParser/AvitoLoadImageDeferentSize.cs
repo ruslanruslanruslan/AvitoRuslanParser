@@ -1,6 +1,8 @@
 ﻿using ParsersChe.Bot.ActionOverPage.ContentPrepare.Avito;
+using ParsersChe.HelpFull;
 using ParsersChe.WebClientParser;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -52,7 +54,7 @@ namespace AvitoRuslanParser.AvitoParser
             if (imageLoader.LoadImage(item, WebCl, guid, guid2, dirName))
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink, dirName);
-              mySqlDB.InsertassGrabberAvitoResourceList(guid2, guid);
+              imageParsedCountHelper.Resources.Add(new KeyValuePair<string, string>(guid2, guid));
               imageParsedCountHelper.CountDownloaded++;
               imageParsedCountHelper.ErrorList.Add("LoadImage success: " + item, false);
             }
