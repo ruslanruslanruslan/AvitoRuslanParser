@@ -176,7 +176,7 @@ namespace AvitoRuslanParser
     public string ResourceID()
     {
       //тело запроса!!!!!!!!!!
-      const string sql = "call sp_get_NextResourceId();";
+      const string sql = "select fn_get_NextResourceId();";
       var resultStr = string.Empty;
       try
       {
