@@ -41,10 +41,10 @@ namespace AvitoRuslanParser.AvitoParser
           imageParsedCountHelper.CountParsed = linksImages.Count;
         foreach (var item in LinksImages)
         {
-          var guid = GetidImage();
-          var guid2 = GetidImageList();
           try
           {
+            var guid = GetidImage();
+            var guid2 = GetidImageList();
             var dirName = string.Empty;
             if (guid.Length > 3)
               dirName = guid.Substring(0, 3);
