@@ -125,7 +125,7 @@ namespace AvitoRuslanParser
       {
         label6.SetPropertyThreadSafe(() => label6.Text, "Start");
         //Ссылка на обьявление
-       // mySqlDB.DeleteUnTransformated();
+        mySqlDB.PrepareAvitoEnvironment();
         //Создаем класс и вводим параметры 
         var Parser = new RuslanParser(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB);
         Parser.PathImages = Properties.Default.PathToImg;
@@ -218,7 +218,7 @@ namespace AvitoRuslanParser
               if (i == 25)
                 i = -1;
               URLLink = item;
-              //mySqlDB.DeleteUnTransformated();
+              mySqlDB.PrepareAvitoEnvironment();
               Dictionary<PartsPage, IEnumerable<string>> result = null;
               try
               {

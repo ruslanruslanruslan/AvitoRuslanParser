@@ -311,7 +311,7 @@ namespace AvitoRuslanParser
     public void InsertassGrabberAvitoResourceList(string index1, string index2)
     {
       //Тело запроса!!!!!!!
-      const string sql = @" insert into ass_grabber_avito_resource_list
+        const string sql = @" insert into ass_grabber_avito_resource_list (id_resource_list, id_resource)
                     Values(@index1,@index2)";
       if (index1 != null)
       {
@@ -333,14 +333,10 @@ namespace AvitoRuslanParser
         }
       }
     }
-    public void DeleteUnTransformated()
+    public void PrepareAvitoEnvironment()
     {
       //Тело запроса!!!!!!!
-      const string sql = @" delete from ass_grabber_avito_resource_list 
-                                where id_resource_list in (select id_resource_list from fct_grabber_avito 
-						                                   where transformated = 0);
-                                    delete from fct_grabber_avito 
-                                    where transformated = 0;";
+        const string sql = @"call sp_prepare_avito_environment;";
       try
       {
         var cmd = new MySqlCommand();
