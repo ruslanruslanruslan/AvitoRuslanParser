@@ -279,6 +279,25 @@ namespace AvitoRuslanParser
         }
       }
     }
+    public void UpdateFctAvitoGrabberPhotoCount(string index, int photo_cnt)
+    {
+      const string sql = @"update fct_grabber_avito set photo_cnt=@photo_cnt where id_resource_list=@index";
+      try
+      {
+        var cmd = new MySqlCommand();
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+
+        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
+        cmd.Parameters.AddWithValue("@index", index);
+        var result = cmd.ExecuteNonQuery();
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
+      }
+    }
     public void InsertItemResource(string resourceid, string url, string directory)
     {
       if (resourceid != null)
@@ -491,7 +510,7 @@ namespace AvitoRuslanParser
           id = item.ItemID;
           cmd.Parameters.AddWithValue("@price", price);
           cmd.Parameters.AddWithValue("@id", id);
-          int result = cmd.ExecuteNonQuery();
+          var result = cmd.ExecuteNonQuery();
 
           if (Properties.Default.PublishParsedData)
           {
@@ -704,6 +723,25 @@ namespace AvitoRuslanParser
           "] [country = " + item.Country + "] [subcategory = " + item.PrimaryCategoryName + "] [section = " + section + "] [desc = " + item.Description +
           "] [currency = " + item.CurrentPrice.currencyID + "] [is_auction = " + is_auction + "] [transformated = " + trans + "] [bid = " + bid +
           "]: " + ex.Message, ex);
+      }
+    }
+    public void UpdateFctEbayGrabberPhotoCount(string index, int photo_cnt)
+    {
+      const string sql = @"update fct_grabber_ebay set photo_cnt=@photo_cnt where id_resource_list=@index";
+      try
+      {
+        var cmd = new MySqlCommand();
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+
+        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
+        cmd.Parameters.AddWithValue("@index", index);
+        var result = cmd.ExecuteNonQuery();
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
       }
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)
