@@ -104,10 +104,25 @@ namespace AvitoRuslanParser
         mySqlDB.InsertFctEbayGrabber(parsedItems, cbCategories.Text);
         var isAuction = true;
 
+        ImageParsedCountHelper imageCount = null;
+
         if (parsedItems != null && parsedItems.Item != null && parsedItems.Item.Count() > 0)
         {
-          imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+          imageCount = imgParser.LoadImages(parsedItems.Item[0].PictureURL);
+          AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+          AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+          foreach (var error in imageCount.ErrorList)
+            AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
           isAuction = (parsedItems.Item[0].TimeLeft != null && parsedItems.Item[0].ListingType != "FixedPriceItem");
+        }
+
+        var idResourceList = mySqlDB.ResourceListIDEbay();
+        imageCount.ResourceId = idResourceList;
+        if (imageCount != null)
+        {
+          foreach (var im in imageCount.Resources)
+            mySqlDB.InsertassGrabberEbayResourceList(idResourceList, im);
+          mySqlDB.UpdateFctEbayGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
         }
 
         if (!isAuction)
@@ -149,10 +164,27 @@ namespace AvitoRuslanParser
         {
           var idResourceList = mySqlDB.ResourceListIDAvito();
           mySqlDB.InsertFctAvitoGrabber(result, idResourceList, URLLink, cbCategories.Text);
-          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, new ImageParsedCountHelper());
+          var imageCount = new ImageParsedCountHelper();
+          imageCount.ResourceId = idResourceList;
+          var Parser2 = new RuslanParser2(Properties.Default.User, Properties.Default.Password, Properties.Default.PathToProxy, mySqlDB, Properties.Default.FtpUsername, Properties.Default.FtpPassword, imageCount);
           Parser2.PathImages2 = Properties.Default.PathToImg;
           var result2 = Parser2.Run(URLLink);
+          AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+          AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
+          foreach (var error in imageCount.ErrorList)
+          {
+            AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
+          }
+
+          foreach (var im in imageCount.Resources)
+            mySqlDB.InsertassGrabberAvitoResourceList(idResourceList, im);
+
+          mySqlDB.UpdateFctAvitoGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
+
+          AddLog("Parser: Loading images end", LogMessageColor.Information());
+          AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
           mySqlDB.ExecuteProcAvito(idResourceList);
+          AddLog("Parser: End publishing ad", LogMessageColor.Information());
         }
       }
       catch (Exception ex)
@@ -277,6 +309,7 @@ namespace AvitoRuslanParser
                   foreach (var im in imageCount.Resources)
                     mySqlDB.InsertassGrabberAvitoResourceList(idResourceList, im);
 
+                  mySqlDB.UpdateFctAvitoGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
                   AddLog("Parser: Loading images end", LogMessageColor.Information());
                   AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
                   mySqlDB.ExecuteProcAvito(idResourceList);
@@ -451,6 +484,7 @@ namespace AvitoRuslanParser
             {
               foreach (var im in imageCount.Resources)
                 mySqlDB.InsertassGrabberEbayResourceList(idResourceList, im);
+              mySqlDB.UpdateFctEbayGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
             }
             if (Properties.Default.PublishParsedData && !isAuction)
             {
