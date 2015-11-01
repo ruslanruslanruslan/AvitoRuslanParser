@@ -25,11 +25,18 @@ namespace ParsersChe.HelpFull
       set { errorList = value; }
     }
 
-    private List<KeyValuePair<string, string>> resources = new List<KeyValuePair<string, string>>();
-    public List<KeyValuePair<string, string>> Resources
+    private List<string> resources = new List<string>();
+    public List<string> Resources
     {
       get { return resources; }
       set { resources = value; }
+    }
+
+    private string resourceId = string.Empty;
+    public string ResourceId
+    {
+      get { return resourceId; }
+      set { resourceId = value; }
     }
   }
 }

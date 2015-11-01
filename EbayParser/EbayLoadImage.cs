@@ -37,7 +37,6 @@ namespace AvitoRuslanParser.EbayParser
         foreach (var item in LinksImages)
         {
           var guid = mySqlDB.ResourceID();          
-          var guid2 = Convert.ToString(Convert.ToInt32(mySqlDB.ResourceListIDEbay()) + 1);
           try
           {
             var dirName = string.Empty;
@@ -45,10 +44,10 @@ namespace AvitoRuslanParser.EbayParser
               dirName = guid.Substring(0, 3);
             else
               dirName = guid;
-            if (imageLoader.LoadImage(item, web, guid, guid2, dirName))
+            if (imageLoader.LoadImage(item, web, guid, helper.ResourceId, dirName))
             {
               mySqlDB.InsertItemResource(guid, frmMain.URLLink, dirName);
-              helper.Resources.Add(new KeyValuePair<string, string>(guid2, guid));
+              helper.Resources.Add(guid);
               helper.CountDownloaded++;
               helper.ErrorList.Add("LoadImage success: " + item, false);
             }

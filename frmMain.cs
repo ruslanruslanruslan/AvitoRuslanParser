@@ -211,8 +211,10 @@ namespace AvitoRuslanParser
             try
             {
               imageCount.ErrorList.Clear();
+              imageCount.Resources.Clear();
               imageCount.CountParsed = 0;
               imageCount.CountDownloaded = 0;
+              imageCount.ResourceId = string.Empty;
               AddLog("Parser: start parse link: " + item, LogMessageColor.Information());
               i++;
               if (i == 25)
@@ -258,7 +260,7 @@ namespace AvitoRuslanParser
                 mySqlDB.InsertFctAvitoGrabber(result, idResourceList, item, linkSection[1]);
                 AddLog("Parser: ad inserted", LogMessageColor.Information());
                 incInserted();
-
+                imageCount.ResourceId = idResourceList;
                 if (Properties.Default.PublishParsedData)
                 {
                   AddLog("Parser: Begin loading images", LogMessageColor.Information());
@@ -273,7 +275,7 @@ namespace AvitoRuslanParser
                   }
 
                   foreach (var im in imageCount.Resources)
-                    mySqlDB.InsertassGrabberAvitoResourceList(im.Key, im.Value);
+                    mySqlDB.InsertassGrabberAvitoResourceList(idResourceList, im);
 
                   AddLog("Parser: Loading images end", LogMessageColor.Information());
                   AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
@@ -440,18 +442,20 @@ namespace AvitoRuslanParser
           AddLog("Parser: sleep after parse off", LogMessageColor.Information());
 
           AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
+          var idResourceList = mySqlDB.ResourceListIDEbay();
+          imageCount.ResourceId = idResourceList;
           try
           {
             mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
             if (imageCount != null)
             {
               foreach (var im in imageCount.Resources)
-                mySqlDB.InsertassGrabberEbayResourceList(im.Key, im.Value);
+                mySqlDB.InsertassGrabberEbayResourceList(idResourceList, im);
             }
             if (Properties.Default.PublishParsedData && !isAuction)
             {
               AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
-              mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+              mySqlDB.ExecuteProcEBay(idResourceList);
               AddLog("Parser: End publishing ad", LogMessageColor.Information());
 
               AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
