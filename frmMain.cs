@@ -333,6 +333,7 @@ namespace AvitoRuslanParser
             {
               AddLog("Parser: " + ex.Message, LogMessageColor.Error());
             }
+            AddLog(string.Empty, LogMessageColor.Information());
           }
           AddLogStatistic(linkSection[1], mySqlDB.CountAd, countIns);
         }
@@ -410,15 +411,12 @@ namespace AvitoRuslanParser
 
         foreach (var item in ids)
         {
-          if (countCurrentRepeat > cryticalCount) break;
+          if (countCurrentRepeat > cryticalCount)
+            break;
           if (mySqlDB.IsNewAdEbay(item))
-          {
             newIds.Add(item);
-          }
           else
-          {
             countCurrentRepeat++;
-          }
         }
 
         var partsIdsCollection = Helpful.Partition<long>(newIds, 1);
@@ -496,13 +494,14 @@ namespace AvitoRuslanParser
               Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
               AddLog("Parser: sleep after publication off", LogMessageColor.Information());
             }
-            AddLog("Parser: ad inserted" + Environment.NewLine, LogMessageColor.Information());
+            AddLog("Parser: ad inserted", LogMessageColor.Information());
             incInserted();
           }
           catch (Exception ex)
           {
             AddLog("Parser: " + ex.Message, LogMessageColor.Error());
           }
+          AddLog(string.Empty, LogMessageColor.Information());
         }
 
         AddLog("Parser: End pasring section " + sectionItem.CategoryName, LogMessageColor.Information());
@@ -699,7 +698,10 @@ namespace AvitoRuslanParser
             var start = rtbLog.Text.Length - 1;
             if (start < 0)
               start = 0;
-            rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+            if (msg == string.Empty)
+              rtbLog.AppendText(Environment.NewLine);
+            else
+              rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
             rtbLog.Select(start, rtbLog.Text.Length - start + 1);
             rtbLog.SelectionColor = msgColor;
             rtbLog.SelectionStart = rtbLog.Text.Length;
