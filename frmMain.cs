@@ -269,15 +269,19 @@ namespace AvitoRuslanParser
               {
                 if (element.Key != PartsPage.Body)
                 {
-                  sb.Append(element.Key + " - ");
+                  sb.Append(string.Format("{0,-15} - ", element.Key));
                   if (element.Value != null)
                     foreach (var t in element.Value)
-                      sb.Append(t + " |");
+                    {
+                      if (element.Value.Count() > 1)
+                        sb.Append(t + " |");
+                      else
+                        sb.Append(t);
+                    }
                   sb.Append(Environment.NewLine);
                 }
               }
-
-              AddLog("Parser: " + sb.ToString(), LogMessageColor.Information());
+              AddLog("Parser: " + sb.ToString().TrimEnd(Environment.NewLine.ToCharArray()), LogMessageColor.Information());
               IncParsed();
               countPre++;
 
@@ -432,13 +436,13 @@ namespace AvitoRuslanParser
           var parsedItems = SearchApi.ParseItems(item);
           foreach (var unit in parsedItems.Item)
           {
-            AddLog("url: " + unit.ViewItemURLForNaturalSearch, LogMessageColor.Information());
-            AddLog("title: " + unit.Title, LogMessageColor.Information());
-            AddLog("cost: " + unit.CurrentPrice.Value.ToString(), LogMessageColor.Information());
-            AddLog("country: " + unit.Country, LogMessageColor.Information());
-            AddLog("city: " + unit.Location, LogMessageColor.Information());
-            AddLog("author: " + unit.Seller.UserID, LogMessageColor.Information());
-            AddLog("ebay section: " + unit.PrimaryCategoryName, LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "url: ", unit.ViewItemURLForNaturalSearch), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "title: ", unit.Title), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "cost: ", unit.CurrentPrice.Value.ToString()), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "country: ", unit.Country), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "city: ", unit.Location), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "author: ", unit.Seller.UserID), LogMessageColor.Information());
+            AddLog(string.Format("{0,-15} - {1}", "ebay section: ", unit.PrimaryCategoryName), LogMessageColor.Information());
           }
           var isAuction = true;
           ImageParsedCountHelper imageCount = null;
