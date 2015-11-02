@@ -24,7 +24,7 @@ namespace AvitoRuslanParser
     private int countInserted = 0;
     public static string URLLink;
     private MySqlDB mySqlDB;
-    private Object thislock = new Object();
+    private object thislock = new object();
 
     public frmMain()
     {
@@ -289,49 +289,45 @@ namespace AvitoRuslanParser
               Thread.Sleep(Properties.Default.SleepAfterParseSec * 1000);
               AddLog("Parser: sleep after parse off", LogMessageColor.Information());
 
-              if (result[PartsPage.Cost] != null && result[PartsPage.Cost].First<string>() != String.Empty)
+              AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
+              var idResourceList = mySqlDB.ResourceListIDAvito();
+              mySqlDB.InsertFctAvitoGrabber(result, idResourceList, item, linkSection[1]);
+              AddLog("Parser: ad inserted", LogMessageColor.Information());
+              incInserted();
+              imageCount.ResourceId = idResourceList;
+              if (Properties.Default.PublishParsedData)
               {
-                AddLog("Parser: preparing ad to insert to db", LogMessageColor.Information());
-                var idResourceList = mySqlDB.ResourceListIDAvito();
-                mySqlDB.InsertFctAvitoGrabber(result, idResourceList, item, linkSection[1]);
-                AddLog("Parser: ad inserted", LogMessageColor.Information());
-                incInserted();
-                imageCount.ResourceId = idResourceList;
-                if (Properties.Default.PublishParsedData)
-                {
-                  AddLog("Parser: Begin loading images", LogMessageColor.Information());
-                  Parser2.PathImages2 = Properties.Default.PathToImg;
+                AddLog("Parser: Begin loading images", LogMessageColor.Information());
+                Parser2.PathImages2 = Properties.Default.PathToImg;
 
-                  var result2 = Parser2.Run(item);
-                  AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
-                  AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
-                  foreach (var error in imageCount.ErrorList)
-                  {
-                    AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
-                  }
+                var result2 = Parser2.Run(item);
+                AddLog("Parser: " + imageCount.CountParsed + " images parsed", LogMessageColor.Information());
+                AddLog("Parser: " + imageCount.CountDownloaded + " images downloaded", LogMessageColor.Information());
 
-                  foreach (var im in imageCount.Resources)
-                    mySqlDB.InsertassGrabberAvitoResourceList(idResourceList, im);
+                foreach (var error in imageCount.ErrorList)
+                  AddLog(error.Key, error.Value == true ? LogMessageColor.Error() : LogMessageColor.Success());
 
-                  mySqlDB.UpdateFctAvitoGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
-                  AddLog("Parser: Loading images end", LogMessageColor.Information());
-                  AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
-                  mySqlDB.ExecuteProcAvito(idResourceList);
-                  AddLog("Parser: End publishing ad", LogMessageColor.Information());
+                foreach (var im in imageCount.Resources)
+                  mySqlDB.InsertassGrabberAvitoResourceList(idResourceList, im);
 
-                  AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
-                  Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
-                  AddLog("Parser: sleep after publication off", LogMessageColor.Information());
-                }
-                else
-                {
-                  AddLog("Parser: Saving data to SMSSpamer", LogMessageColor.Information());
-                  mySqlDB.InsertSMSSpamerData(idResourceList);
-                  AddLog("Parser: Data saved successfully", LogMessageColor.Information());
-                }
-                countIns++;
+                mySqlDB.UpdateFctAvitoGrabberPhotoCount(idResourceList, imageCount.Resources.Count);
 
+                AddLog("Parser: Loading images end", LogMessageColor.Information());
+                AddLog("Parser: Begin publishing ad", LogMessageColor.Information());
+                mySqlDB.ExecuteProcAvito(idResourceList);
+                AddLog("Parser: End publishing ad", LogMessageColor.Information());
+
+                AddLog("Parser: sleep after publication on. " + Properties.Default.SleepSecAfterPublicationSec + " sec", LogMessageColor.Information());
+                Thread.Sleep(Properties.Default.SleepSecAfterPublicationSec * 1000);
+                AddLog("Parser: sleep after publication off", LogMessageColor.Information());
               }
+              else
+              {
+                AddLog("Parser: Saving data to SMSSpamer", LogMessageColor.Information());
+                mySqlDB.InsertSMSSpamerData(idResourceList);
+                AddLog("Parser: Data saved successfully", LogMessageColor.Information());
+              }
+              countIns++;
             }
             catch (Exception ex)
             {
