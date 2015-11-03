@@ -94,6 +94,7 @@
     <Compile Include="MySqlDB.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ParsingState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Properties.Designer.cs">
