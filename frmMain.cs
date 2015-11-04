@@ -18,7 +18,6 @@ namespace AvitoRuslanParser
 {
   public partial class frmMain : Form
   {
-
     private int countParsed = 0;
     private int countInserted = 0;
     public static string URLLink;
@@ -88,8 +87,31 @@ namespace AvitoRuslanParser
       }
     }
 
+    private void DisableControls(Control ctrls)
+    {
+      foreach (Control ctrl in ctrls.Controls)
+        DisableControls(ctrl);
+      ctrls.Enabled = false;
+    }
+
     private void frmMain_Closing(object sender, FormClosingEventArgs e)
     {
+      if (!AvitoState.Stopped || !EbayState.Stopped)
+      {
+        if (MessageBox.Show("Parsing is still running. Are you sure you want to cancel it?", "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        {
+          Text += " [Closing...]";
+          DisableControls(this);
+          if (!AvitoState.Stopped)
+            AvitoState.SetStopping();
+          if (!EbayState.Stopped)
+            EbayState.SetStopping();
+          AvitoState.SetNeedAppClose();
+          EbayState.SetNeedAppClose();
+        }
+        e.Cancel = true;
+        return;
+      }
       SaveField();
       if (mySqlDB != null)
       {
@@ -531,6 +553,12 @@ namespace AvitoRuslanParser
           btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, true);
           btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
           btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+
+          if (AvitoState.NeedAppClose)
+            Invoke((MethodInvoker)delegate
+            {
+              Close();
+            });
         });
       }
       catch (Exception ex)
@@ -914,6 +942,11 @@ namespace AvitoRuslanParser
           btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
           btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
 
+          if (EbayState.NeedAppClose)
+            Invoke((MethodInvoker)delegate
+            {
+              Close();
+            });
         });
       }
       catch (Exception ex)
@@ -1008,6 +1041,12 @@ namespace AvitoRuslanParser
           btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, true);
           btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
           btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+
+          if (AvitoState.NeedAppClose || EbayState.NeedAppClose)
+            Invoke((MethodInvoker)delegate
+            {
+              Close();
+            });
         });
       }
       catch (Exception ex)
