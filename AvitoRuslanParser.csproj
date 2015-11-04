@@ -109,6 +109,7 @@
     <Compile Include="RuslanParser2.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SingleApplication.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
