@@ -7,6 +7,7 @@
     private bool paused;
     private bool stopping;
     private bool stopped;
+    private bool needAppClose = false;
 
     public bool Running
     {
@@ -58,6 +59,11 @@
         SoftReset();
       }
     }
+    public bool NeedAppClose
+    {
+      get { return needAppClose; }
+      set { needAppClose = value; }
+    }
 
     public void SetRunning(bool value = true)
     {
@@ -78,6 +84,10 @@
     public void SetStopped(bool value = true)
     {
       Stopped = value;
+    }
+    public void SetNeedAppClose(bool value = true)
+    {
+      needAppClose = value;
     }
 
     public ParsingState()
