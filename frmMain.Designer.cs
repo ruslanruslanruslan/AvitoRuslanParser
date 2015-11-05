@@ -50,9 +50,9 @@
       this.rtbLogStatistics = new System.Windows.Forms.RichTextBox();
       this.imlMain = new System.Windows.Forms.ImageList(this.components);
       this.gbAvito = new System.Windows.Forms.GroupBox();
-      this.btnParsingAvitoStart = new System.Windows.Forms.Button();
-      this.btnParsingAvitoPause = new System.Windows.Forms.Button();
       this.btnParsingAvitoStop = new System.Windows.Forms.Button();
+      this.btnParsingAvitoPause = new System.Windows.Forms.Button();
+      this.btnParsingAvitoStart = new System.Windows.Forms.Button();
       this.gbEbay = new System.Windows.Forms.GroupBox();
       this.btnParsingEbayStop = new System.Windows.Forms.Button();
       this.btnParsingEbayPause = new System.Windows.Forms.Button();
@@ -254,18 +254,19 @@
       this.gbAvito.TabStop = false;
       this.gbAvito.Text = "Avito";
       // 
-      // btnParsingAvitoStart
+      // btnParsingAvitoStop
       // 
-      this.btnParsingAvitoStart.Anchor = System.Windows.Forms.AnchorStyles.None;
-      this.btnParsingAvitoStart.ImageKey = "start.png";
-      this.btnParsingAvitoStart.ImageList = this.imlMain;
-      this.btnParsingAvitoStart.Location = new System.Drawing.Point(40, 11);
-      this.btnParsingAvitoStart.Margin = new System.Windows.Forms.Padding(0);
-      this.btnParsingAvitoStart.Name = "btnParsingAvitoStart";
-      this.btnParsingAvitoStart.Size = new System.Drawing.Size(24, 23);
-      this.btnParsingAvitoStart.TabIndex = 12;
-      this.btnParsingAvitoStart.UseVisualStyleBackColor = true;
-      this.btnParsingAvitoStart.Click += new System.EventHandler(this.btnParsingAvito_Click);
+      this.btnParsingAvitoStop.Anchor = System.Windows.Forms.AnchorStyles.None;
+      this.btnParsingAvitoStop.Enabled = false;
+      this.btnParsingAvitoStop.ImageKey = "stop.png";
+      this.btnParsingAvitoStop.ImageList = this.imlMain;
+      this.btnParsingAvitoStop.Location = new System.Drawing.Point(88, 11);
+      this.btnParsingAvitoStop.Margin = new System.Windows.Forms.Padding(0);
+      this.btnParsingAvitoStop.Name = "btnParsingAvitoStop";
+      this.btnParsingAvitoStop.Size = new System.Drawing.Size(24, 23);
+      this.btnParsingAvitoStop.TabIndex = 14;
+      this.btnParsingAvitoStop.UseVisualStyleBackColor = true;
+      this.btnParsingAvitoStop.Click += new System.EventHandler(this.btnParsingAvitoStop_Click);
       // 
       // btnParsingAvitoPause
       // 
@@ -281,19 +282,18 @@
       this.btnParsingAvitoPause.UseVisualStyleBackColor = true;
       this.btnParsingAvitoPause.Click += new System.EventHandler(this.btnParsingAvitoPause_Click);
       // 
-      // btnParsingAvitoStop
+      // btnParsingAvitoStart
       // 
-      this.btnParsingAvitoStop.Anchor = System.Windows.Forms.AnchorStyles.None;
-      this.btnParsingAvitoStop.Enabled = false;
-      this.btnParsingAvitoStop.ImageKey = "stop.png";
-      this.btnParsingAvitoStop.ImageList = this.imlMain;
-      this.btnParsingAvitoStop.Location = new System.Drawing.Point(88, 11);
-      this.btnParsingAvitoStop.Margin = new System.Windows.Forms.Padding(0);
-      this.btnParsingAvitoStop.Name = "btnParsingAvitoStop";
-      this.btnParsingAvitoStop.Size = new System.Drawing.Size(24, 23);
-      this.btnParsingAvitoStop.TabIndex = 14;
-      this.btnParsingAvitoStop.UseVisualStyleBackColor = true;
-      this.btnParsingAvitoStop.Click += new System.EventHandler(this.btnParsingAvitoStop_Click);
+      this.btnParsingAvitoStart.Anchor = System.Windows.Forms.AnchorStyles.None;
+      this.btnParsingAvitoStart.ImageKey = "start.png";
+      this.btnParsingAvitoStart.ImageList = this.imlMain;
+      this.btnParsingAvitoStart.Location = new System.Drawing.Point(40, 11);
+      this.btnParsingAvitoStart.Margin = new System.Windows.Forms.Padding(0);
+      this.btnParsingAvitoStart.Name = "btnParsingAvitoStart";
+      this.btnParsingAvitoStart.Size = new System.Drawing.Size(24, 23);
+      this.btnParsingAvitoStart.TabIndex = 12;
+      this.btnParsingAvitoStart.UseVisualStyleBackColor = true;
+      this.btnParsingAvitoStart.Click += new System.EventHandler(this.btnParsingAvito_Click);
       // 
       // gbEbay
       // 
@@ -429,6 +429,7 @@
       this.Text = "Parser";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_Closing);
       this.Load += new System.EventHandler(this.frmMain_Load);
+      this.Shown += new System.EventHandler(this.frmMain_Shown);
       this.groupBox1.ResumeLayout(false);
       this.gbAvito.ResumeLayout(false);
       this.gbEbay.ResumeLayout(false);

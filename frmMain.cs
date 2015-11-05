@@ -91,7 +91,7 @@ namespace AvitoRuslanParser
     {
       foreach (Control ctrl in ctrls.Controls)
         DisableControls(ctrl);
-      ctrls.Enabled = false;
+      ctrls.SetPropertyThreadSafe(() => ctrls.Enabled, false);
     }
 
     private void frmMain_Closing(object sender, FormClosingEventArgs e)
@@ -470,6 +470,24 @@ namespace AvitoRuslanParser
       LinkAdtextBox.Text = Properties.Default.LinkOnAd;
     }
 
+    private void DisableUserControls()
+    {
+      LinkAdtextBox.SetPropertyThreadSafe(() => LinkAdtextBox.Enabled, false);
+      cbCategories.SetPropertyThreadSafe(() => cbCategories.Enabled, false);
+      btnEnter.SetPropertyThreadSafe(() => btnEnter.Enabled, false);
+      btnReset.SetPropertyThreadSafe(() => btnReset.Enabled, false);
+      btnSettings.SetPropertyThreadSafe(() => btnSettings.Enabled, false);
+      btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
+      btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, false);
+      btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, false);
+      btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
+      btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, false);
+      btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, false);
+      btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
+      btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
+      btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+    }
+
     private void btnParsingAvito_Click(object sender, EventArgs e)
     {
       if (AvitoState.Pausing || AvitoState.Paused)
@@ -487,17 +505,24 @@ namespace AvitoRuslanParser
       {
         Task.Factory.StartNew(() =>
         {
-          btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
-          btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, false);
-          btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, false);
+          if (AvitoState.AutomaticMode)
+          {
+            DisableUserControls();
+          }
+          else
+          {
+            btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
+            btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, false);
+            btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, false);
 
-          btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
-          btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, true);
-          btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, true);
+            btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
+            btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, true);
+            btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, true);
 
-          btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
-          btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
-          btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+            btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
+            btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
+            btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+          }
 
           SetZeroCounters();
 
@@ -564,6 +589,11 @@ namespace AvitoRuslanParser
       catch (Exception ex)
       {
         AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+        if (AvitoState.NeedAppClose)
+          Invoke((MethodInvoker)delegate
+          {
+            Close();
+          });
       }
     }
 
@@ -863,17 +893,24 @@ namespace AvitoRuslanParser
       {
         Task.Factory.StartNew(() =>
         {
-          btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
-          btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, true);
-          btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, true);
+          if (EbayState.AutomaticMode)
+          {
+            DisableUserControls();
+          }
+          else
+          {
+            btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
+            btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, true);
+            btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, true);
 
-          btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
-          btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, false);
-          btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, false);
+            btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
+            btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, false);
+            btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, false);
 
-          btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
-          btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
-          btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+            btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
+            btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, false);
+            btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, false);
+          }
 
           SetZeroCounters();
 
@@ -952,6 +989,11 @@ namespace AvitoRuslanParser
       catch (Exception ex)
       {
         AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+        if (EbayState.NeedAppClose)
+          Invoke((MethodInvoker)delegate
+          {
+            Close();
+          });
       }
     }
 
@@ -973,17 +1015,24 @@ namespace AvitoRuslanParser
       {
         Task.Factory.StartNew(() =>
         {
-          btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
-          btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, false);
-          btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, false);
+          if (AvitoState.AutomaticMode || EbayState.AutomaticMode)
+          {
+            DisableUserControls();
+          }
+          else
+          {
+            btnParsingEbayStart.SetPropertyThreadSafe(() => btnParsingEbayStart.Enabled, false);
+            btnParsingEbayPause.SetPropertyThreadSafe(() => btnParsingEbayPause.Enabled, false);
+            btnParsingEbayStop.SetPropertyThreadSafe(() => btnParsingEbayStop.Enabled, false);
 
-          btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
-          btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, false);
-          btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, false);
+            btnParsingAvitoStart.SetPropertyThreadSafe(() => btnParsingAvitoStart.Enabled, false);
+            btnParsingAvitoPause.SetPropertyThreadSafe(() => btnParsingAvitoPause.Enabled, false);
+            btnParsingAvitoStop.SetPropertyThreadSafe(() => btnParsingAvitoStop.Enabled, false);
 
-          btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
-          btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, true);
-          btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, true);
+            btnParsingAvitoEbayStart.SetPropertyThreadSafe(() => btnParsingAvitoEbayStart.Enabled, false);
+            btnParsingAvitoEbayPause.SetPropertyThreadSafe(() => btnParsingAvitoEbayPause.Enabled, true);
+            btnParsingAvitoEbayStop.SetPropertyThreadSafe(() => btnParsingAvitoEbayStop.Enabled, true);
+          }
 
           SetZeroCounters();
 
@@ -1052,6 +1101,11 @@ namespace AvitoRuslanParser
       catch (Exception ex)
       {
         AddLog("Parser: " + ex.Message, LogMessageColor.Error());
+        if (AvitoState.NeedAppClose || EbayState.NeedAppClose)
+          Invoke((MethodInvoker)delegate
+          {
+            Close();
+          });
       }
     }
 
@@ -1197,6 +1251,35 @@ namespace AvitoRuslanParser
       btnParsingAvitoEbayStart.Enabled = false;
       btnParsingAvitoEbayPause.Enabled = false;
       btnParsingAvitoEbayStop.Enabled = false;
+    }
+
+    private void frmMain_Shown(object sender, EventArgs e)
+    {
+      var bInfinite = false;
+
+      foreach (var arg in Environment.GetCommandLineArgs())
+      {
+        if (arg == "--infinite")
+          bInfinite = true;
+        else if (arg == "--parse-avito")
+          AvitoState.AutomaticMode = true;
+        else if (arg == "--parse-ebay")
+          AvitoState.AutomaticMode = true;
+      }
+      if (!bInfinite)
+      {
+        if (AvitoState.AutomaticMode == true)
+          AvitoState.SetNeedAppClose();
+        if (EbayState.AutomaticMode == true)
+          EbayState.SetNeedAppClose();
+      }
+      if (AvitoState.AutomaticMode && EbayState.AutomaticMode)
+        Task.Factory.StartNew(() => { buttonParsingAvitoEbay_Click(this, e); });
+      else if (AvitoState.AutomaticMode)
+        Task.Factory.StartNew(() => { btnParsingAvito_Click(this, e); });
+      else if (EbayState.AutomaticMode)
+        Task.Factory.StartNew(() => { buttonParsingEbay_Click(this, e); });
+      this.SetPropertyThreadSafe(() => Enabled, true);
     }
   }
 }
