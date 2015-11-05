@@ -8,6 +8,7 @@
     private bool stopping;
     private bool stopped;
     private bool needAppClose = false;
+    private bool automaticMode = false;
 
     public bool Running
     {
@@ -64,6 +65,11 @@
       get { return needAppClose; }
       set { needAppClose = value; }
     }
+    public bool AutomaticMode
+    {
+      get { return automaticMode; }
+      set { automaticMode = value; }
+    }
 
     public void SetRunning(bool value = true)
     {
@@ -88,6 +94,10 @@
     public void SetNeedAppClose(bool value = true)
     {
       needAppClose = value;
+    }
+    public void SetAutomaticMode(bool value = true)
+    {
+      automaticMode = value;
     }
 
     public ParsingState()
