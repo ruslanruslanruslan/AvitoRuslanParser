@@ -9,6 +9,7 @@
     private bool stopped;
     private bool needAppClose = false;
     private bool automaticMode = false;
+    private bool infiniteMode = false;
 
     public bool Running
     {
@@ -70,6 +71,11 @@
       get { return automaticMode; }
       set { automaticMode = value; }
     }
+    public bool InfiniteMode
+    {
+      get { return infiniteMode; }
+      set { infiniteMode = value; }
+    }
 
     public void SetRunning(bool value = true)
     {
@@ -98,6 +104,10 @@
     public void SetAutomaticMode(bool value = true)
     {
       automaticMode = value;
+    }
+    public void SetInfiniteMode(bool value = true)
+    {
+      infiniteMode = value;
     }
 
     public ParsingState()

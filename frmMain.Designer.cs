@@ -147,9 +147,9 @@
       // btnSettings
       // 
       this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnSettings.Location = new System.Drawing.Point(627, 377);
+      this.btnSettings.Location = new System.Drawing.Point(696, 378);
       this.btnSettings.Name = "btnSettings";
-      this.btnSettings.Size = new System.Drawing.Size(184, 23);
+      this.btnSettings.Size = new System.Drawing.Size(115, 23);
       this.btnSettings.TabIndex = 20;
       this.btnSettings.Text = "Settings";
       this.btnSettings.UseVisualStyleBackColor = true;
