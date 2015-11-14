@@ -279,6 +279,25 @@ namespace AvitoRuslanParser
         }
       }
     }
+    public void UpdateFctAvitoGrabberPhotoCount(string index, int photo_cnt)
+    {
+      const string sql = @"update fct_grabber_avito set photo_cnt=@photo_cnt where id_resource_list=@index";
+      try
+      {
+        var cmd = new MySqlCommand();
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+
+        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
+        cmd.Parameters.AddWithValue("@index", index);
+        var result = cmd.ExecuteNonQuery();
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
+      }
+    }
     public void InsertItemResource(string resourceid, string url, string directory)
     {
       if (resourceid != null)
@@ -311,7 +330,7 @@ namespace AvitoRuslanParser
     public void InsertassGrabberAvitoResourceList(string index1, string index2)
     {
       //Тело запроса!!!!!!!
-      const string sql = @" insert into ass_grabber_avito_resource_list
+        const string sql = @" insert into ass_grabber_avito_resource_list (id_resource_list, id_resource)
                     Values(@index1,@index2)";
       if (index1 != null)
       {
@@ -333,14 +352,10 @@ namespace AvitoRuslanParser
         }
       }
     }
-    public void DeleteUnTransformated()
+    public void PrepareAvitoEnvironment()
     {
       //Тело запроса!!!!!!!
-      const string sql = @" delete from ass_grabber_avito_resource_list 
-                                where id_resource_list in (select id_resource_list from fct_grabber_avito 
-						                                   where transformated = 0);
-                                    delete from fct_grabber_avito 
-                                    where transformated = 0;";
+        const string sql = @"call sp_prepare_avito_environment;";
       try
       {
         var cmd = new MySqlCommand();
@@ -495,7 +510,7 @@ namespace AvitoRuslanParser
           id = item.ItemID;
           cmd.Parameters.AddWithValue("@price", price);
           cmd.Parameters.AddWithValue("@id", id);
-          int result = cmd.ExecuteNonQuery();
+          var result = cmd.ExecuteNonQuery();
 
           if (Properties.Default.PublishParsedData)
           {
@@ -708,6 +723,25 @@ namespace AvitoRuslanParser
           "] [country = " + item.Country + "] [subcategory = " + item.PrimaryCategoryName + "] [section = " + section + "] [desc = " + item.Description +
           "] [currency = " + item.CurrentPrice.currencyID + "] [is_auction = " + is_auction + "] [transformated = " + trans + "] [bid = " + bid +
           "]: " + ex.Message, ex);
+      }
+    }
+    public void UpdateFctEbayGrabberPhotoCount(string index, int photo_cnt)
+    {
+      const string sql = @"update fct_grabber_ebay set photo_cnt=@photo_cnt where id_resource_list=@index";
+      try
+      {
+        var cmd = new MySqlCommand();
+        cmd.Connection = mySqlConnection;
+        cmd.CommandText = sql;
+        cmd.Prepare();
+
+        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
+        cmd.Parameters.AddWithValue("@index", index);
+        var result = cmd.ExecuteNonQuery();
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
       }
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)

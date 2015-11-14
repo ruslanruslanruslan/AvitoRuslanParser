@@ -20,7 +20,7 @@ namespace AvitoRuslanParser
         AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new frmMain());
+        SingleInstance.SingleApplication.Run(new frmMain());
       }
       catch(Exception ex)
       {

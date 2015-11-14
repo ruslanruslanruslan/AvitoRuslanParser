@@ -31,8 +31,9 @@ namespace AvitoRuslanParser
       edtFtpPassword.Text = Properties.Default.FtpPassword;
       cbRunSMSSpamer.Checked = Properties.Default.RunSMSSpamer;
       edtSMSSPamerPath.Text = Properties.Default.SMSSpamerPath;
-      cbPublishParsedData.Checked = Properties.Default.PublishParsedData;
+      cbPublishParsedData.Checked = true/*Properties.Default.PublishParsedData*/;
       edtSleepSecAfterPublication.Text = Properties.Default.SleepSecAfterPublicationSec.ToString();
+      cbInfiniteParsing.Checked = Properties.Default.InfiniteParsing;
     }
 
     private void btnSave_Click(object sender, EventArgs e)
@@ -97,6 +98,7 @@ namespace AvitoRuslanParser
       Properties.Default.FtpPassword = edtFtpPassword.Text;
 
       Properties.Default.PublishParsedData = cbPublishParsedData.Checked;
+      Properties.Default.InfiniteParsing = cbInfiniteParsing.Checked;
 
       Properties.Default.Save();
 

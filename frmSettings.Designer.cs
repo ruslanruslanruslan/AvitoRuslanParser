@@ -73,6 +73,7 @@
       this.btnSave = new System.Windows.Forms.Button();
       this.dlgBrowser = new System.Windows.Forms.FolderBrowserDialog();
       this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+      this.cbInfiniteParsing = new System.Windows.Forms.CheckBox();
       this.tabControl1.SuspendLayout();
       this.tabMain.SuspendLayout();
       this.tabMySql.SuspendLayout();
@@ -96,6 +97,7 @@
       // 
       // tabMain
       // 
+      this.tabMain.Controls.Add(this.cbInfiniteParsing);
       this.tabMain.Controls.Add(this.edtSleepSecAfterPublication);
       this.tabMain.Controls.Add(this.label15);
       this.tabMain.Controls.Add(this.cbPublishParsedData);
@@ -136,12 +138,15 @@
       // cbPublishParsedData
       // 
       this.cbPublishParsedData.AutoSize = true;
-      this.cbPublishParsedData.Location = new System.Drawing.Point(11, 133);
+      this.cbPublishParsedData.Checked = true;
+      this.cbPublishParsedData.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.cbPublishParsedData.Location = new System.Drawing.Point(11, 182);
       this.cbPublishParsedData.Name = "cbPublishParsedData";
       this.cbPublishParsedData.Size = new System.Drawing.Size(119, 17);
       this.cbPublishParsedData.TabIndex = 8;
       this.cbPublishParsedData.Text = "Publish parsed data";
       this.cbPublishParsedData.UseVisualStyleBackColor = true;
+      this.cbPublishParsedData.Visible = false;
       // 
       // btnBrowserSMSSpamerPath
       // 
@@ -526,6 +531,16 @@
       this.btnSave.UseVisualStyleBackColor = true;
       this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
       // 
+      // cbInfiniteParsing
+      // 
+      this.cbInfiniteParsing.AutoSize = true;
+      this.cbInfiniteParsing.Location = new System.Drawing.Point(11, 124);
+      this.cbInfiniteParsing.Name = "cbInfiniteParsing";
+      this.cbInfiniteParsing.Size = new System.Drawing.Size(92, 17);
+      this.cbInfiniteParsing.TabIndex = 11;
+      this.cbInfiniteParsing.Text = "InfiniteParsing";
+      this.cbInfiniteParsing.UseVisualStyleBackColor = true;
+      // 
       // frmSettings
       // 
       this.AcceptButton = this.btnSave;
@@ -599,5 +614,6 @@
     private System.Windows.Forms.CheckBox cbPublishParsedData;
     private System.Windows.Forms.Label label15;
     private System.Windows.Forms.TextBox edtSleepSecAfterPublication;
+    private System.Windows.Forms.CheckBox cbInfiniteParsing;
   }
 }
