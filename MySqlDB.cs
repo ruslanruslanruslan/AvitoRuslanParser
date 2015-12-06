@@ -478,7 +478,7 @@ namespace AvitoRuslanParser
       if (result != null)
       {
         var r = Convert.ToInt32(result);
-        result = (r != 0);
+        resultValue = (r != 0);
       }
       return resultValue;
     }
