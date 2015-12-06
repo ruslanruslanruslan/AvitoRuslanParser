@@ -134,10 +134,10 @@ namespace AvitoRuslanParser
 
     private string PrepareErrorMessage(string query, Dictionary<string, object> parameters, Exception ex)
     {
-      var str = "MySql error: [" + query + "]";
       if (parameters != null)
         foreach (var param in parameters)
-          str += " [" + param.Key + " = " + param.Value + "]";
+          query = query.Replace(param.Key, param.Value != null ? param.Value.ToString() : "null");
+      var str = "MySql error: [" + query + "]";
       str += ": " + ex.Message;
       return str;
     }
@@ -200,11 +200,10 @@ namespace AvitoRuslanParser
 
     private string PrepareLog(string query, Dictionary<string, object> parameters)
     {
-      var str = query;
-      str += Environment.NewLine;
       if (parameters != null)
         foreach (var param in parameters)
-          str += param.Key + ": " + param.Value + Environment.NewLine;
+          query = query.Replace(param.Key, param.Value != null ? param.Value.ToString() : "null");
+      var str = query + Environment.NewLine;
       return str;
     }
 
