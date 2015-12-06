@@ -114,19 +114,77 @@ namespace AvitoRuslanParser
       }
     }
 
+    private MySqlCommand Prepare(string query, Dictionary<string, object> parameters = null)
+    {
+      var cmd = new MySqlCommand(query, mySqlConnection);
+      if (parameters != null)
+      {
+        cmd.Prepare();
+        foreach (var param in parameters)
+          cmd.Parameters.AddWithValue(param.Key, param.Value);
+      }
+      return cmd;
+    }
+
+    private string PrepareErrorMessage(string query, Dictionary<string, object> parameters, Exception ex)
+    {
+      var str = "MySql error: [" + query + "]";
+      if (parameters != null)
+        foreach (var param in parameters)
+          str += " [" + param.Key + " = " + param.Value + "]";
+      str += ": " + ex.Message;
+      return str;
+    }
+
+    private object ExecuteScalar(string query, Dictionary<string, object> parameters = null)
+    {
+      try
+      {
+        var result = Prepare(query, parameters).ExecuteScalar();
+        return result;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception(PrepareErrorMessage(query, parameters, ex), ex);
+      }
+    }
+
+    private MySqlDataReader ExecuteReader(string query, Dictionary<string, object> parameters = null)
+    {
+      try
+      {
+        var result = Prepare(query, parameters).ExecuteReader();
+        return result;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception(PrepareErrorMessage(query, parameters, ex), ex);
+      }
+    }
+
+    private int ExecuteNonQuery(string query, Dictionary<string, object> parameters = null)
+    {
+      try
+      {
+        var result = Prepare(query, parameters).ExecuteNonQuery();
+        return result;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception(PrepareErrorMessage(query, parameters, ex), ex);
+      }
+    }
+
     public int CountAd { get; set; }
 
     public IList<string[]> LoadSectionsLink()
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_get_SearchUrlsList();";
       IList<string[]> links = new List<string[]>();
-      var resultStr = string.Empty;
       MySqlDataReader reader = null;
       try
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        reader = cmd.ExecuteReader();
+        reader = ExecuteReader(sql);
         while (reader.Read())
         {
           var link = reader.GetString(0);
@@ -134,36 +192,23 @@ namespace AvitoRuslanParser
           links.Add(new string[] { link, category_name });
         }
       }
-      catch (Exception ex)
-      {
-        throw new Exception ("MySql error: [" + sql + "]: " + ex.Message, ex);
-      }
       finally
       {
         if (reader != null)
-        {
           reader.Close();
-        }
       }
       return links;
     }
     public IList<string> GetCategories()
     {
-      var command = new MySqlCommand(); ;
-      const string commandString = "call sp_get_CategoriesList();";
-      command.CommandText = commandString;
-      command.Connection = mySqlConnection;
+      const string sql = "call sp_get_CategoriesList();";
       MySqlDataReader reader = null;
       IList<string> results = new List<string>();
       try
       {
-        reader = command.ExecuteReader();
+        reader = ExecuteReader(sql);
         while (reader.Read())
           results.Add(Convert.ToString(reader["s_name"]));
-      }
-      catch (MySqlException ex)
-      {
-        throw new Exception("MySql error: [" + commandString + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -175,199 +220,110 @@ namespace AvitoRuslanParser
 
     public string ResourceID()
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "select fn_get_NextResourceId();";
       var resultStr = string.Empty;
-      try
+      var result = ExecuteScalar(sql);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          var r = Convert.ToInt32(result);
-          resultStr = r.ToString();
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
+        var r = Convert.ToInt32(result);
+        resultStr = r.ToString();
       }
       return resultStr;
     }
     public string ResourceListIDAvito()
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_get_avito_NextItemId();";
       var resultStr = string.Empty;
-      try
+      var result = ExecuteScalar(sql);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          var r = Convert.ToInt32(result);
-          resultStr = r.ToString();
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
+        var r = Convert.ToInt32(result);
+        resultStr = r.ToString();
       }
       return resultStr;
     }
     public string ExecuteProcAvito(string id)
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_map_grabber_avito(@id)";
       var resultStr = string.Empty;
-      try
-      {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Prepare();
-        cmd.Parameters.AddWithValue("@id", id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-          resultStr = result.ToString();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
-      }
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@id", id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
+        resultStr = result.ToString();
       return resultStr;
     }
-    //Метод вставки данных в базу!!!!!!!!
+
     public void InsertFctAvitoGrabber(Dictionary<PartsPage, IEnumerable<string>> list, string index, string url, string section)
     {
-      //Тело запроса!!!!!!!
       const string sql = @"insert into fct_grabber_avito (id_resource_list, avito_id,url, title, tel_num, author, price, city, avito_section, user_section, description)
                                     Values(@index,@idAvito,@url,@title,@phone,@seller,@price,@city,@subcategory,@section,@desc)";
       var cost = "null";
       var phone = "null";
       if (list != null && list.Count > 0)
       {
-        try
-        {
-          var cmd = new MySqlCommand();
-          cmd.Connection = mySqlConnection;
-          cmd.CommandText = sql;
-          cmd.Prepare();
-          //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-          // и тд
-          if (list[PartsPage.Cost] != null)
-            cost = list[PartsPage.Cost].First();
-          if (list[PartsPage.Phone] != null)
-            phone = list[PartsPage.Phone].First();
-          cmd.Parameters.AddWithValue("@index", index);
-          cmd.Parameters.AddWithValue("@idAvito", list[PartsPage.Id].First());
-          cmd.Parameters.AddWithValue("@url", url);
-          cmd.Parameters.AddWithValue("@title", list[PartsPage.Title].First());
-          cmd.Parameters.AddWithValue("@phone", phone);
-          cmd.Parameters.AddWithValue("@seller", list[PartsPage.Seller].First());
-          cmd.Parameters.AddWithValue("@price", cost);
-          cmd.Parameters.AddWithValue("@city", list[PartsPage.City].First());
-          cmd.Parameters.AddWithValue("@subcategory", list[PartsPage.SubCategory].First());
-          cmd.Parameters.AddWithValue("@section", section);
-          cmd.Parameters.AddWithValue("@desc", list[PartsPage.Body].First());
-          var result = cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex)
-        {
-          throw new Exception("MySql error: [" + sql + "] [index = " + index + "] [idAvito = " + list[PartsPage.Id].First() + "] [url = " + url +
-            "] [title = " + list[PartsPage.Title].First() + "] [phone = " + phone + "] [seller = " + list[PartsPage.Seller].First() + 
-            "] [price = " + cost + "] [city = " + list[PartsPage.City].First() + "] [subcategory = " + list[PartsPage.SubCategory].First() +
-            "] [section = " + section + "] [desc = " + list[PartsPage.Body].First() + " ]: " + ex.Message, ex);
-        }
+        if (list[PartsPage.Cost] != null)
+          cost = list[PartsPage.Cost].First();
+        if (list[PartsPage.Phone] != null)
+          phone = list[PartsPage.Phone].First();
+        var parameters = new Dictionary<string, object>();
+
+        parameters.Add("@index", index);
+        parameters.Add("@idAvito", list[PartsPage.Id].First());
+        parameters.Add("@url", url);
+        parameters.Add("@title", list[PartsPage.Title].First());
+        parameters.Add("@phone", phone);
+        parameters.Add("@seller", list[PartsPage.Seller].First());
+        parameters.Add("@price", cost);
+        parameters.Add("@city", list[PartsPage.City].First());
+        parameters.Add("@subcategory", list[PartsPage.SubCategory].First());
+        parameters.Add("@section", section);
+        parameters.Add("@desc", list[PartsPage.Body].First());
+        ExecuteNonQuery(sql, parameters);
       }
     }
     public void UpdateFctAvitoGrabberPhotoCount(string index, int photo_cnt)
     {
       const string sql = @"update fct_grabber_avito set photo_cnt=@photo_cnt where id_resource_list=@index";
-      try
-      {
-        var cmd = new MySqlCommand();
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-
-        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
-        cmd.Parameters.AddWithValue("@index", index);
-        var result = cmd.ExecuteNonQuery();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
-      }
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@photo_cnt", photo_cnt);
+      parameters.Add("@index", index);
+      ExecuteNonQuery(sql, parameters);
     }
     public void InsertItemResource(string resourceid, string url, string directory)
     {
       if (resourceid != null)
       {
-        //Тело запроса!!!!!!!
         const string fixedDirectory = @"oc-content/uploads/";
         const string sql = @" insert into oc_t_item_resource
                                     select @resourceid, 1, null, ""jpg"", ""image/jpeg"", @directory";
-        try
-        {
-          var cmd = new MySqlCommand();
-          cmd.Connection = mySqlConnection;
-          cmd.CommandText = sql;
-          cmd.Prepare();
-          cmd.Parameters.AddWithValue("@resourceid", resourceid);
-          if (directory.EndsWith("\\"))
-            directory.TrimEnd('\\');
-          if (!directory.EndsWith("/"))
-            directory += "/";
-          cmd.Parameters.AddWithValue("@directory", fixedDirectory + directory);
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("@resourceid", resourceid);
+        if (directory.EndsWith("\\"))
+          directory.TrimEnd('\\');
+        if (!directory.EndsWith("/"))
+          directory += "/";
+        parameters.Add("@directory", fixedDirectory + directory);
 
-          var result = cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex)
-        {
-          throw new Exception("MySql error: [" + sql + "] [resourceid = " + resourceid + "]: " + ex.Message, ex);
-        }
+        ExecuteNonQuery(sql, parameters);
       }
     }
     public void InsertassGrabberAvitoResourceList(string index1, string index2)
     {
-      //Тело запроса!!!!!!!
-        const string sql = @" insert into ass_grabber_avito_resource_list (id_resource_list, id_resource)
+      const string sql = @" insert into ass_grabber_avito_resource_list (id_resource_list, id_resource)
                     Values(@index1,@index2)";
       if (index1 != null)
       {
-        try
-        {
-          var cmd = new MySqlCommand();
-          cmd.Connection = mySqlConnection;
-          cmd.CommandText = sql;
-          cmd.Prepare();
-          //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-          // и тд
-          cmd.Parameters.AddWithValue("@index1", index1);
-          cmd.Parameters.AddWithValue("@index2", index2);
-          var result = cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex)
-        {
-          throw new Exception("MySql error: [" + sql + "] [index1 = ]" + index1 + "] [index2 = ]" + index2 +  "]: " + ex.Message, ex);
-        }
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("@index1", index1);
+        parameters.Add("@index2", index2);
+        ExecuteNonQuery(sql, parameters);
       }
     }
     public void PrepareAvitoEnvironment()
     {
-      //Тело запроса!!!!!!!
-        const string sql = @"call sp_prepare_avito_environment;";
-      try
-      {
-        var cmd = new MySqlCommand();
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-        var result = cmd.ExecuteNonQuery();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
-      }
+      const string sql = @"call sp_prepare_avito_environment;";
+      ExecuteNonQuery(sql);
     }
     // From MySqlDB2
     public IList<SectionItem> LoadSectionLinkEbay()
@@ -383,29 +339,22 @@ namespace AvitoRuslanParser
         throw new Exception("MySql error: " + ex.Message, ex);
       }
     }
-    /// <summary>
-    /// Returns searching categories for both sites Avito and Ebay
-    /// </summary>
-    /// <returns></returns>
     public IList<SectionItem> LoadSectionsLinkEx()
     {
-      //тело запроса!!!!!!!!!!//set order by ordering
       const string sql = "SELECT search_url, category_name FROM fct_categories_search where search_url is not null order by ordering";
       IList<SectionItem> links = new List<SectionItem>();
       var resultStr = string.Empty;
       MySqlDataReader reader = null;
       try
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        reader = cmd.ExecuteReader();
+        reader = ExecuteReader(sql);
         while (reader.Read())
         {
           var link = reader.GetString(0);
           var category_name = reader.GetString(1);
           var siteCurrent = SectionItem.Site.UnTyped;
-          if (link != "NULL" && link != null && link != string.Empty)
+          if (link.ToUpper() != "NULL" && link != null && link != string.Empty)
           {
-            //if (link == null || link == string.Empty) System.Diagnostics.Debugger.Break();
             var uri = new Uri(link);
 
             if (uri.Host == hostAvito)
@@ -417,10 +366,6 @@ namespace AvitoRuslanParser
           }
         }
       }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
-      }
       finally
       {
         if (reader != null)
@@ -430,24 +375,18 @@ namespace AvitoRuslanParser
     }
     public IList<long> LoadAuctionLink()
     {
-      //тело запроса!!!!!!!!!!//set order by ordering
       const string sql = "call sp_get_ebay_AuctionsListForCheck();";
       IList<long> links = new List<long>();
       var resultStr = string.Empty;
       MySqlDataReader reader = null;
       try
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        reader = cmd.ExecuteReader();
+        reader = ExecuteReader(sql);
         while (reader.Read())
         {
           var id = reader.GetInt64(0);
           links.Add(id);
         }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
       }
       finally
       {
@@ -461,185 +400,112 @@ namespace AvitoRuslanParser
     {
       const string sql = "select id_resource_list from fct_grabber_ebay where ebay_id = @ebay_id;";
       var resultStr = string.Empty;
-      try
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@ebay_id", ebay_id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
+        var r = Convert.ToInt32(result);
+        resultStr = r.ToString();
+      }
 
-        cmd.Parameters.AddWithValue("@ebay_id", ebay_id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          var r = Convert.ToInt32(result);
-          resultStr = r.ToString();
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] " + ex.Message, ex);
-      }
       return resultStr;
     }
 
     public int UpdateAuction(GetMultipleItemsResponse list, out string TimeLeft)
     {
-      //Тело запроса!!!!!!!
       const string sql = @"update fct_grabber_ebay set price=@price where ebay_id=@id";
       decimal price = 0;
       ulong id = 0;
       var published = 0;
       TimeLeft = "ERROR";
-      try
+      foreach (var item in list.Item)
       {
-        foreach (var item in list.Item)
+        TimeLeft = item.TimeLeft;
+        var is_auction = item.TimeLeft == "PT0S";
+        if (!is_auction)
+          break;
+
+        price = item.CurrentPrice.Value;
+        id = item.ItemID;
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("@price", price);
+        parameters.Add("@id", id);
+        ExecuteNonQuery(sql, parameters);
+
+        if (Properties.Default.PublishParsedData)
         {
-          TimeLeft = item.TimeLeft;
-          var is_auction = item.TimeLeft == "PT0S";
-          if (!is_auction)
-            break;
-
-          var cmd = new MySqlCommand();
-          cmd.Connection = mySqlConnection;
-          cmd.CommandText = sql;
-          cmd.Prepare();
-          //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-          // и тд
-          price = item.CurrentPrice.Value;
-          id = item.ItemID;
-          cmd.Parameters.AddWithValue("@price", price);
-          cmd.Parameters.AddWithValue("@id", id);
-          var result = cmd.ExecuteNonQuery();
-
-          if (Properties.Default.PublishParsedData)
-          {
-            ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
-            published = 1;
-          }
+          ExecuteProcEBay(GetEBayIDResourceListByEBayID(Convert.ToString(id)));
+          published = 1;
         }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [price = " + price + "] [id = " + id + "]: " + ex.Message, ex);
       }
       return published;
     }
     public bool IsNewAdAvito(int id)
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_check_avito_IsNewAd(@Id);";
       CountAd++;
       var resultValue = true;
-      try
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@Id", id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-
-        cmd.Parameters.AddWithValue("@Id", id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          var r = Convert.ToInt32(result);
-          result = (r != 0);
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
+        var r = Convert.ToInt32(result);
+        result = (r != 0);
       }
       return resultValue;
     }
     public bool IsNewAdEbay(long id)
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_check_ebay_IsNewAd(@Id);";
       CountAd++;
       var resultValue = true;
-      try
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@Id", id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-
-        cmd.Parameters.AddWithValue("@Id", id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          int r = Convert.ToInt32(result);
-          resultValue = (r != 0);
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [Id = " + id + "]: " + ex.Message, ex);
+        int r = Convert.ToInt32(result);
+        resultValue = (r != 0);
       }
       return resultValue;
     }
     public string ResourceListIDEbay()
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "select max(ifnull(v,0)) from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_ebay) t";
       var resultStr = string.Empty;
-      try
+      var result = ExecuteScalar(sql);
+      if (result != null)
       {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-        {
-          var r = Convert.ToInt32(result);
-          resultStr = r.ToString();
-        }
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "]: " + ex.Message, ex);
+        var r = Convert.ToInt32(result);
+        resultStr = r.ToString();
       }
       return resultStr;
     }
     public string ExecuteProcEBay(string id)
     {
-      //тело запроса!!!!!!!!!!
       const string sql = "call sp_map_grabber_ebay(@id)";
       var resultStr = string.Empty;
-      try
-      {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Prepare();
-        cmd.Parameters.AddWithValue("@id", id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-          resultStr = result.ToString();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
-      }
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@id", id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
+        resultStr = result.ToString();
       return resultStr;
     }
     public string InsertSMSSpamerData(string id)
     {
       const string sql = "call sp_fill_smsspamer_data(@id)";
       var resultStr = string.Empty;
-      try
-      {
-        var cmd = new MySqlCommand(sql, mySqlConnection);
-        cmd.Prepare();
-        cmd.Parameters.AddWithValue("@id", id);
-        var result = cmd.ExecuteScalar();
-        if (result != null)
-          resultStr = result.ToString();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [id = " + id + "]: " + ex.Message, ex);
-      }
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@id", id);
+      var result = ExecuteScalar(sql, parameters);
+      if (result != null)
+        resultStr = result.ToString();
       return resultStr;
     }
-    //Метод вставки данных в базу!!!!!!!!
+
     public void InsertFctEbayGrabber(GetMultipleItemsResponse list, string section)
     {
       if (list != null && list.Item != null && list.Item.Length > 0)
@@ -678,95 +544,56 @@ namespace AvitoRuslanParser
       decimal? bid = null;
       var trans = 0;
       var is_auction = false;
-      try
-      {
-        index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
-        is_auction = item.MinimumToBid != null;
-        if (is_auction)
-          trans = 4;
-        var cmd = new MySqlCommand();
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-        //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-        // и тд
-        
-        if (is_auction)
-          bid = item.CurrentPrice.Value;
-        else
-          price = item.CurrentPrice.Value;
+      index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
+      is_auction = item.MinimumToBid != null;
+      if (is_auction)
+        trans = 4;
 
-        cmd.Parameters.AddWithValue("@index", index);
-        cmd.Parameters.AddWithValue("@idEbay", item.ItemID);
-        cmd.Parameters.AddWithValue("@url", item.ViewItemURLForNaturalSearch);
-        cmd.Parameters.AddWithValue("@title", item.Title);
-        cmd.Parameters.AddWithValue("@seller", item.Seller.UserID);
-        cmd.Parameters.AddWithValue("@price", price);
-        cmd.Parameters.AddWithValue("@city", item.Location);
-        cmd.Parameters.AddWithValue("@country", item.Country);
+      var parameters = new Dictionary<string, object>();
 
-        cmd.Parameters.AddWithValue("@subcategory", item.PrimaryCategoryName);
-        cmd.Parameters.AddWithValue("@section", section);
-        cmd.Parameters.AddWithValue("@desc", item.Description);
-        cmd.Parameters.AddWithValue("@currency", item.CurrentPrice.currencyID);
-        cmd.Parameters.AddWithValue("@is_auction", is_auction);
-        cmd.Parameters.AddWithValue("@transformated", trans);
-        cmd.Parameters.AddWithValue("@bid", bid);
+      if (is_auction)
+        bid = item.CurrentPrice.Value;
+      else
+        price = item.CurrentPrice.Value;
 
-        var result = cmd.ExecuteNonQuery();
-        return is_auction;
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [index = " + index + "] [idEbay = " + item.ItemID + "] [url = " + item.ViewItemURLForNaturalSearch +
-          "] [title = " + item.Title + "] [seller = " + item.Seller.UserID + "] [price = " + price + "] [city = " + item.Location +
-          "] [country = " + item.Country + "] [subcategory = " + item.PrimaryCategoryName + "] [section = " + section + "] [desc = " + item.Description +
-          "] [currency = " + item.CurrentPrice.currencyID + "] [is_auction = " + is_auction + "] [transformated = " + trans + "] [bid = " + bid +
-          "]: " + ex.Message, ex);
-      }
+      parameters.Add("@index", index);
+      parameters.Add("@idEbay", item.ItemID);
+      parameters.Add("@url", item.ViewItemURLForNaturalSearch);
+      parameters.Add("@title", item.Title);
+      parameters.Add("@seller", item.Seller.UserID);
+      parameters.Add("@price", price);
+      parameters.Add("@city", item.Location);
+      parameters.Add("@country", item.Country);
+
+      parameters.Add("@subcategory", item.PrimaryCategoryName);
+      parameters.Add("@section", section);
+      parameters.Add("@desc", item.Description);
+      parameters.Add("@currency", item.CurrentPrice.currencyID);
+      parameters.Add("@is_auction", is_auction);
+      parameters.Add("@transformated", trans);
+      parameters.Add("@bid", bid);
+
+      ExecuteNonQuery(sql, parameters);
+      return is_auction;
     }
     public void UpdateFctEbayGrabberPhotoCount(string index, int photo_cnt)
     {
       const string sql = @"update fct_grabber_ebay set photo_cnt=@photo_cnt where id_resource_list=@index";
-      try
-      {
-        var cmd = new MySqlCommand();
-        cmd.Connection = mySqlConnection;
-        cmd.CommandText = sql;
-        cmd.Prepare();
-
-        cmd.Parameters.AddWithValue("@photo_cnt", photo_cnt);
-        cmd.Parameters.AddWithValue("@index", index);
-        var result = cmd.ExecuteNonQuery();
-      }
-      catch (Exception ex)
-      {
-        throw new Exception("MySql error: [" + sql + "] [photo_cnt = " + photo_cnt + "] [id_resource_list = " + index + "]: " + ex.Message, ex);
-      }
+      var parameters = new Dictionary<string, object>();
+      parameters.Add("@photo_cnt", photo_cnt);
+      parameters.Add("@index", index);
+      ExecuteNonQuery(sql, parameters);
     }
     public void InsertassGrabberEbayResourceList(string index1, string index2)
     {
-      //Тело запроса!!!!!!!
       const string sql = @" insert into ass_grabber_ebay_resource_list
                     Values(@index1,@index2)";
       if (index1 != null)
       {
-        try
-        {
-          var cmd = new MySqlCommand();
-          cmd.Connection = mySqlConnection;
-          cmd.CommandText = sql;
-          cmd.Prepare();
-          //Параметры для вставки типа в теле @phone тут мы  list[PartsPage.Phone].First<string>()
-          // и тд
-          cmd.Parameters.AddWithValue("@index1", index1);
-          cmd.Parameters.AddWithValue("@index2", index2);
-          var result = cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex)
-        {
-          throw new Exception("MySql error: [" + sql + "] [index1 = " + index1 + "] [index2 = " + index2 + "]: " + ex.Message, ex);
-        }
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("@index1", index1);
+        parameters.Add("@index2", index2);
+        ExecuteNonQuery(sql, parameters);
       }
     }
   }
