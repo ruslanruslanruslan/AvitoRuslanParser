@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1146,13 +1147,21 @@ namespace AvitoRuslanParser
             if (start < 0)
               start = 0;
             if (msg == string.Empty)
-              rtbLog.AppendText(Environment.NewLine);
+              msg = Environment.NewLine;
             else
-              rtbLog.AppendText(DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine);
+              msg = DateTime.Now.ToLongTimeString() + " | " + msg + Environment.NewLine;
+
+            rtbLog.AppendText(msg);
+
             rtbLog.Select(start, rtbLog.Text.Length - start + 1);
             rtbLog.SelectionColor = msgColor;
             rtbLog.SelectionStart = rtbLog.Text.Length;
             rtbLog.ScrollToCaret();
+
+            using (var file = new StreamWriter(AppDomain.CurrentDomain.FriendlyName + ".log", true))
+            {
+              file.WriteLine(msg);
+            }
           }
         }
         catch (Exception ex)
