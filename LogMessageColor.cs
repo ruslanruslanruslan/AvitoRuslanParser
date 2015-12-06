@@ -20,5 +20,9 @@ namespace AvitoRuslanParser
     {
       return Color.LimeGreen;
     }
+    public static Color DataBase()
+    {
+      return Color.Blue;
+    }
   }
 }
