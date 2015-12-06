@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using ParsersChe.Bot.ActionOverPage.EnumsPartPage;
 using AvitoRuslanParser.Helpfuls;
 using AvitoRuslanParser.EbayParser;
+
 
 namespace AvitoRuslanParser
 {
@@ -18,6 +20,10 @@ namespace AvitoRuslanParser
     private string m_Login;
     private string m_Password;
     private MySqlConnection m_mySqlConnection;
+
+    public delegate void DataBaseLog(string msg, Color color);
+
+    public DataBaseLog dbLog = null;
 
     public MySqlDB(string _Login, string _Password, string _Server, int _Port, string _Database)
     {
@@ -141,6 +147,7 @@ namespace AvitoRuslanParser
       try
       {
         var result = Prepare(query, parameters).ExecuteScalar();
+        LogQuery(query, parameters, result);
         return result;
       }
       catch (Exception ex)
@@ -149,16 +156,31 @@ namespace AvitoRuslanParser
       }
     }
 
-    private MySqlDataReader ExecuteReader(string query, Dictionary<string, object> parameters = null)
+    private List<Dictionary<string, string>> ExecuteReader(string query, Dictionary<string, object> parameters = null)
     {
+      MySqlDataReader result = null;
       try
       {
-        var result = Prepare(query, parameters).ExecuteReader();
-        return result;
+        result = Prepare(query, parameters).ExecuteReader();
+        var list = new List<Dictionary<string, string>>();
+        while (result.Read())
+        {
+          var res = new Dictionary<string, string>();
+          for (var i = 0; i < result.FieldCount; ++i)
+            res.Add(result.GetName(i), result.GetString(i));
+          list.Add(res);
+        }
+        LogReader(query, parameters, list);
+        return list;
       }
       catch (Exception ex)
       {
         throw new Exception(PrepareErrorMessage(query, parameters, ex), ex);
+      }
+      finally
+      {
+        if (result != null)
+          result.Close();
       }
     }
 
@@ -167,6 +189,7 @@ namespace AvitoRuslanParser
       try
       {
         var result = Prepare(query, parameters).ExecuteNonQuery();
+        LogQuery(query, parameters, result);
         return result;
       }
       catch (Exception ex)
@@ -175,46 +198,66 @@ namespace AvitoRuslanParser
       }
     }
 
+    private string PrepareLog(string query, Dictionary<string, object> parameters)
+    {
+      var str = query;
+      str += Environment.NewLine;
+      if (parameters != null)
+        foreach (var param in parameters)
+          str += param.Key + ": " + param.Value + Environment.NewLine;
+      return str;
+    }
+
+    private void LogQuery(string query, Dictionary<string, object> parameters, object result)
+    {
+      if (dbLog == null)
+        return;
+
+      var str = PrepareLog(query, parameters);
+      str += "Result: " + result;
+
+      dbLog(str, LogMessageColor.DataBase());
+    }
+
+    private void LogReader(string query, Dictionary<string, object> parameters, List<Dictionary<string, string>> result)
+    {
+      if (dbLog == null)
+        return;
+
+      var str = PrepareLog(query, parameters);
+      str += "Results: " + Environment.NewLine + "++-----++" + Environment.NewLine;
+      foreach (var row in result)
+      {
+        foreach (var val in row)
+          str += val.Key + ": " + val.Value + Environment.NewLine;
+        str += "++-----++" + Environment.NewLine;
+      }
+
+      dbLog(str, LogMessageColor.DataBase());
+    }
+
     public int CountAd { get; set; }
 
     public IList<string[]> LoadSectionsLink()
     {
       const string sql = "call sp_get_SearchUrlsList();";
       IList<string[]> links = new List<string[]>();
-      MySqlDataReader reader = null;
-      try
+      var reader = ExecuteReader(sql);
+      foreach (var row in reader)
       {
-        reader = ExecuteReader(sql);
-        while (reader.Read())
-        {
-          var link = reader.GetString(0);
-          var category_name = reader.GetString(1);
-          links.Add(new string[] { link, category_name });
-        }
-      }
-      finally
-      {
-        if (reader != null)
-          reader.Close();
+        var link = row.Values.ElementAt(0);
+        var category_name = row.Values.ElementAt(1);
+        links.Add(new string[] { link, category_name });
       }
       return links;
     }
     public IList<string> GetCategories()
     {
       const string sql = "call sp_get_CategoriesList();";
-      MySqlDataReader reader = null;
       IList<string> results = new List<string>();
-      try
-      {
-        reader = ExecuteReader(sql);
-        while (reader.Read())
-          results.Add(Convert.ToString(reader["s_name"]));
-      }
-      finally
-      {
-        if (reader != null)
-          reader.Close();
-      }
+      var reader = ExecuteReader(sql);
+      foreach (var row in reader)
+        results.Add(row["s_name"]);
       return results;
     }
 
@@ -344,32 +387,24 @@ namespace AvitoRuslanParser
       const string sql = "SELECT search_url, category_name FROM fct_categories_search where search_url is not null order by ordering";
       IList<SectionItem> links = new List<SectionItem>();
       var resultStr = string.Empty;
-      MySqlDataReader reader = null;
-      try
-      {
-        reader = ExecuteReader(sql);
-        while (reader.Read())
-        {
-          var link = reader.GetString(0);
-          var category_name = reader.GetString(1);
-          var siteCurrent = SectionItem.Site.UnTyped;
-          if (link.ToUpper() != "NULL" && link != null && link != string.Empty)
-          {
-            var uri = new Uri(link);
 
-            if (uri.Host == hostAvito)
-              siteCurrent = SectionItem.Site.Avito;
-            else if (uri.Host == hostEbay)
-              siteCurrent = SectionItem.Site.Ebay;
-            var section = new SectionItem { Link = link, site = siteCurrent, CategoryName = category_name };
-            links.Add(section);
-          }
-        }
-      }
-      finally
+      var reader = ExecuteReader(sql);
+      foreach (var row in reader)
       {
-        if (reader != null)
-          reader.Close();
+        var link = row.Values.ElementAt(0);
+        var category_name = row.Values.ElementAt(1);
+        var siteCurrent = SectionItem.Site.UnTyped;
+        if (link.ToUpper() != "NULL" && link != null && link != string.Empty)
+        {
+          var uri = new Uri(link);
+
+          if (uri.Host == hostAvito)
+            siteCurrent = SectionItem.Site.Avito;
+          else if (uri.Host == hostEbay)
+            siteCurrent = SectionItem.Site.Ebay;
+          var section = new SectionItem { Link = link, site = siteCurrent, CategoryName = category_name };
+          links.Add(section);
+        }
       }
       return links;
     }
@@ -378,20 +413,11 @@ namespace AvitoRuslanParser
       const string sql = "call sp_get_ebay_AuctionsListForCheck();";
       IList<long> links = new List<long>();
       var resultStr = string.Empty;
-      MySqlDataReader reader = null;
-      try
+      var reader = ExecuteReader(sql);
+      foreach (var row in reader)
       {
-        reader = ExecuteReader(sql);
-        while (reader.Read())
-        {
-          var id = reader.GetInt64(0);
-          links.Add(id);
-        }
-      }
-      finally
-      {
-        if (reader != null)
-          reader.Close();
+        var id = Convert.ToInt64(row.Values.ElementAt(0));
+        links.Add(id);
       }
       return links;
     }

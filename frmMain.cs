@@ -33,6 +33,7 @@ namespace AvitoRuslanParser
       CheckForIllegalCrossThreadCalls = true;
       mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword,
         Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
+      mySqlDB.dbLog = new MySqlDB.DataBaseLog(AddLog);
     }
 
     public void IncParsed()
