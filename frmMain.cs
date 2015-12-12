@@ -1143,6 +1143,14 @@ namespace AvitoRuslanParser
         {
           lock (thislock)
           {
+            var maxLinesCount = 1000;
+            if (rtbLog.Lines.Count() > maxLinesCount)
+            {
+              var lines = rtbLog.Lines;
+              var newLines = lines.Skip(rtbLog.Lines.Count() - maxLinesCount);
+              rtbLog.Lines = newLines.ToArray();
+            }
+
             var start = rtbLog.Text.Length - 1;
             if (start < 0)
               start = 0;
@@ -1182,9 +1190,24 @@ namespace AvitoRuslanParser
         {
           lock (thislock)
           {
-            rtbLogStatistics.AppendText(DateTime.Now.ToLongTimeString() + " | " + category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine);
+            var maxLinesCount = 1000;
+            if (rtbLogStatistics.Lines.Count() > maxLinesCount)
+            {
+              var lines = rtbLogStatistics.Lines;
+              var newLines = lines.Skip(rtbLogStatistics.Lines.Count() - maxLinesCount);
+              rtbLogStatistics.Lines = newLines.ToArray();
+            }
+
+            var msg = DateTime.Now.ToLongTimeString() + " | " + category + " | count prepared: " + countPrepared.ToString() + " count inserted: " + countInserted.ToString() + Environment.NewLine;
+
+            rtbLogStatistics.AppendText(msg);
             rtbLogStatistics.SelectionStart = rtbLogStatistics.Text.Length;
             rtbLogStatistics.ScrollToCaret();
+
+            using (var file = new StreamWriter(AppDomain.CurrentDomain.FriendlyName + ".Statistics.log", true))
+            {
+              file.WriteLine(msg);
+            }
           }
         }
         catch (Exception ex)
