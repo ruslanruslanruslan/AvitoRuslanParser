@@ -67,7 +67,7 @@ namespace ParsersChe.Bot.ActionOverPage.ContentPrepare
         string mobileURL;
         var id = InfoPage.GetDatafromText(url, "\\d{7,}");
         mobileURL = url.Replace("www.avito.ru", "m.avito.ru");
-        mobileURL = mobileURL.Replace("_" + id, "._" + id);
+        //mobileURL = mobileURL.Replace("_" + id, "._" + id);
         var req = HttpWeb.GetHttpWebReq(mobileURL);
         req.AllowAutoRedirect = true;
         var res = HttpWeb.GetHttpWebResp(req);
