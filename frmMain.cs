@@ -131,7 +131,7 @@ namespace AvitoRuslanParser
         var parsedItems = SearchApi.ParseItems(new long[] { id });
 
 
-        mySqlDB.InsertFctEbayGrabber(parsedItems, cbCategories.Text);
+        //mySqlDB.InsertFctEbayGrabber(idResourceList, parsedItems, cbCategories.Text);
         var isAuction = true;
 
         ImageParsedCountHelper imageCount = null;
@@ -156,7 +156,7 @@ namespace AvitoRuslanParser
         }
 
         if (!isAuction)
-          mySqlDB.ExecuteProcEBay(mySqlDB.ResourceListIDEbay());
+            mySqlDB.ExecuteProcEBay(idResourceList);
       }
       catch (Exception ex)
       {
@@ -739,7 +739,7 @@ namespace AvitoRuslanParser
           imageCount.ResourceId = idResourceList;
           try
           {
-            mySqlDB.InsertFctEbayGrabber(parsedItems, sectionItem.CategoryName);
+              mySqlDB.InsertFctEbayGrabber(idResourceList, parsedItems, sectionItem.CategoryName);
             if (imageCount != null)
             {
               foreach (var im in imageCount.Resources)
@@ -922,7 +922,7 @@ namespace AvitoRuslanParser
 
           do
           {
-            EbayUpdateAuctions();
+ //           EbayUpdateAuctions();
 
             while (EbayState.Pausing || EbayState.Paused)
             {

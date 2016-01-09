@@ -498,7 +498,7 @@ namespace AvitoRuslanParser
     }
     public string ResourceListIDEbay()
     {
-      const string sql = "select max(ifnull(v,0)) from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_ebay) t";
+      const string sql = "select max(ifnull(v,0))+1 from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_ebay) t";
       var resultStr = string.Empty;
       var result = ExecuteScalar(sql);
       if (result != null)
@@ -531,14 +531,14 @@ namespace AvitoRuslanParser
       return resultStr;
     }
 
-    public void InsertFctEbayGrabber(GetMultipleItemsResponse list, string section)
+    public void InsertFctEbayGrabber(string idResourceList, GetMultipleItemsResponse list, string section)
     {
       if (list != null && list.Item != null && list.Item.Length > 0)
       {
         try
         {
           foreach (var item in list.Item)
-            InsertEbay(item, section);
+              InsertEbay(idResourceList, item, section);
         }
         catch (Exception ex)
         {
@@ -546,30 +546,15 @@ namespace AvitoRuslanParser
         }
       }
     }
-    public void InsertFctEbayGrabberOneItem(GetMultipleItemsResponseItem item, string section)
-    {
-      if (item != null)
-      {
-        try
-        {
-          InsertEbay(item, section);
-        }
-        catch (Exception ex)
-        {
-          throw new Exception("MySql error: " + ex.Message, ex);
-        }
-      }
-    }
-    public bool InsertEbay(GetMultipleItemsResponseItem item, string section)
+
+    public bool InsertEbay(string idResourceList, GetMultipleItemsResponseItem item, string section)
     {
       const string sql = @" insert into fct_grabber_ebay (id_resource_list, ebay_id,url, title, author, price, city,country, ebay_section, user_section, description,curr_code,is_auction,bid,transformated)
                                     Values(@index,@idEbay,@url,@title,@seller,@price,@city,@country,@subcategory,@section,@desc,@currency,@is_auction,@bid,@transformated)";
-      var index = "null";
       decimal? price = null;
       decimal? bid = null;
       var trans = 0;
       var is_auction = false;
-      index = Convert.ToString(Convert.ToInt32(ResourceListIDEbay()) + 1);
       is_auction = item.MinimumToBid != null;
       if (is_auction)
         trans = 4;
@@ -581,7 +566,7 @@ namespace AvitoRuslanParser
       else
         price = item.CurrentPrice.Value;
 
-      parameters.Add("@index", index);
+      parameters.Add("@index", idResourceList);
       parameters.Add("@idEbay", item.ItemID);
       parameters.Add("@url", item.ViewItemURLForNaturalSearch);
       parameters.Add("@title", item.Title);
