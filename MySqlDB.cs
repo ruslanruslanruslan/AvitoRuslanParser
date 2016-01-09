@@ -274,7 +274,7 @@ namespace AvitoRuslanParser
     }
     public string ResourceListIDAvito()
     {
-      const string sql = "call sp_get_avito_NextItemId();";
+      const string sql = "select fn_get_avito_NextItemId();";
       var resultStr = string.Empty;
       var result = ExecuteScalar(sql);
       if (result != null)
@@ -383,7 +383,7 @@ namespace AvitoRuslanParser
     }
     public IList<SectionItem> LoadSectionsLinkEx()
     {
-      const string sql = "SELECT search_url, category_name FROM fct_categories_search where search_url is not null order by ordering";
+      const string sql = @"call sp_get_SearchUrlsList";
       IList<SectionItem> links = new List<SectionItem>();
       var resultStr = string.Empty;
 
@@ -498,7 +498,7 @@ namespace AvitoRuslanParser
     }
     public string ResourceListIDEbay()
     {
-      const string sql = "select max(ifnull(v,0))+1 from (select max(pk_i_id) v from oc_t_item union select max(id_resource_list) from fct_grabber_ebay) t";
+        const string sql = "select fn_get_ebay_NextItemId();";
       var resultStr = string.Empty;
       var result = ExecuteScalar(sql);
       if (result != null)
