@@ -221,6 +221,7 @@
       this.splitter1.Size = new System.Drawing.Size(921, 3);
       this.splitter1.TabIndex = 1;
       this.splitter1.TabStop = false;
+      this.splitter1.Visible = false;
       // 
       // rtbLogStatistics
       // 
@@ -232,6 +233,7 @@
       this.rtbLogStatistics.Size = new System.Drawing.Size(921, 96);
       this.rtbLogStatistics.TabIndex = 2;
       this.rtbLogStatistics.Text = "";
+      this.rtbLogStatistics.Visible = false;
       // 
       // imlMain
       // 
