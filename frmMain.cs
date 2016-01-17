@@ -1170,6 +1170,13 @@ namespace AvitoRuslanParser
             {
               file.WriteLine(msg);
             }
+            if (msgColor == LogMessageColor.Error())
+            {
+              using (var file = new StreamWriter(AppDomain.CurrentDomain.FriendlyName + ".error.log", true))
+              {
+                file.WriteLine(msg);
+              }
+            }
           }
         }
         catch (Exception ex)
