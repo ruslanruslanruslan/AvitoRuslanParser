@@ -35,6 +35,7 @@ namespace AvitoRuslanParser
       mySqlDB = new MySqlDB(Properties.Default.MySqlServerUsername, Properties.Default.MySqlServerPassword,
         Properties.Default.MySqlServerAddress, Properties.Default.MySqlServerPort, Properties.Default.MySqlServerDatabase);
       mySqlDB.dbLog = new MySqlDB.DataBaseLog(AddLog);
+      Text = "Parser - " + BuildTimeStamp.TimeStamp();
     }
 
     public void IncParsed()
