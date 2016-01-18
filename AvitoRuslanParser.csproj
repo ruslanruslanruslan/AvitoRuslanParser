@@ -72,6 +72,7 @@
     <Compile Include="AvitoParser\AvitoLoadImageDeferentSize.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BuildTimeStamp.cs" />
     <Compile Include="EbayParser\EbayLoadImage.cs" />
     <Compile Include="EbayParser\ItemInfo.cs" />
     <Compile Include="EbayParser\SearchApi.cs" />
