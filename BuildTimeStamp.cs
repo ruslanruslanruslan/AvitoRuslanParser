@@ -4,7 +4,7 @@ namespace AvitoRuslanParser
   { 
     public static string TimeStamp() 
     { 
-      return "2016.01.18.00.01.01"; 
+      return "2016.01.19.00.05.23"; 
     } 
   } 
 } 
